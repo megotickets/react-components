@@ -7,6 +7,7 @@ import React, {
 } from "react";
 import MegoModal from "./MegoModal";
 import "./mego-style.css";
+import '@rainbow-me/rainbowkit/styles.css';
 import { BrowserProvider, ethers } from "ethers";
 type Route =
   | "ChooseType"
