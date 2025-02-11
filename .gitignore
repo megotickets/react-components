@@ -1,0 +1,11 @@
+# Esclude tutto
+*
+
+# Includi specificamente questi file
+!.gitignore
+!package.json
+!readme.md
+
+# Includi la cartella mego e tutto il suo contenuto
+!mego/
+!mego/**/*
