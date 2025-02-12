@@ -187,28 +187,33 @@ export const Web3Provider: React.FC<Web3ProviderProps> = ({ children }) => {
 
   const loginWithWalletConnect = async () => {
     setLoadingText("Checking walletconnect ...");
-    //@ts-ignore
     if (!window.ethereum) {
       alert("walletConnect is not installed");
       return;
     }
     try {
-      //@ts-ignore
       const _provider = new BrowserProvider(window.ethereum);
       await _provider.send("eth_requestAccounts", []);
       const signer = await _provider.getSigner();
       const address = await signer.getAddress();
+      
+      // Prima settiamo il provider e l'indirizzo
+      setProvider("walletConnect");
+      setWalletConnectProvider(_provider);
+      
+      // Poi aggiorniamo lo stato e il localStorage
       setLoggedAs(address);
       localStorage.setItem("loggedAs", address);
       localStorage.setItem("provider", "walletConnect");
-      setProvider("walletConnect");
-      setWalletConnectProvider(_provider);
-
-      //Switch chain to the one specified in the .env file
+      
+      // Cambiamo la sezione a "Logged"
+      setSection("Logged");
+      
       if (process.env.REACT_APP_CHAIN_ID) {
-        await _provider.send("wallet_switchEthereumChain", [{ chainId: `0x${parseInt(process.env.REACT_APP_CHAIN_ID).toString(16)}` }]); // Converti l'ID in esadecimale
+        await _provider.send("wallet_switchEthereumChain", [{ 
+          chainId: `0x${parseInt(process.env.REACT_APP_CHAIN_ID).toString(16)}` 
+        }]);
       }
-      closeMegoModal();
     } catch (error) {
       console.error("Error initializing provider:", error);
       console.log(error);
@@ -307,14 +312,21 @@ export const Web3Provider: React.FC<Web3ProviderProps> = ({ children }) => {
   useEffect(() => {
     const handleAccountsChanged = async (accounts: string[]) => {
       if (accounts.length > 0) {
-        //refresh the page
-        window.location.reload();
+        // Invece di ricaricare la pagina, aggiorniamo lo stato
+        const _provider = new BrowserProvider(window.ethereum);
+        const signer = await _provider.getSigner();
+        const address = await signer.getAddress();
+        setLoggedAs(address);
+        localStorage.setItem("loggedAs", address);
+        setSection("Logged");
+      } else {
+        // Se non ci sono account, facciamo logout
+        logout();
       }
     };
-    //@ts-ignore
+    
     window?.ethereum?.on('accountsChanged', handleAccountsChanged);
     return () => {
-      //@ts-ignore
       window?.ethereum?.removeListener('accountsChanged', handleAccountsChanged);
     };
   }, []);

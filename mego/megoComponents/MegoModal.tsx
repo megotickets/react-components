@@ -158,7 +158,6 @@ const ChooseTypeSection: React.FC<SectionBaseProps> = ({ setSection }) => {
         GOOGLE ACCOUNT
       </button>
 
-
       <WalletConnectButton />
     </>
   );
