@@ -26,6 +26,7 @@
   justify-content: center;
   align-items: flex-end;
   z-index: 1000;
+  overflow-y: auto;
 }
 
 .graci .mego-modal-container,.cottanera .mego-modal-container,.custodi .mego-modal-container,.benanti .mego-modal-container,.russo .mego-modal-container {
@@ -190,4 +191,37 @@
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
+}
+
+.mego-modal-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.mego-modal-buttons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+
+.mego-modal-title {
+  font-size: 1.5rem;
+  color: white;
+  margin-left: auto;
+  margin-right: auto;
+  font-weight: bold;
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.mego-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
 }

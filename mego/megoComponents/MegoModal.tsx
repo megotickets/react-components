@@ -78,7 +78,7 @@ const MegoModal: React.FC<MegoModalProps> = ({ isOpen, onClose }) => {
       <div className="mego-modal-backdrop" onClick={handleClose}></div>
       <div className="mego-modal-wrapper">
         <div className="mego-modal-header">
-          <div className="d-flex align-items-center">
+          <div className="mego-modal-logo">
             <img
               height={22}
               src={"/mego.svg"}
@@ -92,8 +92,9 @@ const MegoModal: React.FC<MegoModalProps> = ({ isOpen, onClose }) => {
               className="ms-2"
             />
           </div>
-          <div>
-            {prevSection && !loggedAs && (
+          <div className="mego-modal-buttons">
+            {
+              prevSection && !loggedAs &&
               <img
                 role="button"
                 height={16}
@@ -102,7 +103,7 @@ const MegoModal: React.FC<MegoModalProps> = ({ isOpen, onClose }) => {
                 alt="BackIcon"
                 className="ms-2"
               />
-            )}
+            }
             <img
               role="button"
               height={16}
@@ -121,8 +122,8 @@ const MegoModal: React.FC<MegoModalProps> = ({ isOpen, onClose }) => {
               transition: "height 0.3s",
             }}
           >
-            <div className="fs-4 text-white mx-auto font-bold m-auto mt-0 mb-4 text-center">
-              {section === "Register" ? "REGISTER" : "LOGIN"}
+            <div className="mego-modal-title">
+              {section === "Register" ? "REGISTER" : "CHOOSE HOW TO LOGIN"}
             </div>
 
             <>&nbsp;</>
@@ -221,7 +222,7 @@ const LoginSection = () => {
       </h5>
       <form
         onSubmit={handleLogin}
-        className="d-flex flex-column align-items-center w-100"
+        className="mego-form"
       >
 
         <input
@@ -285,7 +286,7 @@ const RegisterSection = () => {
 
       <form
         onSubmit={handleLogin}
-        className="d-flex flex-column align-items-center w-100"
+        className="mego-form"
       >
 
         <input
