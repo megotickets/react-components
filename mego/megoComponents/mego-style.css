@@ -26,7 +26,6 @@
   justify-content: center;
   align-items: flex-end;
   z-index: 1000;
-  overflow-y: auto;
 }
 
 .graci .mego-modal-container,.cottanera .mego-modal-container,.custodi .mego-modal-container,.benanti .mego-modal-container,.russo .mego-modal-container {

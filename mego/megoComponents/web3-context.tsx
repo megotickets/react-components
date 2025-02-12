@@ -15,7 +15,9 @@ type Route =
   | "Email"
   | "Login"
   | "Register"
-  | "Logged";
+  | "Logged"
+  | "ExportPrivateKey";
+    
 interface Web3ContextType {
   isMegoModalOpen: boolean; openMegoModal: () => void;
   redirectToGoogleLogin: () => void;

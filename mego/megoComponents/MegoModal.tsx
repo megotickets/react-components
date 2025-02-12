@@ -46,6 +46,7 @@ const MegoModal: React.FC<MegoModalProps> = ({ isOpen, onClose }) => {
     if (route === "Login") setPrevSection("Email");
     if (route === "Register") setPrevSection("Email");
     if (route === "Logged") setPrevSection(undefined);
+    if (route === "ExportPrivateKey") setPrevSection("ExportPrivateKey");
   }
 
   function handleClose() {
@@ -68,6 +69,8 @@ const MegoModal: React.FC<MegoModalProps> = ({ isOpen, onClose }) => {
         return <LoggedSection logout={logout} />;
       case "Register":
         return <RegisterSection />;
+      case "ExportPrivateKey":
+        return <ExportPrivateKeySection />;
     }
   }
 
@@ -150,7 +153,7 @@ const ChooseTypeSection: React.FC<SectionBaseProps> = ({ setSection }) => {
   const { redirectToAppleLogin, redirectToGoogleLogin } = useWeb3Context();
 
   return (
-    <>
+    <div>
       <button
         className={`mego-modal-button mego-apple opacity-50`}
         onClick={redirectToAppleLogin}>
@@ -171,7 +174,7 @@ const ChooseTypeSection: React.FC<SectionBaseProps> = ({ setSection }) => {
         <img src={"/email.svg"} width={30} alt="Email" className="mr-2" />
         E-MAIL
       </button>
-    </>
+    </div>
   );
 };
 
@@ -195,15 +198,49 @@ const EmailSection: React.FC<SectionBaseProps> = ({ setSection }) => {
 };
 
 const LoggedSection: React.FC<{ logout: () => void }> = ({ logout }) => {
+  const { loggedAs, setSection } = useWeb3Context();
+
+  const handleCopyAddress = () => {
+    if (loggedAs) {
+      navigator.clipboard.writeText(loggedAs);
+      alert("Address copied to clipboard");
+    }
+  };
+
+  const handleExportPrivateKey = () => {
+    setSection("ExportPrivateKey");
+  };
+
   return (
     <div>
+      <button className="mego-modal-button outlined" onClick={handleCopyAddress}>
+        <img src={"/turnOff.svg"} alt="TurnOff" className="mr-2" />
+        Copy address
+      </button>
+
+      <button className="mego-modal-button outlined" onClick={handleExportPrivateKey}>
+        <img src={"/turnOff.svg"} alt="TurnOff" className="mr-2" />
+        Export private key
+      </button>
+
       <button className="mego-modal-button outlined" onClick={logout}>
         <img src={"/turnOff.svg"} alt="TurnOff" className="mr-2" />
-        LOGOUT
+        Disconnect
       </button>
     </div>
   );
 };
+
+const ExportPrivateKeySection = () => {
+  return (
+    <div>
+      <h5 className="mego-login-text">
+        Export private key to implement
+      </h5>
+    </div>
+  );
+};
+
 
 const LoginSection = () => {
   const { createNewWallet, loginWithEmail } = useWeb3Context();
