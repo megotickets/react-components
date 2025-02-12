@@ -8,11 +8,14 @@ const WalletIcon: React.FC = () => (
 )
 
 const WalletButton = () => {
-    const { openMegoModal } = useWeb3Context()
+    const { openMegoModal, loggedAs, provider } = useWeb3Context();
 
-    return <div className="wallet-icon" role="button" onClick={openMegoModal}>
-        <WalletIcon />
-    </div>
+    return (
+        <div className="mego-wallet-icon" role="button" onClick={openMegoModal}>
+            <WalletIcon />
+            {loggedAs && provider === "walletConnect" && <div>{loggedAs.slice(0, 6)}...</div>}
+        </div>
+    )
 }
 
 export default WalletButton;
