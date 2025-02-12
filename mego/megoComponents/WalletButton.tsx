@@ -13,7 +13,7 @@ const WalletButton = () => {
     return (
         <div className="mego-wallet-icon" role="button" onClick={openMegoModal}>
             <WalletIcon />
-            {loggedAs && provider === "walletConnect" && <div>{loggedAs.slice(0, 6)}...</div>}
+            {loggedAs && <div>{loggedAs.slice(0, 6)}...</div>}
         </div>
     )
 }

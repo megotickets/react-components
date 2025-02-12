@@ -37,6 +37,8 @@ const MegoModal: React.FC<MegoModalProps> = ({ isOpen, onClose }) => {
       }, 100);
     }
   }, [loggedAs, isOpen]);
+
+
   function setNewSection(route: Route) {
     setSection(route);
     if (route === "ChooseType") setPrevSection(undefined);
@@ -143,8 +145,7 @@ const ChooseTypeSection: React.FC<SectionBaseProps> = ({ setSection }) => {
   return (
     <>
       <button
-        className={`mego-modal-button mego-apple opacity-50 cursor-not-allowed`}
-        disabled={true}
+        className={`mego-modal-button mego-apple opacity-50`}
         onClick={redirectToAppleLogin}>
         <img src="/apple.svg" alt="Apple" className="mr-2" />
         APPLE ACCOUNT
@@ -152,7 +153,6 @@ const ChooseTypeSection: React.FC<SectionBaseProps> = ({ setSection }) => {
 
       <button
         className="mego-modal-button opacity-50 cursor-not-allowed"
-        disabled={true}
         onClick={redirectToGoogleLogin}>
         <img width={17} src="/google.svg" alt="Google" className="mr-2 mt-1" />
         GOOGLE ACCOUNT
@@ -165,22 +165,12 @@ const ChooseTypeSection: React.FC<SectionBaseProps> = ({ setSection }) => {
 
 const LoggedSection: React.FC<{ logout: () => void }> = ({ logout }) => {
   return (
-    <>
-      {/* <button
-        className="mego-modal-button outlined"
-        onClick={() => {
-          const address = localStorage.getItem("loggedAs");
-          window.open(`https://nft.etnadivino.com?address=${address}`, "_blank")
-        }}
-      >
-        <img src={"/imageLogo.svg"} alt="NftLogo" className="mr-2" />
-        Visualizza NFTs
-      </button> */}
+    <div>
       <button className="mego-modal-button outlined" onClick={logout}>
         <img src={"/turnOff.svg"} alt="TurnOff" className="mr-2" />
         LOGOUT
       </button>
-    </>
+    </div>
   );
 };
 
