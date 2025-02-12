@@ -46,7 +46,9 @@ const MegoModal: React.FC<MegoModalProps> = ({ isOpen, onClose }) => {
     if (route === "Login") setPrevSection("Email");
     if (route === "Register") setPrevSection("Email");
     if (route === "Logged") setPrevSection(undefined);
-    if (route === "ExportPrivateKey") setPrevSection("ExportPrivateKey");
+    if (route === "ExportPrivateKey") setPrevSection("Logged");
+    if (route === "TokenForPrivateKey") setPrevSection("ExportPrivateKey");
+    if (route === "LoginWithPasswordForPrivateKey") setPrevSection("Logged");
   }
 
   function handleClose() {
@@ -71,6 +73,12 @@ const MegoModal: React.FC<MegoModalProps> = ({ isOpen, onClose }) => {
         return <RegisterSection />;
       case "ExportPrivateKey":
         return <ExportPrivateKeySection />;
+      case "TokenForPrivateKey":
+        return <TokenForPrivateKeySection />;
+      case "LoginWithPasswordForPrivateKey":
+        return <LoginWithPasswordForPrivateKeySection />;
+      case "PrivateKey":
+        return <PrivateKeySection />;
     }
   }
 
@@ -198,7 +206,17 @@ const EmailSection: React.FC<SectionBaseProps> = ({ setSection }) => {
 };
 
 const LoggedSection: React.FC<{ logout: () => void }> = ({ logout }) => {
-  const { loggedAs, setSection, provider } = useWeb3Context();
+  const { loggedAs, setSection, provider,
+    requestExportPrivateKeyWithGoogle,
+    requestExportPrivateKeyWithApple,
+    openMegoModal }
+    = useWeb3Context();
+
+  const exported = new URLSearchParams(window.location.search).get("exported");
+
+  if (exported) {
+    setSection("TokenForPrivateKey");
+  }
 
   const handleCopyAddress = () => {
     if (loggedAs) {
@@ -207,27 +225,48 @@ const LoggedSection: React.FC<{ logout: () => void }> = ({ logout }) => {
     }
   };
 
-  const handleExportPrivateKey = () => {
-    setSection("ExportPrivateKey");
-  };
+  const requestExportPrivateKey = () => {
+    console.log("provider -> ", provider);
+    switch (provider) {
+      case "email":
+        setSection("LoginWithPasswordForPrivateKey");
+        break;
+      case "google":
+        requestExportPrivateKeyWithGoogle();
+        break;
+      case "google?provider=google":
+        requestExportPrivateKeyWithGoogle();
+        break;
+      case "apple":
+        requestExportPrivateKeyWithApple();
+        break;
+      case "apple?provider=apple":
+        requestExportPrivateKeyWithApple();
+        break;
+      default:
+        break;
+    }
+  }
+
 
   return (
     <div>
       <button className="mego-modal-button outlined" onClick={handleCopyAddress}>
-        <img src={"/turnOff.svg"} alt="TurnOff" className="mr-2" />
+        <img src={"/copy.svg"} alt="TurnOff" className="mr-2 h-6 w-6" />
         Copy address
       </button>
 
       {/* ONLY FOR EMAIL PROVIDER (GOOGLE, APPLE, EMAIL)*/}
       {
-        provider !== "walletConnect" && <button className="mego-modal-button outlined" onClick={handleExportPrivateKey}>
-          <img src={"/turnOff.svg"} alt="TurnOff" className="mr-2" />
+        provider !== "walletConnect" &&
+        <button className="mego-modal-button outlined" onClick={requestExportPrivateKey}>
+          <img src={"/export_key.svg"} alt="TurnOff" className="mr-2 h-6 w-6" />
           Export private key
         </button>
       }
 
       <button className="mego-modal-button outlined" onClick={logout}>
-        <img src={"/turnOff.svg"} alt="TurnOff" className="mr-2" />
+        <img src={"/disconnect.svg"} alt="TurnOff" className="mr-2 h-6 w-6" />
         Disconnect
       </button>
     </div>
@@ -244,6 +283,72 @@ const ExportPrivateKeySection = () => {
   );
 };
 
+const LoginWithPasswordForPrivateKeySection = () => {
+  const [password, setPassword] = useState<string>("");
+
+  return (
+    <div>
+      <h5 className="mego-login-text">
+        Insert password to obtain private key
+      </h5>
+      <input
+        className="mego-input"
+        id="password"
+        placeholder="Password..."
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+      />
+    </div>
+  );
+};
+
+
+const TokenForPrivateKeySection = () => {
+  const [token, setToken] = useState<string>("");
+
+  const { revealPrivateKey } = useWeb3Context();
+
+  return (
+    <div className="w-full flex flex-col items-center justify-center">
+      <input
+        className="mego-input-token"
+        id="token"
+        placeholder="Insert token..."
+        value={token}
+        onChange={(e) => setToken(e.target.value)}
+      />
+      <button
+        disabled={token.length == 0}
+        className={"mego-modal-button mt-3 " + (token.length == 0 ? "opacity-50" : "")}
+        onClick={() => revealPrivateKey(token)}
+      >
+        Reveal private key
+      </button>
+    </div>
+  );
+};
+
+const PrivateKeySection = () => {
+  const { privateKey } = useWeb3Context();
+
+  const handleCopyPrivateKey = () => {
+    if (privateKey) {
+      navigator.clipboard.writeText(privateKey);
+      alert("Private key copied to clipboard");
+    }
+  }
+
+  return (
+    <div>
+      <h5 className="mego-login-text">
+        Private key: {privateKey}
+      </h5>
+      <button className="mego-modal-button outlined" onClick={handleCopyPrivateKey}>
+        Copy private key
+      </button>
+    </div>
+  );
+};
 
 const LoginSection = () => {
   const { createNewWallet, loginWithEmail } = useWeb3Context();
@@ -303,14 +408,9 @@ const LoginSection = () => {
 };
 
 const RegisterSection = () => {
-
   const { createNewWallet } = useWeb3Context();
-
   const [email, setEmail] = useState<string>("");
-
   const [password, setPassword] = useState<string>("");
-
-
 
   const handleLogin = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

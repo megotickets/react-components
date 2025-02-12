@@ -10,14 +10,19 @@ import "./mego-style.css";
 import '@rainbow-me/rainbowkit/styles.css';
 import { BrowserProvider, ethers } from "ethers";
 import axios from "axios";
+
+
 type Route =
   | "ChooseType"
   | "Email"
   | "Login"
   | "Register"
   | "Logged"
+  | "TokenForPrivateKey" //Is section where user can insert token received from email (is for obtain private key)
+  | "PrivateKey" //Is section where user can view his private key and copy it (export private key)
+  | "LoginWithPasswordForPrivateKey" //Is section where user can login with email password to obtain private key
   | "ExportPrivateKey";
-    
+
 interface Web3ContextType {
   isMegoModalOpen: boolean; openMegoModal: () => void;
   redirectToGoogleLogin: () => void;
@@ -40,6 +45,13 @@ interface Web3ContextType {
   createNewWallet: (email: string, password: string) => Promise<void>; // Add the createNewWallet function to the context
   getProvider: () => any;
   getSigner: () => any;
+
+  //Private key export
+  requestExportPrivateKeyWithEmail: () => Promise<void>;
+  requestExportPrivateKeyWithGoogle: () => Promise<void>;
+  requestExportPrivateKeyWithApple: () => Promise<void>;
+  revealPrivateKey: (token: string) => Promise<void>;
+  privateKey: string | null;
 }
 
 const Web3Context = createContext<Web3ContextType | undefined>(undefined);
@@ -70,6 +82,8 @@ export const Web3Provider: React.FC<Web3ProviderProps> = ({ children }) => {
   const [loggedAs, setLoggedAs] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [loadingText, setLoadingText] = useState<string>("");
+
+  const [privateKey, setPrivateKey] = useState<string | null>(null);
   const openMegoModal = (): void => {
     setIsMegoModalOpen(true);
     setIsLoading(false); // Reset loading state when opening modal
@@ -201,22 +215,22 @@ export const Web3Provider: React.FC<Web3ProviderProps> = ({ children }) => {
       await _provider.send("eth_requestAccounts", []);
       const signer = await _provider.getSigner();
       const address = await signer.getAddress();
-      
+
       // Prima settiamo il provider e l'indirizzo
       setProvider("walletConnect");
       setWalletConnectProvider(_provider);
-      
+
       // Poi aggiorniamo lo stato e il localStorage
       setLoggedAs(address);
       localStorage.setItem("loggedAs", address);
       localStorage.setItem("provider", "walletConnect");
-      
+
       // Cambiamo la sezione a "Logged"
       setSection("Logged");
-      
+
       if (process.env.REACT_APP_CHAIN_ID) {
-        await _provider.send("wallet_switchEthereumChain", [{ 
-          chainId: `0x${parseInt(process.env.REACT_APP_CHAIN_ID).toString(16)}` 
+        await _provider.send("wallet_switchEthereumChain", [{
+          chainId: `0x${parseInt(process.env.REACT_APP_CHAIN_ID).toString(16)}`
         }]);
       }
     } catch (error) {
@@ -275,11 +289,14 @@ export const Web3Provider: React.FC<Web3ProviderProps> = ({ children }) => {
   }
 
   useEffect(() => {
+    console.log("[DEBUG] Executing useEffect");
     const searchParams = new URLSearchParams(window.location.search);
     const urlProvider = searchParams.get("provider");
-    const urlLoggedAs = searchParams.get("loggedAs");
-
+    let urlLoggedAs = searchParams.get("loggedAs") || searchParams.get("signedAs");
+    const exported = searchParams.get("exported");
+    //# 1
     if (urlProvider) {
+      console.log("[DEBUG] #1 - urlProvider:", urlProvider);
       setProvider(urlProvider);
       localStorage.setItem("provider", urlProvider);
 
@@ -288,18 +305,24 @@ export const Web3Provider: React.FC<Web3ProviderProps> = ({ children }) => {
         const jsonRpcProvider = new ethers.JsonRpcProvider(process.env.REACT_APP_JSON_RPC_PROVIDER);
         setNoWalletConnectProvider(jsonRpcProvider);
       }
+
+      if (exported) {
+        openMegoModal();
+      }
     }
 
+    //# 2
     if (urlLoggedAs) {
+      console.log("[DEBUG] #2 - urlLoggedAs:", urlLoggedAs);
       setLoggedAs(urlLoggedAs);
       localStorage.setItem("loggedAs", urlLoggedAs);
     }
 
+    //# 3
     if (!urlProvider && !urlLoggedAs) {
+      console.log("[DEBUG] #3 - !urlProvider && !urlLoggedAs");
       const storedProvider = localStorage.getItem("provider");
       const storedLoggedAs = localStorage.getItem("loggedAs");
-      console.log("[DEBUG]storedProvider:", storedProvider);
-      console.log("[DEBUG]storedLoggedAs:", storedLoggedAs);
       if (storedProvider) {
         setProvider(storedProvider);
         // Inizializza il provider anche per sessioni ripristinate
@@ -313,7 +336,9 @@ export const Web3Provider: React.FC<Web3ProviderProps> = ({ children }) => {
       if (storedLoggedAs) setLoggedAs(storedLoggedAs);
     }
 
+    //# 4
     if (urlProvider === 'google' && urlLoggedAs) {
+      console.log("[DEBUG] #4 - urlProvider === 'google' && urlLoggedAs");
       try {
         const jsonRpcProvider = new ethers.JsonRpcProvider("https://base-sepolia.g.alchemy.com/v2/KxxtZXKplWuSt71LXxy-9Mr4BhucrqEP");
         setNoWalletConnectProvider(jsonRpcProvider);
@@ -325,6 +350,7 @@ export const Web3Provider: React.FC<Web3ProviderProps> = ({ children }) => {
         console.error("[Google Auth] Error initializing provider:", error);
       }
     }
+
   }, []);
 
   //Handle chain change
@@ -358,7 +384,7 @@ export const Web3Provider: React.FC<Web3ProviderProps> = ({ children }) => {
     };
   }, []);
 
-  
+
   //Usando windows.etherium verificiamo se l'address del wallet cambia (in caso di cambiamento refresh)
   useEffect(() => {
     const handleAccountsChanged = async (accounts: string[]) => {
@@ -375,7 +401,7 @@ export const Web3Provider: React.FC<Web3ProviderProps> = ({ children }) => {
         logout();
       }
     };
-    
+
     window?.ethereum?.on('accountsChanged', handleAccountsChanged);
     return () => {
       window?.ethereum?.removeListener('accountsChanged', handleAccountsChanged);
@@ -383,11 +409,54 @@ export const Web3Provider: React.FC<Web3ProviderProps> = ({ children }) => {
   }, []);
 
 
+  //Private key export
+  const requestExportPrivateKeyWithEmail = async () => {
+    setIsLoading(true);
+    setSection("TokenForPrivateKey");
+  }
+
+  const requestExportPrivateKeyWithGoogle = async () => {
+    setIsLoading(true);
+
+    //Redirect for request token via google auth
+    setTimeout(() => {
+      window.location.href = BASE_URL + "/auth/google" + "?origin=" + window.location.href.replace("https://", "").replace("http://", "") + "&message=EXPORT_WALLET";
+    }, 2500);
+
+  }
+
+  const requestExportPrivateKeyWithApple = async () => {
+    setIsLoading(true);
+    setSection("TokenForPrivateKey");
+  }
+
+  const revealPrivateKey = async (token: string) => {
+    setIsLoading(true);
+    setLoadingText("Revealing private key...");
+    console.log("Revealing private key with token:", token);
+    //POST with axios
+    const reveal = await axios.post(`${BASE_URL}/wallets/export`, { token: token })
+    if (reveal.data.error) {
+      setLoadingText(reveal.data.message);
+      alert(reveal.data.message);
+      setIsLoading(false);
+      setLoadingText("");
+      setTimeout(() => {
+        window.location.href = window.location.origin;
+      }, 1000);
+    } else {
+      setIsLoading(false);
+      setPrivateKey(reveal.data.private_keys.eth);
+      setSection("PrivateKey");
+    }
+  }
+
 
   const value: Web3ContextType = {
     getProvider, getSigner, isMegoModalOpen, openMegoModal,
     redirectToAppleLogin, redirectToGoogleLogin, closeMegoModal, provider, walletConnectProvider, loginWithWalletConnect, section,
-    setSection, prevSection, setPrevSection, loggedAs, isLoading, logout, setIsLoading, loadingText, setLoadingText, loginWithEmail, createNewWallet
+    setSection, prevSection, setPrevSection, loggedAs, isLoading, logout, setIsLoading, loadingText, setLoadingText, loginWithEmail, createNewWallet,
+    requestExportPrivateKeyWithEmail, requestExportPrivateKeyWithGoogle, requestExportPrivateKeyWithApple, revealPrivateKey, privateKey
   };
   return (
     <Web3Context.Provider value={value}>

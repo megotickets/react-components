@@ -168,6 +168,18 @@
   width: 100%;
 }
 
+.mego-input-token {
+  background-color: #000;
+  border: 0.1rem solid var(--btn-bg-color);
+  padding: 0.9rem;
+  border-radius: 0.6rem;
+  margin-bottom: 1rem;
+  outline: none;
+  width: 100%;
+  color: var(--btn-bg-color);
+  width: 100%;
+}
+
 .mego-input::placeholder {
   opacity: 1;
   color: var(--btn-bg-color);
