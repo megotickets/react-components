@@ -155,14 +155,14 @@ const ChooseTypeSection: React.FC<SectionBaseProps> = ({ setSection }) => {
   return (
     <div>
       <button
-        className={`mego-modal-button mego-apple opacity-50`}
+        className={`mego-modal-button mego-apple`}
         onClick={redirectToAppleLogin}>
         <img src="/apple.svg" alt="Apple" className="mr-2" />
         APPLE ACCOUNT
       </button>
 
       <button
-        className="mego-modal-button opacity-50 cursor-not-allowed"
+        className="mego-modal-button"
         onClick={redirectToGoogleLogin}>
         <img width={17} src="/google.svg" alt="Google" className="mr-2 mt-1" />
         GOOGLE ACCOUNT
