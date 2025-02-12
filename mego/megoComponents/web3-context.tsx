@@ -9,6 +9,7 @@ import MegoModal from "./MegoModal";
 import "./mego-style.css";
 import '@rainbow-me/rainbowkit/styles.css';
 import { BrowserProvider, ethers } from "ethers";
+import axios from "axios";
 type Route =
   | "ChooseType"
   | "Email"
@@ -22,6 +23,7 @@ interface Web3ContextType {
   closeMegoModal: () => void;
   provider: string | null;
   walletConnectProvider: any;
+  loginWithEmail: (email: string, password: string) => Promise<void>;
   loginWithWalletConnect: () => Promise<void>;
   loggedAs: string | null;
   loadingText: string;
@@ -33,6 +35,7 @@ interface Web3ContextType {
   prevSection: Route | undefined;
   setPrevSection: (section: Route | undefined) => void;
   logout: () => void;
+  createNewWallet: (email: string, password: string) => Promise<void>; // Add the createNewWallet function to the context
   getProvider: () => any;
   getSigner: () => any;
 }
@@ -223,6 +226,52 @@ export const Web3Provider: React.FC<Web3ProviderProps> = ({ children }) => {
     }
   };
 
+
+  const loginWithEmail = async (email: string, password: string) => {
+    const lowerCaseEmail = email.toLowerCase();
+    setLoadingText("Checking email and password");
+
+    const check = await axios.post(`${BASE_URL}/wallets/check`, {
+      email: lowerCaseEmail,
+      password: password,
+    });
+
+    if (check.data.error === false) {
+      setIsLoading(false);
+      setLoadingText("");
+      setLoggedAs(check.data.addresses.eth);
+      localStorage.setItem("loggedAs", check.data.addresses.eth);
+      localStorage.setItem("provider", "email");
+      localStorage.setItem("email", email);
+      setProvider("email");
+    } else {
+      setLoadingText("");
+      alert(check.data.message);
+      setIsLoading(false);
+    }
+  };
+
+  // Aggiungi la funzione per creare un nuovo wallet
+
+  async function createNewWallet(email: string, password: string) {
+    if (!isLoading) {
+      setIsLoading(true);
+      setLoadingText("Creating new mego wallet");
+      const lowerCaseEmail = email.toLowerCase();
+      const create = await axios.post(`${BASE_URL}/wallets/email/new`, {
+        email: lowerCaseEmail,
+        password: password,
+      });
+      if (!create.data.error) {
+        await loginWithEmail(email, password);
+      } else {
+        alert(create.data.message);
+        setIsLoading(false);
+        setLoadingText("");
+      }
+    }
+  }
+
   useEffect(() => {
     const searchParams = new URLSearchParams(window.location.search);
     const urlProvider = searchParams.get("provider");
@@ -336,7 +385,7 @@ export const Web3Provider: React.FC<Web3ProviderProps> = ({ children }) => {
   const value: Web3ContextType = {
     getProvider, getSigner, isMegoModalOpen, openMegoModal,
     redirectToAppleLogin, redirectToGoogleLogin, closeMegoModal, provider, walletConnectProvider, loginWithWalletConnect, section,
-    setSection, prevSection, setPrevSection, loggedAs, isLoading, logout, setIsLoading, loadingText, setLoadingText,
+    setSection, prevSection, setPrevSection, loggedAs, isLoading, logout, setIsLoading, loadingText, setLoadingText, loginWithEmail, createNewWallet
   };
   return (
     <Web3Context.Provider value={value}>
