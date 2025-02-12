@@ -198,7 +198,7 @@ const EmailSection: React.FC<SectionBaseProps> = ({ setSection }) => {
 };
 
 const LoggedSection: React.FC<{ logout: () => void }> = ({ logout }) => {
-  const { loggedAs, setSection } = useWeb3Context();
+  const { loggedAs, setSection, provider } = useWeb3Context();
 
   const handleCopyAddress = () => {
     if (loggedAs) {
@@ -218,10 +218,13 @@ const LoggedSection: React.FC<{ logout: () => void }> = ({ logout }) => {
         Copy address
       </button>
 
-      <button className="mego-modal-button outlined" onClick={handleExportPrivateKey}>
-        <img src={"/turnOff.svg"} alt="TurnOff" className="mr-2" />
-        Export private key
-      </button>
+      {/* ONLY FOR EMAIL PROVIDER (GOOGLE, APPLE, EMAIL)*/}
+      {
+        provider !== "walletConnect" && <button className="mego-modal-button outlined" onClick={handleExportPrivateKey}>
+          <img src={"/turnOff.svg"} alt="TurnOff" className="mr-2" />
+          Export private key
+        </button>
+      }
 
       <button className="mego-modal-button outlined" onClick={logout}>
         <img src={"/turnOff.svg"} alt="TurnOff" className="mr-2" />
