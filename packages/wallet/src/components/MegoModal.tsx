@@ -85,7 +85,7 @@ export function MegoModal({ isOpen, onClose }: MegoModalProps) {
   if (!isOpen && !isClosing) return null;
 
   return (
-    <div className={`${isClosing ? "closing" : ""}`}>
+    <div className={`${isClosing ? "closing" : ""} mego-modal-container`}>
       <div className="mego-modal-backdrop" onClick={handleClose}></div>
       <div className="mego-modal-wrapper" style={{ backgroundColor: 'white' }}>
         <div className="mego-modal-header">
