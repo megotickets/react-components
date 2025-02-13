@@ -125,7 +125,7 @@ export function MegoModal({ isOpen, onClose }: MegoModalProps) {
             />
           </div>
         </div>
-        <div className="mego-modal-content" style={{ padding: 0 }}>
+        <div className="mego-modal-content">
           <span
             style={{
               transform: "scale(0.8)",
@@ -265,7 +265,7 @@ const LoggedSection: React.FC<{ logout: () => void }> = ({ logout }) => {
             alt="TurnOff"
             style={{ marginRight: '0.5rem', height: '1.5rem', width: '1.5rem' }}
           />
-          Export private key
+          {`Export private key`}
         </button>
       }
 
