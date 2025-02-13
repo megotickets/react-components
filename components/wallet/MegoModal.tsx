@@ -176,7 +176,7 @@ const ChooseTypeSection: React.FC<SectionBaseProps> = ({ setSection }) => {
         GOOGLE ACCOUNT
       </button>
 
-      <WalletConnectButton />
+      {/* <WalletConnectButton /> */}
 
       <button className="mego-modal-button mego-email" onClick={() => setSection("Email")}>
         <img src={"/email.svg"} width={30} alt="Email" className="mr-2" />

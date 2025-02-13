@@ -19,7 +19,7 @@ export default function Home() {
     <WagmiProvider config={config}>
       <QueryClientProvider client={queryClient}>
         <RainbowKitProvider>
-            <MegoWrapper/>
+          <MegoWrapper/>
         </RainbowKitProvider>
       </QueryClientProvider>
     </WagmiProvider>
