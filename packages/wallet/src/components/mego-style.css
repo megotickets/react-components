@@ -34,12 +34,12 @@
   --image-filter: var(--mego-image-filter);
 }
 .etna-survey__nav-button{
-  color: var(--btn-text-color);
+  color: black;
 }
 .mego-apple img,
 .mego-email img,
 .mego-modal-header img {
-  filter: var(--image-filter);
+  filter: none;
 }
 .mego-modal-backdrop {
   position: absolute;
@@ -61,7 +61,7 @@
   max-width: 700px;
   padding: 0 5px;
   margin: 0 4px;
-  background: var(--btn-bg-color);
+  background-color: white;
   animation: slideUp 0.3s ease-out;
 }
 
@@ -109,10 +109,10 @@
   width: 100%;
   padding: 0.9rem;
   max-width: 315px;
-  color: var(--btn-text-color);
+  color: black;
   margin: auto;
   margin-bottom: 0.85rem;
-  background-color: var(--btn-bg-color);
+  background-color: white;
   border-radius: 0.6rem;
   border: none;
   outline: none;
@@ -123,8 +123,8 @@
 
 .mego-modal-button.outlined {
   background-color: #000;
-  border: 0.1rem solid var(--btn-bg-color);
-  color: var(--btn-bg-color);
+  border: 0.1rem solid white;
+  color: white;
 }
 
 .mego-modal-button img {
@@ -135,7 +135,7 @@
 /* Aggiungi il loader */
 .loader {
   border: 6px solid rgba(255, 255, 255, 0.3);
-  border-top: 6px solid var(--btn-bg-color);
+  border-top: 6px solid white;
   border-radius: 50%;
   width: 40px;
   height: 40px;
@@ -164,31 +164,31 @@
 
 .mego-input {
   background-color: #000;
-  border: 0.1rem solid var(--btn-bg-color);
+  border: 0.1rem solid white;
   padding: 0.9rem;
   border-radius: 0.6rem;
   margin-bottom: 1rem;
   outline: none;
   max-width: 365px;
-  color: var(--btn-bg-color);
+  color: white;
   width: 100%;
 }
 
 .mego-input-token {
   background-color: #000;
-  border: 0.1rem solid var(--btn-bg-color);
+  border: 0.1rem solid white;
   padding: 0.9rem;
   border-radius: 0.6rem;
   margin-bottom: 1rem;
   outline: none;
   width: 100%;
-  color: var(--btn-bg-color);
+  color: white;
   width: 100%;
 }
 
 .mego-input::placeholder {
   opacity: 1;
-  color: var(--btn-bg-color);
+  color: white;
 }
 
 .mego-input:user-invalid {

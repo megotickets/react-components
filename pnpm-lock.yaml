@@ -8,7 +8,53 @@ importers:
 
   .: {}
 
-  packages/ui:
+  packages/test:
+    dependencies:
+      '@megotickets/wallet':
+        specifier: workspace:*
+        version: link:../wallet
+      '@tanstack/react-query':
+        specifier: ^5.0.0
+        version: 5.66.0(react@18.3.1)
+      encoding:
+        specifier: ^0.1.13
+        version: 0.1.13
+      lokijs:
+        specifier: ^1.5.12
+        version: 1.5.12
+      next:
+        specifier: 14.1.0
+        version: 14.1.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      pino-pretty:
+        specifier: ^10.0.0
+        version: 10.3.1
+      react:
+        specifier: ^18.2.0
+        version: 18.3.1
+      react-dom:
+        specifier: ^18.2.0
+        version: 18.3.1(react@18.3.1)
+      viem:
+        specifier: ^2.0.0
+        version: 2.23.2(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)
+      wagmi:
+        specifier: ^2.0.0
+        version: 2.14.11(@tanstack/query-core@5.66.0)(@tanstack/react-query@5.66.0(react@18.3.1))(@types/react@18.3.18)(bufferutil@4.0.9)(encoding@0.1.13)(react@18.3.1)(typescript@5.7.3)(utf-8-validate@5.0.10)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10))
+    devDependencies:
+      '@types/node':
+        specifier: ^20.0.0
+        version: 20.17.18
+      '@types/react':
+        specifier: ^18.2.0
+        version: 18.3.18
+      '@types/react-dom':
+        specifier: ^18.2.0
+        version: 18.3.5(@types/react@18.3.18)
+      typescript:
+        specifier: ^5.0.0
+        version: 5.7.3
+
+  packages/wallet:
     dependencies:
       '@rainbow-me/rainbowkit':
         specifier: ^2.0.0
@@ -53,52 +99,6 @@ importers:
       tsup:
         specifier: ^8.0.1
         version: 8.3.6(postcss@8.4.31)(typescript@5.7.3)
-      typescript:
-        specifier: ^5.0.0
-        version: 5.7.3
-
-  packages/web:
-    dependencies:
-      '@megotickets/wallet':
-        specifier: workspace:*
-        version: link:../ui
-      '@tanstack/react-query':
-        specifier: ^5.0.0
-        version: 5.66.0(react@18.3.1)
-      encoding:
-        specifier: ^0.1.13
-        version: 0.1.13
-      lokijs:
-        specifier: ^1.5.12
-        version: 1.5.12
-      next:
-        specifier: 14.1.0
-        version: 14.1.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      pino-pretty:
-        specifier: ^10.0.0
-        version: 10.3.1
-      react:
-        specifier: ^18.2.0
-        version: 18.3.1
-      react-dom:
-        specifier: ^18.2.0
-        version: 18.3.1(react@18.3.1)
-      viem:
-        specifier: ^2.0.0
-        version: 2.23.2(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)
-      wagmi:
-        specifier: ^2.0.0
-        version: 2.14.11(@tanstack/query-core@5.66.0)(@tanstack/react-query@5.66.0(react@18.3.1))(@types/react@18.3.18)(bufferutil@4.0.9)(encoding@0.1.13)(react@18.3.1)(typescript@5.7.3)(utf-8-validate@5.0.10)(viem@2.23.2(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10))
-    devDependencies:
-      '@types/node':
-        specifier: ^20.0.0
-        version: 20.17.18
-      '@types/react':
-        specifier: ^18.2.0
-        version: 18.3.18
-      '@types/react-dom':
-        specifier: ^18.2.0
-        version: 18.3.5(@types/react@18.3.18)
       typescript:
         specifier: ^5.0.0
         version: 5.7.3
@@ -3802,7 +3802,7 @@ snapshots:
 
   extension-port-stream@3.0.0:
     dependencies:
-      readable-stream: 3.6.2
+      readable-stream: 4.7.0
       webextension-polyfill: 0.10.0
 
   fast-copy@3.0.2: {}
