@@ -1,12 +1,9 @@
 'use client'
 import { getDefaultConfig, RainbowKitProvider } from "@rainbow-me/rainbowkit";
 import { sepolia, optimism } from 'wagmi/chains';
-import { QueryClientProvider, QueryClient, } from "@tanstack/react-query";
+import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import { WagmiProvider } from "wagmi";
-
-import WalletButton from "../components/wallet/WalletButton";
-import { Web3Provider } from "../components/wallet/web3-context";
-
+import { Web3Provider, WalletButton } from "@mego/components";
 
 const config = getDefaultConfig({
   appName: '<Your custom project>',
@@ -16,18 +13,17 @@ const config = getDefaultConfig({
 });
 
 const queryClient = new QueryClient();
+
 export default function Home() {
-
-
   return (
     <WagmiProvider config={config}>
       <QueryClientProvider client={queryClient}>
         <RainbowKitProvider>
-          <Web3Provider>
-            <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
+          <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
+            <Web3Provider>
               <WalletButton />
-            </div>
-          </Web3Provider>
+            </Web3Provider>
+          </div>
         </RainbowKitProvider>
       </QueryClientProvider>
     </WagmiProvider>

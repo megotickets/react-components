@@ -6,10 +6,11 @@ import React, {
   useEffect,
 } from "react";
 import MegoModal from "./MegoModal";
-import "./mego-style.css";
+//import "./mego-style.css";
 import '@rainbow-me/rainbowkit/styles.css';
 import { BrowserProvider, ethers } from "ethers";
 import axios from "axios";
+import { useConnectModal } from '@rainbow-me/rainbowkit';
 
 
 type Route =
@@ -52,6 +53,7 @@ interface Web3ContextType {
   requestExportPrivateKeyWithApple: () => Promise<void>;
   revealPrivateKey: (token: string) => Promise<void>;
   privateKey: string | null;
+  rainbowKitConnect?: () => void;
 }
 
 const Web3Context = createContext<Web3ContextType | undefined>(undefined);
@@ -73,6 +75,7 @@ interface Web3ProviderProps {
 }
 
 export const Web3Provider: React.FC<Web3ProviderProps> = ({ children }) => {
+  const { openConnectModal } = useConnectModal();
   const [section, setSection] = useState<Route>("ChooseType");
   const [prevSection, setPrevSection] = useState<Route | undefined>();
   const [isMegoModalOpen, setIsMegoModalOpen] = useState<boolean>(false);
@@ -206,12 +209,12 @@ export const Web3Provider: React.FC<Web3ProviderProps> = ({ children }) => {
 
   const loginWithWalletConnect = async () => {
     setLoadingText("Checking walletconnect ...");
-    if (!window.ethereum) {
+    if (!(window as any).ethereum) {
       alert("walletConnect is not installed");
       return;
     }
     try {
-      const _provider = new BrowserProvider(window.ethereum);
+      const _provider = new BrowserProvider((window as any).ethereum);
       await _provider.send("eth_requestAccounts", []);
       const signer = await _provider.getSigner();
       const address = await signer.getAddress();
@@ -390,7 +393,7 @@ export const Web3Provider: React.FC<Web3ProviderProps> = ({ children }) => {
     const handleAccountsChanged = async (accounts: string[]) => {
       if (accounts.length > 0) {
         // Invece di ricaricare la pagina, aggiorniamo lo stato
-        const _provider = new BrowserProvider(window.ethereum);
+        const _provider = new BrowserProvider((window as any).ethereum);
         const signer = await _provider.getSigner();
         const address = await signer.getAddress();
         setLoggedAs(address);
@@ -402,9 +405,9 @@ export const Web3Provider: React.FC<Web3ProviderProps> = ({ children }) => {
       }
     };
 
-    window?.ethereum?.on('accountsChanged', handleAccountsChanged);
+    (window as any).ethereum?.on('accountsChanged', handleAccountsChanged);
     return () => {
-      window?.ethereum?.removeListener('accountsChanged', handleAccountsChanged);
+      (window as any).ethereum?.removeListener('accountsChanged', handleAccountsChanged);
     };
   }, []);
 
@@ -456,12 +459,13 @@ export const Web3Provider: React.FC<Web3ProviderProps> = ({ children }) => {
     getProvider, getSigner, isMegoModalOpen, openMegoModal,
     redirectToAppleLogin, redirectToGoogleLogin, closeMegoModal, provider, walletConnectProvider, loginWithWalletConnect, section,
     setSection, prevSection, setPrevSection, loggedAs, isLoading, logout, setIsLoading, loadingText, setLoadingText, loginWithEmail, createNewWallet,
-    requestExportPrivateKeyWithEmail, requestExportPrivateKeyWithGoogle, requestExportPrivateKeyWithApple, revealPrivateKey, privateKey
+    requestExportPrivateKeyWithEmail, requestExportPrivateKeyWithGoogle, requestExportPrivateKeyWithApple, revealPrivateKey, privateKey,
+    rainbowKitConnect: openConnectModal
   };
   return (
     <Web3Context.Provider value={value}>
       {children}
-      <MegoModal isOpen={isMegoModalOpen} onClose={closeMegoModal} />
+      {isMegoModalOpen && <MegoModal isOpen={isMegoModalOpen} onClose={closeMegoModal} />}
     </Web3Context.Provider>
   );
 };

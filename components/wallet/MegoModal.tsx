@@ -19,7 +19,7 @@ const MegoModal: React.FC<MegoModalProps> = ({ isOpen, onClose }) => {
     prevSection,
     setPrevSection,
   } = useWeb3Context(); // Aggiungi il contesto per il loading
-
+ 
   useEffect(() => {
     if (isOpen) {
       if (loggedAs) {
@@ -85,7 +85,7 @@ const MegoModal: React.FC<MegoModalProps> = ({ isOpen, onClose }) => {
   if (!isOpen && !isClosing) return null;
 
   return (
-    <div className={`mego-modal-container ${isClosing ? "closing" : ""}`}>
+    <div className={`${isClosing ? "closing" : ""}`}>
       <div className="mego-modal-backdrop" onClick={handleClose}></div>
       <div className="mego-modal-wrapper">
         <div className="mego-modal-header">

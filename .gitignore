@@ -5,3 +5,11 @@ node_modules
 .env.development.local
 .env.test.local
 .env.production.local
+dist
+./test/.next
+./test/node_modules
+./test/.env
+./test/.env.local
+./test/.env.development.local
+./test/.env.test.local
+./test/.env.production.local
