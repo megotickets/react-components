@@ -53,7 +53,6 @@ interface Web3ContextType {
   requestExportPrivateKeyWithApple: () => Promise<void>;
   revealPrivateKey: (token: string) => Promise<void>;
   privateKey: string | null;
-  rainbowKitConnect?: () => void;
 }
 
 const Web3Context = createContext<Web3ContextType | undefined>(undefined);
@@ -460,13 +459,12 @@ export const Web3Provider: React.FC<Web3ProviderProps> = ({ children }) => {
     redirectToAppleLogin, redirectToGoogleLogin, closeMegoModal, provider, walletConnectProvider, loginWithWalletConnect, section,
     setSection, prevSection, setPrevSection, loggedAs, isLoading, logout, setIsLoading, loadingText, setLoadingText, loginWithEmail, createNewWallet,
     requestExportPrivateKeyWithEmail, requestExportPrivateKeyWithGoogle, requestExportPrivateKeyWithApple, revealPrivateKey, privateKey,
-    rainbowKitConnect: openConnectModal
   };
   return (
-    <Web3Context.Provider value={value}>
-      {children}
-      {isMegoModalOpen && <MegoModal isOpen={isMegoModalOpen} onClose={closeMegoModal} />}
-    </Web3Context.Provider>
+      <Web3Context.Provider value={value}>
+        {children}
+        {isMegoModalOpen && <MegoModal isOpen={isMegoModalOpen} onClose={closeMegoModal} />}
+      </Web3Context.Provider>
   );
 };
 export type { Route };
