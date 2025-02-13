@@ -1,0 +1,28 @@
+{
+  "name": "@my-web3/web",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
+  },
+  "dependencies": {
+    "@megotickets/wallet": "workspace:*",
+    "@tanstack/react-query": "^5.0.0",
+    "encoding": "^0.1.13",
+    "lokijs": "^1.5.12",
+    "next": "14.1.0",
+    "pino-pretty": "^10.0.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "viem": "^2.0.0",
+    "wagmi": "^2.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "typescript": "^5.0.0"
+  }
+}

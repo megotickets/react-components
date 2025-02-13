@@ -1,11 +1,19 @@
-# Dependencies
-   yarn install
+# How to use it
 
-# Run project
-   yarn dev
-   
-# This repo is intended to be used as a submodule of a bigger project.
-   git submodule add <URL-della-repo-react-components> path/dove/includere
+## Install dependencies
 
-   
-   
+```bash
+pnpm install
+```
+
+## Build component
+
+```bash
+pnpm --filter @megotickets/wallet build
+```
+
+## Run the web app
+
+```bash
+pnpm dev
+```
