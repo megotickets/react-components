@@ -3,6 +3,10 @@
   "private": true,
   "scripts": {
     "dev": "pnpm --filter web dev",
-    "build": "pnpm --filter './packages/**' build"
+    "build": "pnpm --filter './packages/**' build",
+    "build:mego": "pnpm --filter '@megotickets/wallet' build"
+  },
+  "devDependencies": {
+    "gh-pages": "^6.0.0"
   }
 } 

@@ -134,7 +134,7 @@ export function MegoModal({ isOpen, onClose }: MegoModalProps) {
             }}
           >
             <div className="mego-modal-title">
-              {section === "Register" ? "REGISTER" : "CHOOSE HOW TO LOGIN"}
+              {section === "Register" ? "REGISTER" : "LOGIN"}
             </div>
 
             <>&nbsp;</>
