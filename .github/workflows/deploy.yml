@@ -26,8 +26,8 @@ jobs:
       - name: Build wallet package
         run: pnpm build:mego
         
-      - name: Build and export Next.js app
-        run: pnpm --filter web export
+      - name: Build Next.js app
+        run: pnpm --filter @my-web3/web build
         
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
