@@ -1,6 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { Route, useWeb3Context } from "./web3-context";
 import WalletConnectButton from "./WalletConnectButton"
+import AppleIcon from "./icons/AppleIcon"
+import ArrowBackIcon from "./icons/ArrowBackIcon";
+import CopyIcon from "./icons/CopyIcon";
+import CrossIcon from "./icons/CrossIcon";
+import DisconnectIcon from "./icons/DisconnectIcon";
+import EmailIcon from "./icons/EmailIcon";
+import ExportKeyIcon from "./icons/ExportKeyIcon";
+import GoogleIcon from "./icons/GoogleIcon";
+import MegoIcon from "./icons/MegoIcon";
+import MegoLetter from "./icons/MegoLetter";
 
 interface MegoModalProps {
   isOpen: boolean;
@@ -90,39 +100,19 @@ export function MegoModal({ isOpen, onClose }: MegoModalProps) {
       <div className="mego-modal-wrapper" style={{ backgroundColor: 'white' }}>
         <div className="mego-modal-header">
           <div className="mego-modal-logo">
-            <img
-              height={22}
-              src={"/mego.svg"}
-              alt="MegoLogo"
-              style={{ marginRight: '0.5rem', marginTop: '0.5rem' }}
-            />
-            <img
-              height={13}
-              src={"/megoLetter.svg"}
-              alt="MegoLetter"
-              style={{ marginRight: '0.5rem', marginTop: '0.5rem' }}
-            />
+            <MegoIcon height={22} style={{ marginRight: '0.5rem', marginTop: '0.5rem' }} />
+            <MegoLetter height={13} style={{ marginRight: '0.5rem', marginTop: '0.5rem' }} />
           </div>
           <div className="mego-modal-buttons">
             {
               prevSection && !loggedAs &&
-              <img
-                role="button"
-                height={16}
-                onClick={() => setNewSection(prevSection)}
-                src={"/arrowBack.svg"}
-                alt="BackIcon"
-                style={{ marginRight: '0.5rem', marginTop: '0.5rem' }}
-              />
+              <div onClick={() => setNewSection(prevSection)} style={{ marginRight: '0.5rem', marginTop: '0.5rem' }}>
+                <ArrowBackIcon height={16} width={16} />
+              </div>
             }
-            <img
-              role="button"
-              height={16}
-              onClick={handleClose}
-              src={"/cross.svg"}
-              alt="CloseIcon"
-              style={{ marginRight: '0.5rem', marginTop: '0.5rem' }}
-            />
+            <div onClick={handleClose} style={{ marginRight: '0.5rem', marginTop: '0.5rem' }}>
+              <CrossIcon onClick={handleClose} height={16} width={16} />
+            </div>
           </div>
         </div>
         <div className="mego-modal-content">
@@ -165,21 +155,23 @@ const ChooseTypeSection: React.FC<SectionBaseProps> = ({ setSection }) => {
       <button
         className={`mego-modal-button mego-apple`}
         onClick={redirectToAppleLogin}>
-        <img src="/apple.svg" alt="Apple" className="mr-2" />
+        <div style={{ marginRight: '0.5rem' }}>
+          <AppleIcon height={13} width={11} />
+        </div>
         APPLE ACCOUNT
       </button>
 
       <button
         className="mego-modal-button"
         onClick={redirectToGoogleLogin}>
-        <img width={17} src="/google.svg" alt="Google" className="mr-2 mt-1" />
+        <GoogleIcon width={17} style={{ marginRight: '0.5rem' }} />
         GOOGLE ACCOUNT
       </button>
 
       <WalletConnectButton />
 
       <button className="mego-modal-button mego-email" onClick={() => setSection("Email")}>
-        <img src={"/email.svg"} width={30} alt="Email" className="mr-2" />
+        <EmailIcon width={30} />
         E-MAIL
       </button>
     </div>
@@ -252,7 +244,7 @@ const LoggedSection: React.FC<{ logout: () => void }> = ({ logout }) => {
   return (
     <div>
       <button className="mego-modal-button outlined" onClick={handleCopyAddress}>
-        <img src={"/copy.svg"} alt="TurnOff" style={{ marginRight: '0.5rem', height: '1.5rem', width: '1.5rem' }} />
+        <CopyIcon height={16} width={16} style={{ marginRight: '0.5rem', height: '1.5rem', width: '1.5rem' }} />
         Copy address
       </button>
 
@@ -260,9 +252,7 @@ const LoggedSection: React.FC<{ logout: () => void }> = ({ logout }) => {
       {
         provider !== "walletConnect" &&
         <button className="mego-modal-button outlined" onClick={requestExportPrivateKey}>
-          <img
-            src={"/export_key.svg"}
-            alt="TurnOff"
+          <ExportKeyIcon
             style={{ marginRight: '0.5rem', height: '1.5rem', width: '1.5rem' }}
           />
           {`Export private key`}
@@ -270,9 +260,7 @@ const LoggedSection: React.FC<{ logout: () => void }> = ({ logout }) => {
       }
 
       <button className="mego-modal-button outlined" onClick={logout}>
-        <img
-          src={"/disconnect.svg"}
-          alt="TurnOff"
+        <DisconnectIcon
           style={{ marginRight: '0.5rem', height: '1.5rem', width: '1.5rem' }}
         />
         Disconnect

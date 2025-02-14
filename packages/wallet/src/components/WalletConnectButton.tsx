@@ -2,6 +2,7 @@ import React from "react";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { useWeb3Context } from "./web3-context";
 import "./mego-style.css";
+import WalletConnectIcon from "./icons/WalletConnect";
 
 interface WalletConnectStatusProps {
   account?: any;
@@ -34,7 +35,7 @@ const WalletConnectStatus: React.FC<WalletConnectStatusProps> = ({
   if (!account || !chain) {
     return (
       <button className="mego-modal-button" onClick={openConnectModal}>
-        <img width={17} src="/walletconnect.svg" alt="WalletConnect" className="mr-2 mt-1" />
+        <WalletConnectIcon width={17} style={{ marginRight: '0.5rem' }} />
         WALLET CONNECT
       </button>
     );
@@ -42,14 +43,14 @@ const WalletConnectStatus: React.FC<WalletConnectStatusProps> = ({
   if (!loggedAs) {
     return (
       <button className="mego-modal-button" onClick={() => loginWithWalletConnect(account.address)}>
-        <img width={17} src="/walletconnect.svg" alt="WalletConnect" className="mr-2 mt-1" />
+        <WalletConnectIcon width={17} style={{ marginRight: '0.5rem'}} />
         WALLET CONNECT
       </button>
     );
   }
   return (
     <button className="mego-modal-button" onClick={openAccountModal}>
-      <img width={17} src="/walletconnect.svg" alt="WalletConnect" className="mr-2 mt-1" />
+      <WalletConnectIcon width={17} style={{ marginRight: '0.5rem' }} />
       {account.displayName}
     </button>
   );
