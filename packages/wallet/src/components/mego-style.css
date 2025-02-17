@@ -230,13 +230,6 @@
   margin-bottom: 2rem;
 }
 
-.mego-wallet-icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-}
-
 .mego-modal-logo {
   display: flex;
   align-items: center;
@@ -251,6 +244,23 @@
   gap: 0.5rem;
 }
 
+.mego-wallet-icon-container {
+  cursor: pointer;
+  border: 3px solid white;
+  border-radius: 50px;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+}
+
+.mego-wallet-icon-container:hover {
+  background-color: lightgray;
+}
 
 .mego-modal-title {
   font-size: 1.5rem;

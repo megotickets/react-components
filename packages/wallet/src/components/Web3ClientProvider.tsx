@@ -10,6 +10,7 @@ import {
 import '@rainbow-me/rainbowkit/styles.css';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useState } from 'react';
+import { CustomizationProvider } from './CustomizationProvider';
 
 const config = createConfig({
   chains: [mainnet, polygon],
@@ -38,12 +39,14 @@ export function Web3ClientProvider({ children }: Web3ProviderProps) {
   );
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <WagmiProvider config={config}>
-        <RainbowKitProvider>
-          {children}
-        </RainbowKitProvider>
-      </WagmiProvider>
-    </QueryClientProvider>
+    <CustomizationProvider>
+      <QueryClientProvider client={queryClient}>
+        <WagmiProvider config={config}>
+          <RainbowKitProvider>
+            {children}
+          </RainbowKitProvider>
+        </WagmiProvider>
+      </QueryClientProvider>
+    </CustomizationProvider>
   );
 } 

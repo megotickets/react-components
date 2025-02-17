@@ -3,6 +3,7 @@ import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { useWeb3Context } from "./web3-context";
 import "./mego-style.css";
 import WalletConnectIcon from "./icons/WalletConnect";
+import { useCustomization } from "./CustomizationProvider";
 
 interface WalletConnectStatusProps {
   account?: any;
@@ -25,6 +26,7 @@ const WalletConnectStatus: React.FC<WalletConnectStatusProps> = ({
   loginWithWalletConnect,
   loggedAs,
 }) => {
+  const { style, buttonOverrideComponent } = useCustomization();
   if (!mounted || authenticationStatus === "loading") {
     return (
       <button className="mego-modal-button">
@@ -34,22 +36,36 @@ const WalletConnectStatus: React.FC<WalletConnectStatusProps> = ({
   }
   if (!account || !chain) {
     return (
-      <button className="mego-modal-button" onClick={openConnectModal}>
-        <WalletConnectIcon width={17} style={{ marginRight: '0.5rem' }} />
-        WALLET CONNECT
-      </button>
+      <div onClick={openConnectModal}>
+        {
+          buttonOverrideComponent?.walletConnectButton ?
+            buttonOverrideComponent?.walletConnectButton
+            :
+            <button className="mego-modal-button" onClick={openConnectModal} style={{ ...style?.modalStyle?.buttonStyle }}>
+              <WalletConnectIcon width={17} style={{ marginRight: '0.5rem' }} />
+              WALLET CONNECT
+            </button>
+        }
+      </div>
     );
   }
   if (!loggedAs) {
     return (
-      <button className="mego-modal-button" onClick={() => loginWithWalletConnect(account.address)}>
-        <WalletConnectIcon width={17} style={{ marginRight: '0.5rem'}} />
-        WALLET CONNECT
-      </button>
+      <div onClick={() => loginWithWalletConnect(account.address)}>
+        {
+          buttonOverrideComponent?.walletConnectButton ?
+            buttonOverrideComponent?.walletConnectButton
+            :
+            <button className="mego-modal-button" onClick={() => loginWithWalletConnect(account.address)} style={{ ...style?.modalStyle?.buttonStyle }}>
+              <WalletConnectIcon width={17} style={{ marginRight: '0.5rem' }} />
+              WALLET CONNECT
+            </button>
+        }
+      </div>
     );
   }
   return (
-    <button className="mego-modal-button" onClick={openAccountModal}>
+    <button className="mego-modal-button" onClick={openAccountModal} style={{ ...style?.modalStyle?.buttonStyle }}>
       <WalletConnectIcon width={17} style={{ marginRight: '0.5rem' }} />
       {account.displayName}
     </button>

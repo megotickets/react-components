@@ -11,6 +11,8 @@ import ExportKeyIcon from "./icons/ExportKeyIcon";
 import GoogleIcon from "./icons/GoogleIcon";
 import MegoIcon from "./icons/MegoIcon";
 import MegoLetter from "./icons/MegoLetter";
+import { useCustomization } from "./CustomizationProvider";
+
 
 interface MegoModalProps {
   isOpen: boolean;
@@ -29,6 +31,8 @@ export function MegoModal({ isOpen, onClose }: MegoModalProps) {
     prevSection,
     setPrevSection,
   } = useWeb3Context(); // Aggiungi il contesto per il loading
+
+  const { style } = useCustomization();
 
   useEffect(() => {
     if (isOpen) {
@@ -97,9 +101,17 @@ export function MegoModal({ isOpen, onClose }: MegoModalProps) {
   return (
     <div className={`${isClosing ? "closing" : ""} mego-modal-container`}>
       <div className="mego-modal-backdrop" onClick={handleClose}></div>
-      <div className="mego-modal-wrapper" style={{ backgroundColor: 'white' }}>
-        <div className="mego-modal-header">
-          <div className="mego-modal-logo">
+      <div className="mego-modal-wrapper"
+        style={{
+          backgroundColor: style?.modalStyle?.headerStyle?.backgroundColor || 'white',
+        }}
+      >
+        <div className="mego-modal-header" style={{ ...style?.modalStyle?.headerStyle }}>
+          <div className="mego-modal-logo"
+            style={{
+              backgroundColor: style?.modalStyle?.headerStyle?.backgroundColor || 'white',
+            }}
+          >
             <MegoIcon height={22} style={{ marginRight: '0.5rem', marginTop: '0.5rem' }} />
             <MegoLetter height={13} style={{ marginRight: '0.5rem', marginTop: '0.5rem' }} />
           </div>
@@ -115,7 +127,7 @@ export function MegoModal({ isOpen, onClose }: MegoModalProps) {
             </div>
           </div>
         </div>
-        <div className="mego-modal-content">
+        <div className="mego-modal-content" style={{ ...style?.modalStyle?.bodyStyle }}>
           <span
             style={{
               transform: "scale(0.8)",
@@ -123,11 +135,10 @@ export function MegoModal({ isOpen, onClose }: MegoModalProps) {
               transition: "height 0.3s",
             }}
           >
-            <div className="mego-modal-title">
+            <div className="mego-modal-title" style={{ marginBottom: '0.5rem' }}>
               {section === "Register" ? "REGISTER" : "LOGIN"}
             </div>
 
-            <>&nbsp;</>
             {isLoading ? (
               <div className="mego-loader-div">
                 <div className="loader" />
@@ -149,31 +160,55 @@ type SectionBaseProps = { setSection: (route: Route) => void };
 
 const ChooseTypeSection: React.FC<SectionBaseProps> = ({ setSection }) => {
   const { redirectToAppleLogin, redirectToGoogleLogin } = useWeb3Context();
-
+  const { style, buttonOverrideComponent } = useCustomization();
   return (
     <div>
-      <button
-        className={`mego-modal-button mego-apple`}
-        onClick={redirectToAppleLogin}>
-        <div style={{ marginRight: '0.5rem' }}>
-          <AppleIcon height={13} width={11} />
-        </div>
-        APPLE ACCOUNT
-      </button>
 
-      <button
-        className="mego-modal-button"
-        onClick={redirectToGoogleLogin}>
-        <GoogleIcon width={17} style={{ marginRight: '0.5rem' }} />
-        GOOGLE ACCOUNT
-      </button>
+      <div onClick={redirectToAppleLogin}>
+        {
+          buttonOverrideComponent?.appleButton ?
+            buttonOverrideComponent?.appleButton
+            :
+            <button
+              className={`mego-modal-button mego-apple`}
+              style={{ ...style?.modalStyle?.buttonStyle }}
+            >
+              <div style={{ marginRight: '0.5rem' }}>
+                <AppleIcon height={13} width={11} />
+              </div>
+              APPLE ACCOUNT
+            </button>
+        }
+      </div>
+
+      <div onClick={redirectToGoogleLogin}>
+        {
+          buttonOverrideComponent?.googleButton ?
+            buttonOverrideComponent?.googleButton
+            :
+            <button
+              className="mego-modal-button"
+              style={{ ...style?.modalStyle?.buttonStyle }}
+            >
+              <GoogleIcon width={17} style={{ marginRight: '0.5rem' }} />
+              GOOGLE ACCOUNT
+            </button>
+        }
+      </div>
 
       <WalletConnectButton />
 
-      <button className="mego-modal-button mego-email" onClick={() => setSection("Email")}>
-        <EmailIcon width={30} />
-        E-MAIL
-      </button>
+      <div onClick={() => setSection("Email")}>
+        {
+          buttonOverrideComponent?.emailButton ?
+            buttonOverrideComponent?.emailButton
+            :
+            <button className="mego-modal-button mego-email" style={{ ...style?.modalStyle?.buttonStyle }}>
+              <EmailIcon width={30} />
+              E-MAIL
+            </button>
+        }
+      </div>
     </div>
   );
 };
