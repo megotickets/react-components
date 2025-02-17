@@ -1,13 +1,9 @@
-import { buttonOverrideComponent, CustomStyle } from 'interfaces/CustomStyle';
+import { CustomStyle } from 'interfaces/CustomStyle';
 import React, { createContext, useContext, ReactNode } from 'react';
 
 interface CustomizationContextType {
     style: CustomStyle;
     setStyle: (style: CustomStyle) => void;
-    buttonOverrideComponent: buttonOverrideComponent;
-    setButtonOverrideComponent: (buttonOverrideComponent: buttonOverrideComponent) => void;
-    megoWalletIconContainerStyle: React.CSSProperties;
-    setMegoWalletIconContainerStyle: (megoWalletIconContainerStyle: React.CSSProperties) => void;
 }
 
 const CustomizationContext = createContext<CustomizationContextType | undefined>(undefined);
@@ -29,10 +25,8 @@ interface CustomizationProviderProps {
 export const CustomizationProvider: React.FC<CustomizationProviderProps> = ({ children }) => {
 
     const [style, setStyle] = React.useState<CustomStyle>({});
-    const [buttonOverrideComponent, setButtonOverrideComponent] = React.useState<buttonOverrideComponent>({});
-    const [megoWalletIconContainerStyle, setMegoWalletIconContainerStyle] = React.useState<React.CSSProperties>({});
-
-    const value = { style, setStyle, buttonOverrideComponent, setButtonOverrideComponent, megoWalletIconContainerStyle, setMegoWalletIconContainerStyle };  
+    
+    const value = { style, setStyle};  
 
     return (
         <CustomizationContext.Provider value={value}>

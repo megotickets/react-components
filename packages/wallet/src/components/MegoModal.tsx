@@ -160,14 +160,14 @@ type SectionBaseProps = { setSection: (route: Route) => void };
 
 const ChooseTypeSection: React.FC<SectionBaseProps> = ({ setSection }) => {
   const { redirectToAppleLogin, redirectToGoogleLogin } = useWeb3Context();
-  const { style, buttonOverrideComponent } = useCustomization();
+  const { style } = useCustomization();
   return (
     <div>
 
       <div onClick={redirectToAppleLogin}>
         {
-          buttonOverrideComponent?.appleButton ?
-            buttonOverrideComponent?.appleButton
+          style?.customButtonOverrideComponent?.appleButton ?
+            style?.customButtonOverrideComponent?.appleButton
             :
             <button
               className={`mego-modal-button mego-apple`}
@@ -183,8 +183,8 @@ const ChooseTypeSection: React.FC<SectionBaseProps> = ({ setSection }) => {
 
       <div onClick={redirectToGoogleLogin}>
         {
-          buttonOverrideComponent?.googleButton ?
-            buttonOverrideComponent?.googleButton
+          style?.customButtonOverrideComponent?.googleButton ?
+            style?.customButtonOverrideComponent?.googleButton
             :
             <button
               className="mego-modal-button"
@@ -200,8 +200,8 @@ const ChooseTypeSection: React.FC<SectionBaseProps> = ({ setSection }) => {
 
       <div onClick={() => setSection("Email")}>
         {
-          buttonOverrideComponent?.emailButton ?
-            buttonOverrideComponent?.emailButton
+          style?.customButtonOverrideComponent?.emailButton ?
+            style?.customButtonOverrideComponent?.emailButton
             :
             <button className="mego-modal-button mego-email" style={{ ...style?.modalStyle?.buttonStyle }}>
               <EmailIcon width={30} />

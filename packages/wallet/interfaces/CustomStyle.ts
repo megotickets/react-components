@@ -5,8 +5,12 @@ interface CustomStyle {
         bodyStyle?: React.CSSProperties;
         buttonStyle?: React.CSSProperties;
     };
+    customButtonOverrideComponent?: buttonOverrideComponent;
+    buttonOverrideComponent?: buttonOverrideComponent;
     connectButtonStyle?: React.CSSProperties;
-    megoWalletIconContainerStyle?: React.CSSProperties;
+    megoWalletContainerStyle?: React.CSSProperties;
+    megoWalletIconStyle?: React.CSSProperties;
+    megoWalletPosition?: 'left' | 'right' | 'center';
 }
 
 interface buttonOverrideComponent {

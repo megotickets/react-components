@@ -26,7 +26,7 @@ const WalletConnectStatus: React.FC<WalletConnectStatusProps> = ({
   loginWithWalletConnect,
   loggedAs,
 }) => {
-  const { style, buttonOverrideComponent } = useCustomization();
+  const { style } = useCustomization();
   if (!mounted || authenticationStatus === "loading") {
     return (
       <button className="mego-modal-button">
@@ -38,8 +38,8 @@ const WalletConnectStatus: React.FC<WalletConnectStatusProps> = ({
     return (
       <div onClick={openConnectModal}>
         {
-          buttonOverrideComponent?.walletConnectButton ?
-            buttonOverrideComponent?.walletConnectButton
+          style?.customButtonOverrideComponent?.walletConnectButton ?
+            style?.customButtonOverrideComponent?.walletConnectButton
             :
             <button className="mego-modal-button" onClick={openConnectModal} style={{ ...style?.modalStyle?.buttonStyle }}>
               <WalletConnectIcon width={17} style={{ marginRight: '0.5rem' }} />
@@ -53,8 +53,8 @@ const WalletConnectStatus: React.FC<WalletConnectStatusProps> = ({
     return (
       <div onClick={() => loginWithWalletConnect(account.address)}>
         {
-          buttonOverrideComponent?.walletConnectButton ?
-            buttonOverrideComponent?.walletConnectButton
+          style?.customButtonOverrideComponent?.walletConnectButton ?
+            style?.customButtonOverrideComponent?.walletConnectButton
             :
             <button className="mego-modal-button" onClick={() => loginWithWalletConnect(account.address)} style={{ ...style?.modalStyle?.buttonStyle }}>
               <WalletConnectIcon width={17} style={{ marginRight: '0.5rem' }} />
