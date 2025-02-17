@@ -47,7 +47,8 @@ export function WalletButton({ customStyle, customButtonOverrideComponent, custo
             style={{
                 display: 'flex',
                 alignItems: 'center',
-                justifyContent: 'center',
+                justifyContent: 'right',
+                paddingRight: '1rem',
                 gap: '0.5rem',
                 ...megoWalletIconContainerStyle
             }}>

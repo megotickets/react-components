@@ -11,7 +11,7 @@ export default function Home() {
       <Web3Provider>
         <Web3MegoClientProvider>
           <MegoWalletButton
-            customStyle={{
+            /* customStyle={{
               modalStyle: {
                 headerStyle: {
                   backgroundColor: 'red',
@@ -37,19 +37,19 @@ export default function Home() {
                 boxShadow: '0 0 10px 0 rgba(33, 7, 179, 0.5)',
               },
             }}
-            /* customButtonOverrideComponent={{
+            customButtonOverrideComponent={{
               appleButton: <button>Apple</button>,
               googleButton: <button>Google</button>,
               emailButton: <button>Email</button>,
               walletConnectButton: <button>WalletConnect</button>,
-            }} */
+            }}
             customMegoWalletIconContainerStyle={{
               display: 'flex',
               justifyContent: 'right',
               alignItems: 'center',
               borderRadius: '10px',
               padding: '10px',
-            }}
+            }} */
           />
         </Web3MegoClientProvider>
       </Web3Provider>
