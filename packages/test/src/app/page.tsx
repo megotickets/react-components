@@ -17,6 +17,7 @@ export default function Home() {
               emailProvider: false,
               walletConnectProvider: false,
             }} */
+            forceChainId={10} // OP Mainnet
             customStyle={{
               modalStyle: {
                 /* headerStyle: {

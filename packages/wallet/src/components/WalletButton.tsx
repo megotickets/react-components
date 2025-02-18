@@ -22,13 +22,14 @@ const WalletIcon: React.FC = () => {
 interface MegoWalletProps {
     customStyle?: CustomStyle;
     providerConfiguration?: providerConfiguration;
+    forceChainId?: number; //Chain ID to force
 }
 
-export function WalletButton({ customStyle, providerConfiguration }: MegoWalletProps) {
+export function WalletButton({ customStyle, providerConfiguration, forceChainId }: MegoWalletProps) {
     const { openMegoModal, loggedAs, provider } = useWeb3Context();
 
     // Inflate the custom style and button override component
-    const {setStyle, setProviderConfiguration} = useCustomization();
+    const {setStyle, setProviderConfiguration, setForceChainId} = useCustomization();
     
     useEffect(() => {
         if (customStyle) {
@@ -39,7 +40,11 @@ export function WalletButton({ customStyle, providerConfiguration }: MegoWalletP
             setProviderConfiguration(providerConfiguration);
         }
 
-    }, [customStyle, providerConfiguration]);
+        if (forceChainId) {
+            setForceChainId(forceChainId);
+        }
+
+    }, [customStyle, providerConfiguration, forceChainId]);
 
     return (
         <div role="button" onClick={openMegoModal}
