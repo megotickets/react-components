@@ -11,7 +11,6 @@ import '@rainbow-me/rainbowkit/styles.css';
 import { BrowserProvider, ethers } from "ethers";
 import axios from "axios";
 import { useConnectModal } from '@rainbow-me/rainbowkit';
-import { useCustomization } from "./CustomizationProvider";
 
 type Route =
   | "ChooseType"
@@ -75,7 +74,6 @@ interface Web3ProviderProps {
 
 export const Web3Provider: React.FC<Web3ProviderProps> = ({ children }) => {
   const { openConnectModal } = useConnectModal();
-  const { forceChainId } = useCustomization();
   const [section, setSection] = useState<Route>("ChooseType");
   const [prevSection, setPrevSection] = useState<Route | undefined>();
   const [isMegoModalOpen, setIsMegoModalOpen] = useState<boolean>(false);
@@ -359,13 +357,8 @@ export const Web3Provider: React.FC<Web3ProviderProps> = ({ children }) => {
   //Handle chain change
   useEffect(() => {
     const handleChainChanged = async (chainId: string) => {
-      //Skip if forceChainId is not set
-      if (forceChainId == 0) {
-        return;
-      }
-
-      const targetChainId = `0x${Number(forceChainId).toString(16)}`;
-      console.log("targetChainId:", targetChainId);
+      console.log("Chain cambiata:", chainId);
+      const targetChainId = `0x${Number(process.env.REACT_APP_CHAIN_ID).toString(16)}`;
       // Verifica se la chain è diversa da quella target
       if (chainId !== targetChainId) {
         try {
@@ -390,7 +383,7 @@ export const Web3Provider: React.FC<Web3ProviderProps> = ({ children }) => {
       //@ts-ignore
       window.ethereum?.removeListener('chainChanged', handleChainChanged);
     };
-  }, [forceChainId]);
+  }, []);
 
 
   //Usando windows.etherium verificiamo se l'address del wallet cambia (in caso di cambiamento refresh)

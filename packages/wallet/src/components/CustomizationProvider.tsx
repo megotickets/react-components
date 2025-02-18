@@ -7,9 +7,6 @@ interface CustomizationContextType {
     
     providerConfiguration: providerConfiguration;
     setProviderConfiguration: (providerConfiguration: providerConfiguration) => void;
-
-    forceChainId: number;
-    setForceChainId: (forceChainId: number) => void;
 }
 
 const CustomizationContext = createContext<CustomizationContextType | undefined>(undefined);
@@ -32,9 +29,8 @@ export const CustomizationProvider: React.FC<CustomizationProviderProps> = ({ ch
 
     const [style, setStyle] = React.useState<CustomStyle>({});
     const [providerConfiguration, setProviderConfiguration] = React.useState<providerConfiguration>({});
-    const [forceChainId, setForceChainId] = React.useState<number>(0);
 
-    const value = { style, setStyle, providerConfiguration, setProviderConfiguration, forceChainId, setForceChainId};  
+    const value = { style, setStyle, providerConfiguration, setProviderConfiguration};  
 
     return (
         <CustomizationContext.Provider value={value}>
