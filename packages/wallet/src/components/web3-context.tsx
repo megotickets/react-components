@@ -52,6 +52,9 @@ interface Web3ContextType {
   requestExportPrivateKeyWithApple: () => Promise<void>;
   revealPrivateKey: (token: string) => Promise<void>;
   privateKey: string | null;
+
+  forceChainId: number;
+  setForceChainId: (forceChainId: number) => void;
 }
 
 const Web3Context = createContext<Web3ContextType | undefined>(undefined);
@@ -85,6 +88,8 @@ export const Web3Provider: React.FC<Web3ProviderProps> = ({ children }) => {
   const [loadingText, setLoadingText] = useState<string>("");
 
   const [privateKey, setPrivateKey] = useState<string | null>(null);
+  const [forceChainId, setForceChainId] = useState<number>(0);
+
   const openMegoModal = (): void => {
     setIsMegoModalOpen(true);
     setIsLoading(false); // Reset loading state when opening modal
@@ -357,8 +362,11 @@ export const Web3Provider: React.FC<Web3ProviderProps> = ({ children }) => {
   //Handle chain change
   useEffect(() => {
     const handleChainChanged = async (chainId: string) => {
+      if (forceChainId == 0) {
+        return;
+      }
       console.log("Chain cambiata:", chainId);
-      const targetChainId = `0x${Number(process.env.REACT_APP_CHAIN_ID).toString(16)}`;
+      const targetChainId = `0x${Number(forceChainId).toString(16)}`;
       // Verifica se la chain è diversa da quella target
       if (chainId !== targetChainId) {
         try {
@@ -383,7 +391,7 @@ export const Web3Provider: React.FC<Web3ProviderProps> = ({ children }) => {
       //@ts-ignore
       window.ethereum?.removeListener('chainChanged', handleChainChanged);
     };
-  }, []);
+  }, [forceChainId]);
 
 
   //Usando windows.etherium verificiamo se l'address del wallet cambia (in caso di cambiamento refresh)
@@ -458,6 +466,7 @@ export const Web3Provider: React.FC<Web3ProviderProps> = ({ children }) => {
     redirectToAppleLogin, redirectToGoogleLogin, closeMegoModal, provider, walletConnectProvider, loginWithWalletConnect, section,
     setSection, prevSection, setPrevSection, loggedAs, isLoading, logout, setIsLoading, loadingText, setLoadingText, loginWithEmail, createNewWallet,
     requestExportPrivateKeyWithEmail, requestExportPrivateKeyWithGoogle, requestExportPrivateKeyWithApple, revealPrivateKey, privateKey,
+    forceChainId, setForceChainId
   };
   return (
       <Web3Context.Provider value={value}>
