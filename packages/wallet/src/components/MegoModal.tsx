@@ -118,11 +118,11 @@ export function MegoModal({ isOpen, onClose }: MegoModalProps) {
           <div className="mego-modal-buttons">
             {
               prevSection && !loggedAs &&
-              <div onClick={() => setNewSection(prevSection)} style={{ marginRight: '0.5rem', marginTop: '0.5rem' }}>
+              <div onClick={() => setNewSection(prevSection)} style={{ marginRight: '0.5rem', marginTop: '0.5rem', cursor: 'pointer' }}>
                 <ArrowBackIcon height={16} width={16} />
               </div>
             }
-            <div onClick={handleClose} style={{ marginRight: '0.5rem', marginTop: '0.5rem' }}>
+            <div onClick={handleClose} style={{ marginRight: '0.5rem', marginTop: '0.5rem', cursor: 'pointer' }}>
               <CrossIcon onClick={handleClose} height={16} width={16} />
             </div>
           </div>
