@@ -7,10 +7,16 @@ interface CustomStyle {
     };
     customButtonOverrideComponent?: buttonOverrideComponent;
     buttonOverrideComponent?: buttonOverrideComponent;
-    connectButtonStyle?: React.CSSProperties;
     megoWalletContainerStyle?: React.CSSProperties;
     megoWalletIconStyle?: React.CSSProperties;
     megoWalletPosition?: 'left' | 'right' | 'center';
+}
+
+interface providerConfiguration {
+    googleProvider?: boolean;
+    appleProvider?: boolean;
+    emailProvider?: boolean;
+    walletConnectProvider?: boolean;
 }
 
 interface buttonOverrideComponent {
@@ -20,4 +26,4 @@ interface buttonOverrideComponent {
     walletConnectButton?: React.ReactNode;
 }
 
-export type { CustomStyle, buttonOverrideComponent };
+export type { CustomStyle, buttonOverrideComponent, providerConfiguration };

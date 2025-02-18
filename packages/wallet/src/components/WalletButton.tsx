@@ -2,7 +2,7 @@ import React, { useEffect } from "react"
 import { useWeb3Context } from "./web3-context"
 import "./mego-style.css";
 import { useCustomization } from "./CustomizationProvider";
-import { CustomStyle } from "interfaces/CustomStyle";
+import { CustomStyle, providerConfiguration } from "interfaces/CustomStyle";
 
 const WalletIcon: React.FC = () => {
     const { loggedAs } = useWeb3Context();
@@ -21,20 +21,25 @@ const WalletIcon: React.FC = () => {
 
 interface MegoWalletProps {
     customStyle?: CustomStyle;
+    providerConfiguration?: providerConfiguration;
 }
 
-export function WalletButton({ customStyle }: MegoWalletProps) {
+export function WalletButton({ customStyle, providerConfiguration }: MegoWalletProps) {
     const { openMegoModal, loggedAs, provider } = useWeb3Context();
 
     // Inflate the custom style and button override component
-    const {setStyle} = useCustomization();
+    const {setStyle, setProviderConfiguration} = useCustomization();
     
     useEffect(() => {
         if (customStyle) {
             setStyle(customStyle);
         }
 
-    }, [customStyle]);
+        if (providerConfiguration) {
+            setProviderConfiguration(providerConfiguration);
+        }
+
+    }, [customStyle, providerConfiguration]);
 
     return (
         <div role="button" onClick={openMegoModal}

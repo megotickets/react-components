@@ -11,6 +11,12 @@ export default function Home() {
       <Web3Provider>
         <Web3MegoClientProvider>
           <MegoWalletButton
+            /* providerConfiguration={{
+              appleProvider: false,
+              googleProvider: false,
+              emailProvider: false,
+              walletConnectProvider: false,
+            }} */
             customStyle={{
               modalStyle: {
                 /* headerStyle: {
@@ -29,10 +35,7 @@ export default function Home() {
                   border: '1px solid #000',
                   boxShadow: '0 0 10px 0 rgba(33, 7, 179, 0.5)',
                 }, */
-              },
-              connectButtonStyle: {
-                border: '1px solid purple',
-              },
+              }
               /* megoWalletContainerStyle: {
                 border: '3px solid purple',
                 color: 'purple',

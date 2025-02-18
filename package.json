@@ -3,6 +3,8 @@
   "private": true,
   "scripts": {
     "dev": "pnpm --filter web dev",
+    "dev:mego": "pnpm --filter '@megotickets/wallet' dev",
+
     "build": "pnpm --filter './packages/**' build",
     "build:mego": "pnpm --filter '@megotickets/wallet' build"
   },

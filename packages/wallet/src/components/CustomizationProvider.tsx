@@ -1,9 +1,12 @@
-import { CustomStyle } from 'interfaces/CustomStyle';
+import { CustomStyle, providerConfiguration } from 'interfaces/CustomStyle';
 import React, { createContext, useContext, ReactNode } from 'react';
 
 interface CustomizationContextType {
     style: CustomStyle;
     setStyle: (style: CustomStyle) => void;
+    
+    providerConfiguration: providerConfiguration;
+    setProviderConfiguration: (providerConfiguration: providerConfiguration) => void;
 }
 
 const CustomizationContext = createContext<CustomizationContextType | undefined>(undefined);
@@ -25,8 +28,8 @@ interface CustomizationProviderProps {
 export const CustomizationProvider: React.FC<CustomizationProviderProps> = ({ children }) => {
 
     const [style, setStyle] = React.useState<CustomStyle>({});
-    
-    const value = { style, setStyle};  
+    const [providerConfiguration, setProviderConfiguration] = React.useState<providerConfiguration>({});
+    const value = { style, setStyle, providerConfiguration, setProviderConfiguration};  
 
     return (
         <CustomizationContext.Provider value={value}>
