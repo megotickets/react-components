@@ -19,6 +19,9 @@ export default function Home() {
             }} */
             forceChainId={10}
             customStyle={{
+              /* megoWalletIconStyle: {
+                stroke: 'black',
+              }, */
               modalStyle: {
                 /* headerStyle: {
                   backgroundColor: 'red',
@@ -41,9 +44,6 @@ export default function Home() {
                 border: '3px solid purple',
                 color: 'purple',
               }, */
-              /* megoWalletIconStyle: {
-                stroke: 'purple',
-              } */
               /* megoWalletPosition: 'center', */
               /* customButtonOverrideComponent: {
                 appleButton: <button>Apple</button>,

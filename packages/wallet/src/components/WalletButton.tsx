@@ -9,15 +9,22 @@ const WalletIcon: React.FC = () => {
     const { style } = useCustomization();
     return (
         <div className="mego-wallet-icon-container" style={{ ...style?.megoWalletContainerStyle }}>
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ ...style?.megoWalletIconStyle }}>
-                <path d="M3.00001 6.5V6.5C3.00001 5.11929 4.1193 4 5.50001 4L19.2857 4C19.4852 4 19.585 4 19.6651 4.02806C19.8088 4.07831 19.9217 4.19124 19.9719 4.33486C20 4.41505 20 4.51479 20 4.71429V4.71429C20 5.91124 20 6.50972 19.8317 6.99084C19.5301 7.85258 18.8526 8.53011 17.9908 8.83165C17.5097 9 16.9112 9 15.7143 9L15 9M3.00001 6.5V6.5C3.00001 7.88071 4.11929 9 5.50001 9L19 9C19.9428 9 20.4142 9 20.7071 9.29289C21 9.58579 21 10.0572 21 11L21 13M3.00001 6.5L3.00001 17C3.00001 18.8856 3.00001 19.8284 3.58579 20.4142C4.17158 21 5.11439 21 7.00001 21L19 21C19.9428 21 20.4142 21 20.7071 20.7071C21 20.4142 21 19.9428 21 19L21 17M21 17H17C16.0572 17 15.5858 17 15.2929 16.7071C15 16.4142 15 15.9428 15 15V15C15 14.0572 15 13.5858 15.2929 13.2929C15.5858 13 16.0572 13 17 13H21M21 17L21 13" 
-                stroke={`${style?.megoWalletIconStyle?.stroke || 'white'}`} stroke-width="2" />
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28 26" style={{ ...style?.megoWalletIconStyle, height: '1.5rem', width: '1.5rem', stroke: 'none', fill: `${style?.megoWalletIconStyle?.stroke || 'white'}` }}>
+                <path d="M20.4 12.7c.4 0 .8.3.8.8s-.3.8-.8.8h-.2c-.4 0-.8-.3-.8-.8s.3-.8.8-.8h.2Z" />
+                <path d="M20.2 11h4.2v-.5c0-2.6-2.1-4.8-4.8-4.8h-10c-2.6 0-4.8 2.1-4.8 4.8v6c0 2.6 2.1 4.8 4.8 4.8h10c2.6 0 4.8-2.1 4.8-4.8V16h-4.2c-1.4 0-2.5-1.1-2.5-2.5s1.1-2.5 2.5-2.5Zm-5.5 6.5h-6c-.3 0-.5-.2-.5-.5s.2-.5.5-.5h6c.3 0 .5.2.5.5s-.2.5-.5.5Z" />
+                <path
+                    d="M6.9 6.2c.8-.6 1.8-.9 2.9-.9h10c1.3 0 2.5.5 3.4 1.3l-.7-1.7c-1-2.6-4-3.8-6.5-2.7L8.4 5.3c-.6.2-1 .5-1.5.9Z"
+                    style={{
+                        fillRule: "evenodd",
+                    }}
+                />
             </svg>
             {loggedAs && <div>{loggedAs.slice(0, 4)}...{loggedAs.slice(-4)}</div>}
         </div>
     )
 }
-
+//style={{ ...style?.megoWalletIconStyle }}
+//stroke={`${style?.megoWalletIconStyle?.stroke || 'white'}`}
 
 interface MegoWalletProps {
     customStyle?: CustomStyle;
@@ -29,8 +36,8 @@ export function WalletButton({ customStyle, providerConfiguration, forceChainId 
     const { openMegoModal, loggedAs, provider, setForceChainId } = useWeb3Context();
 
     // Inflate the custom style and button override component
-    const {setStyle, setProviderConfiguration} = useCustomization();
-    
+    const { setStyle, setProviderConfiguration } = useCustomization();
+
     useEffect(() => {
         if (customStyle) {
             setStyle(customStyle);
@@ -57,6 +64,16 @@ export function WalletButton({ customStyle, providerConfiguration, forceChainId 
                 paddingRight: '1rem',
                 gap: '0.5rem',
             }}>
+            {/* <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28 26" >
+                <path d="M20.4 12.7c.4 0 .8.3.8.8s-.3.8-.8.8h-.2c-.4 0-.8-.3-.8-.8s.3-.8.8-.8h.2Z" />
+                <path d="M20.2 11h4.2v-.5c0-2.6-2.1-4.8-4.8-4.8h-10c-2.6 0-4.8 2.1-4.8 4.8v6c0 2.6 2.1 4.8 4.8 4.8h10c2.6 0 4.8-2.1 4.8-4.8V16h-4.2c-1.4 0-2.5-1.1-2.5-2.5s1.1-2.5 2.5-2.5Zm-5.5 6.5h-6c-.3 0-.5-.2-.5-.5s.2-.5.5-.5h6c.3 0 .5.2.5.5s-.2.5-.5.5Z" />
+                <path
+                    d="M6.9 6.2c.8-.6 1.8-.9 2.9-.9h10c1.3 0 2.5.5 3.4 1.3l-.7-1.7c-1-2.6-4-3.8-6.5-2.7L8.4 5.3c-.6.2-1 .5-1.5.9Z"
+                    style={{
+                        fillRule: "evenodd",
+                    }}
+                />
+            </svg> */}
             <WalletIcon />
         </div>
     )
