@@ -179,7 +179,7 @@ const ChooseTypeSection: React.FC<SectionBaseProps> = ({ setSection }) => {
               </div>
               APPLE ACCOUNT
             </button>
-            : <></>
+            : <div></div>
         }
       </div>
 
@@ -196,14 +196,14 @@ const ChooseTypeSection: React.FC<SectionBaseProps> = ({ setSection }) => {
               <GoogleIcon width={17} style={{ marginRight: '0.5rem' }} />
               GOOGLE ACCOUNT
             </button>
-            : <></>
+            : <div></div>
         }
       </div>
 
       {
         providerConfiguration?.walletConnectProvider || providerConfiguration?.walletConnectProvider === undefined || providerConfiguration?.walletConnectProvider === null ?
         <WalletConnectButton />
-        : <></>
+        : <div></div>
       }
 
       <div onClick={() => setSection("Email")}>
@@ -216,7 +216,7 @@ const ChooseTypeSection: React.FC<SectionBaseProps> = ({ setSection }) => {
               <EmailIcon width={30} />
               E-MAIL
             </button>
-            : <></>
+            : <div></div>
         }
       </div>
     </div>
