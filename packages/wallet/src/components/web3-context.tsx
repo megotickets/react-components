@@ -234,9 +234,9 @@ export const Web3Provider: React.FC<Web3ProviderProps> = ({ children }) => {
       // Cambiamo la sezione a "Logged"
       setSection("Logged");
 
-      if (process.env.REACT_APP_CHAIN_ID) {
+      if (forceChainId && forceChainId !== 0) {
         await _provider.send("wallet_switchEthereumChain", [{
-          chainId: `0x${parseInt(process.env.REACT_APP_CHAIN_ID).toString(16)}`
+          chainId: `0x${forceChainId.toString(16)}`
         }]);
       }
     } catch (error) {
