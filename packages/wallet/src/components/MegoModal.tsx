@@ -135,14 +135,14 @@ export function MegoModal({ isOpen, onClose }: MegoModalProps) {
               transition: "height 0.3s",
             }}
           >
-            <div className="mego-modal-title" style={{ marginBottom: '0.5rem' }}>
+            <div className="mego-modal-title mego-font-medium" style={{ marginBottom: '0.5rem' }}>
               {section === "Register" ? "REGISTER" : "LOGIN"}
             </div>
 
             {isLoading ? (
               <div className="mego-loader-div">
                 <div className="mego-loader" />
-                <p className="mego-login-text" style={{ marginTop: '1rem' }}>
+                <p className="mego-login-text mego-font-medium" style={{ marginTop: '1rem' }}>
                   {loadingText || "Loading data..."}
                 </p>
               </div>
@@ -177,7 +177,7 @@ const ChooseTypeSection: React.FC<SectionBaseProps> = ({ setSection }) => {
               <div style={{ marginRight: '0.5rem' }}>
                 <AppleIcon height={13} width={11} />
               </div>
-              APPLE ACCOUNT
+              <p className="mego-font-medium">APPLE ACCOUNT</p>
             </button>
             : <div></div>
         }
@@ -194,7 +194,7 @@ const ChooseTypeSection: React.FC<SectionBaseProps> = ({ setSection }) => {
               style={{ ...style?.modalStyle?.buttonStyle }}
             >
               <GoogleIcon width={17} style={{ marginRight: '0.5rem' }} />
-              GOOGLE ACCOUNT
+              <p className="mego-font-medium">GOOGLE ACCOUNT</p>
             </button>
             : <div></div>
         }
@@ -214,7 +214,7 @@ const ChooseTypeSection: React.FC<SectionBaseProps> = ({ setSection }) => {
             providerConfiguration?.emailProvider || providerConfiguration?.emailProvider === undefined || providerConfiguration?.emailProvider === null ?
             <button className="mego-modal-button mego-email" style={{ ...style?.modalStyle?.buttonStyle }}>
               <EmailIcon width={30} />
-              E-MAIL
+              <p className="mego-font-medium">E-MAIL</p>
             </button>
             : <div></div>
         }
@@ -230,13 +230,13 @@ const EmailSection: React.FC<SectionBaseProps> = ({ setSection }) => {
         className="mego-modal-button outlined"
         onClick={() => setSection("Login")}
       >
-        LOGIN
+        <p className="mego-font-medium">LOGIN</p>
       </button>
       <button
         className="mego-modal-button outlined"
         onClick={() => setSection("Register")}
       >
-        SIGN UP
+        <p className="mego-font-medium">SIGN UP</p>
       </button>
     </>
   );
@@ -290,7 +290,7 @@ const LoggedSection: React.FC<{ logout: () => void }> = ({ logout }) => {
     <div>
       <button className="mego-modal-button outlined" onClick={handleCopyAddress}>
         <CopyIcon height={16} width={16} style={{ marginRight: '0.5rem', height: '1.5rem', width: '1.5rem' }} />
-        Copy address
+        <p className="mego-font-medium">Copy address</p>
       </button>
 
       {/* ONLY FOR EMAIL PROVIDER (GOOGLE, APPLE, EMAIL)*/}
@@ -300,7 +300,7 @@ const LoggedSection: React.FC<{ logout: () => void }> = ({ logout }) => {
           <ExportKeyIcon
             style={{ marginRight: '0.5rem', height: '1.5rem', width: '1.5rem' }}
           />
-          {`Export private key`}
+          <p className="mego-font-medium">Export private key</p>
         </button>
       }
 
@@ -308,7 +308,7 @@ const LoggedSection: React.FC<{ logout: () => void }> = ({ logout }) => {
         <DisconnectIcon
           style={{ marginRight: '0.5rem', height: '1.5rem', width: '1.5rem' }}
         />
-        Disconnect
+        <p className="mego-font-medium">Disconnect</p>
       </button>
     </div>
   );
@@ -317,7 +317,7 @@ const LoggedSection: React.FC<{ logout: () => void }> = ({ logout }) => {
 const ExportPrivateKeySection = () => {
   return (
     <div>
-      <h5 className="mego-login-text">
+      <h5 className="mego-login-text mego-font-medium">
         Export private key to implement
       </h5>
     </div>
@@ -329,7 +329,7 @@ const LoginWithPasswordForPrivateKeySection = () => {
 
   return (
     <div>
-      <h5 className="mego-login-text">
+      <h5 className="mego-login-text mego-font-medium">
         Insert password to obtain private key
       </h5>
       <input
@@ -363,7 +363,7 @@ const TokenForPrivateKeySection = () => {
         className={"mego-modal-button mt-3 " + (token.length == 0 ? "opacity-50" : "")}
         onClick={() => revealPrivateKey(token)}
       >
-        Reveal private key
+        <p className="mego-font-medium">Reveal private key</p>
       </button>
     </div>
   );
@@ -381,11 +381,11 @@ const PrivateKeySection = () => {
 
   return (
     <div>
-      <h5 className="mego-login-text">
+      <h5 className="mego-login-text mego-font-medium">
         Private key: {privateKey}
       </h5>
       <button className="mego-modal-button outlined" onClick={handleCopyPrivateKey}>
-        Copy private key
+        <p className="mego-font-medium">Copy private key</p>
       </button>
     </div>
   );
@@ -403,7 +403,7 @@ const LoginSection = () => {
 
   return (
     <>
-      <h5 className="mego-login-text">
+      <h5 className="mego-login-text mego-font-medium">
         Type your e-mail address and Password to login
       </h5>
       <form
@@ -441,7 +441,7 @@ const LoginSection = () => {
           type="submit"
           style={{ maxWidth: 200 }}
         >
-          LOGIN
+          <p className="mego-font-medium">LOGIN</p>
         </button>
       </form>
     </>
@@ -461,7 +461,7 @@ const RegisterSection = () => {
   return (
 
     <>
-      <h5 className="mego-login-text">
+      <h5 className="mego-login-text mego-font-medium">
         Type your e-mail address and Password to register
       </h5>
 
@@ -507,7 +507,7 @@ const RegisterSection = () => {
           type="submit"
           style={{ maxWidth: 200 }}
         >
-          REGISTER
+          <p className="mego-font-medium">REGISTER</p>
         </button>
       </form>
     </>

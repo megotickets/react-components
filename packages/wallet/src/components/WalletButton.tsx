@@ -4,6 +4,20 @@ import "./mego-style.css";
 import { useCustomization } from "./CustomizationProvider";
 import { CustomStyle, providerConfiguration } from "interfaces/CustomStyle";
 
+const GlobalStyle = `
+  @import url('https://api.fontshare.com/v2/css?f[]=satoshi@300,500&display=swap');
+  
+  .mego-font-light {
+    font-family: 'Satoshi', sans-serif;
+    font-weight: 300;
+  }
+
+  .mego-font-medium {
+    font-family: 'Satoshi', sans-serif;
+    font-weight: 500;
+  }
+`;
+
 const WalletIcon: React.FC = () => {
     const { loggedAs } = useWeb3Context();
     const { style } = useCustomization();
@@ -51,7 +65,13 @@ export function WalletButton({ customStyle, providerConfiguration, forceChainId 
             setForceChainId(forceChainId);
         }
 
-
+        const styleElement = document.createElement('style');
+        styleElement.innerHTML = GlobalStyle;
+        document.head.appendChild(styleElement);
+        
+        return () => {
+            document.head.removeChild(styleElement);
+        };
     }, [customStyle, providerConfiguration, forceChainId]);
 
 
@@ -64,16 +84,6 @@ export function WalletButton({ customStyle, providerConfiguration, forceChainId 
                 paddingRight: '1rem',
                 gap: '0.5rem',
             }}>
-            {/* <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28 26" >
-                <path d="M20.4 12.7c.4 0 .8.3.8.8s-.3.8-.8.8h-.2c-.4 0-.8-.3-.8-.8s.3-.8.8-.8h.2Z" />
-                <path d="M20.2 11h4.2v-.5c0-2.6-2.1-4.8-4.8-4.8h-10c-2.6 0-4.8 2.1-4.8 4.8v6c0 2.6 2.1 4.8 4.8 4.8h10c2.6 0 4.8-2.1 4.8-4.8V16h-4.2c-1.4 0-2.5-1.1-2.5-2.5s1.1-2.5 2.5-2.5Zm-5.5 6.5h-6c-.3 0-.5-.2-.5-.5s.2-.5.5-.5h6c.3 0 .5.2.5.5s-.2.5-.5.5Z" />
-                <path
-                    d="M6.9 6.2c.8-.6 1.8-.9 2.9-.9h10c1.3 0 2.5.5 3.4 1.3l-.7-1.7c-1-2.6-4-3.8-6.5-2.7L8.4 5.3c-.6.2-1 .5-1.5.9Z"
-                    style={{
-                        fillRule: "evenodd",
-                    }}
-                />
-            </svg> */}
             <WalletIcon />
         </div>
     )

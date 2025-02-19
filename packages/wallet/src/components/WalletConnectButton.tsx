@@ -43,7 +43,7 @@ const WalletConnectStatus: React.FC<WalletConnectStatusProps> = ({
             :
             <button className="mego-modal-button" onClick={openConnectModal} style={{ ...style?.modalStyle?.buttonStyle }}>
               <WalletConnectIcon width={17} style={{ marginRight: '0.5rem' }} />
-              WALLET CONNECT
+              <p className="mego-font-medium">WALLET CONNECT</p>
             </button>
         }
       </div>
@@ -58,7 +58,7 @@ const WalletConnectStatus: React.FC<WalletConnectStatusProps> = ({
             :
             <button className="mego-modal-button" onClick={() => loginWithWalletConnect(account.address)} style={{ ...style?.modalStyle?.buttonStyle }}>
               <WalletConnectIcon width={17} style={{ marginRight: '0.5rem' }} />
-              WALLET CONNECT
+              <p className="mego-font-medium">WALLET CONNECT</p>
             </button>
         }
       </div>
