@@ -160,14 +160,25 @@
 }
 
 /* Aggiungi il loader */
-.loader {
-  border: 6px solid rgba(255, 255, 255, 0.3);
-  border-top: 6px solid white;
+.mego-loader {
+  width: 50px;
+  padding: 8px;
+  aspect-ratio: 1;
   border-radius: 50%;
-  width: 40px;
-  height: 40px;
+  background: white;
+  --_m: 
+    conic-gradient(#0000 10%, #000),
+    linear-gradient(#000 0 0) content-box;
+  -webkit-mask: var(--_m);
+          mask: var(--_m);
+  -webkit-mask-composite: source-out;
+          mask-composite: subtract;
+  animation: mego-spin 1s infinite linear;
   margin: auto;
-  animation: spin 1s linear infinite;
+}
+
+@keyframes mego-spin {
+  to { transform: rotate(1turn) }
 }
 
 .mego-loader-div {

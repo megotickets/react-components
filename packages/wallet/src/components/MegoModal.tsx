@@ -141,8 +141,8 @@ export function MegoModal({ isOpen, onClose }: MegoModalProps) {
 
             {isLoading ? (
               <div className="mego-loader-div">
-                <div className="loader" />
-                <p className="mego-login-text" style={{ marginTop: '0.5rem' }}>
+                <div className="mego-loader" />
+                <p className="mego-login-text" style={{ marginTop: '1rem' }}>
                   {loadingText || "Loading data..."}
                 </p>
               </div>
