@@ -381,7 +381,7 @@ const PrivateKeySection = () => {
 
   return (
     <div>
-      <h5 className="mego-login-text mego-font-medium">
+      <h5 style={{ marginTop: '2rem' }} className="mego-login-text mego-font-medium">
         Private key: {privateKey}
       </h5>
       <button className="mego-modal-button outlined" onClick={handleCopyPrivateKey}>
