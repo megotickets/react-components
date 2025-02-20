@@ -34,41 +34,20 @@ const WalletConnectStatus: React.FC<WalletConnectStatusProps> = ({
       </button>
     );
   }
-  if (!account || !chain) {
-    return (
-      <div onClick={openConnectModal}>
-        {
-          style?.customButtonOverrideComponent?.walletConnectButton ?
-            style?.customButtonOverrideComponent?.walletConnectButton
-            :
-            <button className="mego-modal-button" onClick={openConnectModal} style={{ ...style?.modalStyle?.buttonStyle }}>
-              <WalletConnectIcon width={17} style={{ marginRight: '0.5rem' }} />
-              <p className="mego-font-medium">WALLET CONNECT</p>
-            </button>
-        }
-      </div>
-    );
-  }
-  if (!loggedAs) {
-    return (
-      <div onClick={() => loginWithWalletConnect(account.address)}>
-        {
-          style?.customButtonOverrideComponent?.walletConnectButton ?
-            style?.customButtonOverrideComponent?.walletConnectButton
-            :
-            <button className="mego-modal-button" onClick={() => loginWithWalletConnect(account.address)} style={{ ...style?.modalStyle?.buttonStyle }}>
-              <WalletConnectIcon width={17} style={{ marginRight: '0.5rem' }} />
-              <p className="mego-font-medium">WALLET CONNECT</p>
-            </button>
-        }
-      </div>
-    );
-  }
+  console.log(account);
+  console.log(chain);
   return (
-    <button className="mego-modal-button" onClick={openAccountModal} style={{ ...style?.modalStyle?.buttonStyle }}>
-      <WalletConnectIcon width={17} style={{ marginRight: '0.5rem' }} />
-      {account.displayName}
-    </button>
+    <div onClick={openConnectModal}>
+      {
+        style?.customButtonOverrideComponent?.walletConnectButton ?
+          style?.customButtonOverrideComponent?.walletConnectButton
+          :
+          <button className="mego-modal-button" onClick={openConnectModal} style={{ ...style?.modalStyle?.buttonStyle }}>
+            <WalletConnectIcon width={17} style={{ marginRight: '0.5rem' }} />
+            <p className="mego-font-medium">WALLET CONNECT</p>
+          </button>
+      }
+    </div>
   );
 };
 

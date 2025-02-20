@@ -11,6 +11,9 @@ import '@rainbow-me/rainbowkit/styles.css';
 import { BrowserProvider, ethers } from "ethers";
 import axios from "axios";
 import { useConnectModal } from '@rainbow-me/rainbowkit';
+import { useAccount } from 'wagmi';
+import { disconnect } from 'wagmi/actions'
+import { config } from "./Web3ClientProvider";
 
 type Route =
   | "ChooseType"
@@ -89,6 +92,7 @@ export const Web3Provider: React.FC<Web3ProviderProps> = ({ children }) => {
 
   const [privateKey, setPrivateKey] = useState<string | null>(null);
   const [forceChainId, setForceChainId] = useState<number>(0);
+  const { address, isConnected } = useAccount();
 
   const openMegoModal = (): void => {
     setIsMegoModalOpen(true);
@@ -96,19 +100,23 @@ export const Web3Provider: React.FC<Web3ProviderProps> = ({ children }) => {
   };
 
   useEffect(() => {
-    try {
-      if (loggedAs) {
-        if (provider !== 'walletConnect') {
-          console.log("Rilevato accesso tramite un provider != walletConnect");
-          const jsonRpcProvider = new ethers.JsonRpcProvider(process.env.REACT_APP_JSON_RPC_PROVIDER);
-          setNoWalletConnectProvider(jsonRpcProvider);
-        }
-      }
-    } catch (error) {
-      console.error("Error during loggedAs check", error);
-      console.log(error);
+    if (address) {
+      setLoggedAs(address);
+      setSection("Logged");
+      localStorage.setItem("loggedAs", address);
+      setProvider("walletConnect");
     }
-  }, [loggedAs])
+  }, [address]);
+
+  useEffect(()=>{
+    if(!isConnected){
+      setLoggedAs(null);
+      setProvider(null);
+      setSection("ChooseType");
+      localStorage.removeItem("loggedAs");
+      localStorage.removeItem("provider");
+    }
+  },[isConnected, address])
 
   const closeMegoModal = (): void => {
     localStorage.setItem("isQuestionary", "false");
@@ -145,19 +153,16 @@ export const Web3Provider: React.FC<Web3ProviderProps> = ({ children }) => {
   }, []);
 
   const logoutWalletConnect = async () => {
-
     try {
-      // Rainbowkit walletconnect disconnect
-      //@ts-ignore
-      window.ethereum.removeAllListeners();
-      //@ts-ignore
+      // Utilizzo del hook di disconnect di wallet connect
+      disconnect(config);
       setWalletConnectProvider(null);
       setProvider(null);
       setLoggedAs(null);
       localStorage.removeItem("provider");
       localStorage.removeItem("loggedAs");
     } catch (error) {
-      console.error("Error logging out of walletconnect:", error);
+      console.error("Errore durante il logout da walletconnect:", error);
     }
   }
 
@@ -329,6 +334,8 @@ export const Web3Provider: React.FC<Web3ProviderProps> = ({ children }) => {
       console.log("[DEBUG] #3 - !urlProvider && !urlLoggedAs");
       const storedProvider = localStorage.getItem("provider");
       const storedLoggedAs = localStorage.getItem("loggedAs");
+      console.log("[DEBUG] #3 - storedProvider:", storedProvider);
+      console.log("[DEBUG] #3 - storedLoggedAs:", storedLoggedAs);
       if (storedProvider) {
         setProvider(storedProvider);
         // Inizializza il provider anche per sessioni ripristinate

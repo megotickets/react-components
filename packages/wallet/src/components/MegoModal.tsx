@@ -163,13 +163,12 @@ const ChooseTypeSection: React.FC<SectionBaseProps> = ({ setSection }) => {
   const { style, providerConfiguration } = useCustomization();
   return (
     <div>
-
       <div onClick={redirectToAppleLogin}>
         {
           style?.customButtonOverrideComponent?.appleButton ?
             style?.customButtonOverrideComponent?.appleButton
             :
-            providerConfiguration?.appleProvider || providerConfiguration?.appleProvider === undefined || providerConfiguration?.appleProvider === null ?
+            (!providerConfiguration ||providerConfiguration?.appleProvider || providerConfiguration?.appleProvider === undefined || providerConfiguration?.appleProvider === null )?
               <button
                 className={`mego-modal-button mego-apple`}
                 style={{ ...style?.modalStyle?.buttonStyle }}
