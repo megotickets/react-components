@@ -2,6 +2,7 @@
 
 import { Web3Provider, MegoWalletButton, Web3MegoClientProvider } from "@megotickets/wallet";
 import "@megotickets/wallet/dist/index.css";
+import { Web3Status } from "../components/status/Web3Status";
 //import "./globals.css";
 
 export default function Home() {
@@ -10,6 +11,7 @@ export default function Home() {
       <h1>@megotickets/wallet</h1>
       <Web3Provider>
         <Web3MegoClientProvider>
+          <Web3Status />
           <MegoWalletButton
             /* providerConfiguration={{
               appleProvider: false,
