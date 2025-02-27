@@ -58,6 +58,11 @@ interface Web3ContextType {
 
   forceChainId: number;
   setForceChainId: (forceChainId: number) => void;
+
+  //Firma con Apple
+  signMessageWithApple: (origin: string, challange: string) => void;
+  //Firma con Google
+  signMessageWithGoogle: (origin: string, challange: string) => void;
 }
 
 const Web3Context = createContext<Web3ContextType | undefined>(undefined);
@@ -190,6 +195,22 @@ export const Web3Provider: React.FC<Web3ProviderProps> = ({ children }) => {
     } else {
       return noWalletConnectProvider;
     }
+  };
+
+  //Firma con Apple 
+  const signMessageWithApple = (origin: string, challange: string) => {
+    localStorage.setItem("reddeemWithMego", "1");
+    if (window)
+      //@ts-expect-error typing bug
+      window.location = `https://wallet.mego.tools/auth/apple?origin=${origin.replace("http://", "").replace("https://", "")}&message=${challange}`;
+  };
+  
+  //Firma con Google
+  const signMessageWithGoogle = (origin: string, challange: string) => {
+    localStorage.setItem("redeemWithMego", "1");
+    if (window)
+      //@ts-expect-error typing bug
+      window.location = `https://wallet.mego.tools/auth/google?origin=${origin.replace("http://", "").replace("https://", "")}&message=${challange}`;
   };
 
   const getSigner = async () => {
@@ -473,7 +494,7 @@ export const Web3Provider: React.FC<Web3ProviderProps> = ({ children }) => {
     redirectToAppleLogin, redirectToGoogleLogin, closeMegoModal, provider, walletConnectProvider, loginWithWalletConnect, section,
     setSection, prevSection, setPrevSection, loggedAs, isLoading, logout, setIsLoading, loadingText, setLoadingText, loginWithEmail, createNewWallet,
     requestExportPrivateKeyWithEmail, requestExportPrivateKeyWithGoogle, requestExportPrivateKeyWithApple, revealPrivateKey, privateKey,
-    forceChainId, setForceChainId
+    forceChainId, setForceChainId, signMessageWithApple, signMessageWithGoogle
   };
   return (
       <Web3Context.Provider value={value}>
@@ -482,4 +503,5 @@ export const Web3Provider: React.FC<Web3ProviderProps> = ({ children }) => {
       </Web3Context.Provider>
   );
 };
+
 export type { Route };
