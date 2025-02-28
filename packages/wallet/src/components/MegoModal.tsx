@@ -402,7 +402,7 @@ const LoginSection = () => {
 
   return (
     <>
-      <h5 className="mego-login-text mego-font-medium">
+      <h5 className="mego-login-text mego-font-medium" style={{ marginTop: '10px' }}>
         Type your e-mail address and Password to login
       </h5>
       <form
@@ -460,7 +460,7 @@ const RegisterSection = () => {
   return (
 
     <>
-      <h5 className="mego-login-text mego-font-medium">
+      <h5 className="mego-login-text mego-font-medium" style={{ marginTop: '10px' }}>
         Type your e-mail address and Password to register
       </h5>
 
