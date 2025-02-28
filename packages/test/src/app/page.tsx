@@ -11,7 +11,6 @@ export default function Home() {
       <h1>@megotickets/wallet</h1>
       <Web3Provider>
         <Web3MegoClientProvider>
-          <MegoPreview />
           <MegoWalletButton
             /* providerConfiguration={{
               appleProvider: false,
@@ -55,6 +54,9 @@ export default function Home() {
               } */
             }}
           />
+          <div className="mt-10">
+            <MegoPreview />
+          </div>
         </Web3MegoClientProvider>
       </Web3Provider>
     </div>
