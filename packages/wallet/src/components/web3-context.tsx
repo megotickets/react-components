@@ -144,8 +144,6 @@ export const Web3Provider: React.FC<Web3ProviderProps> = ({ children }) => {
     setTimeout(() => {
       window.location.href = BASE_URL + "/auth/google" + "?origin=" + window.location.href.replace("https://", "").replace("http://", "");
     }, 2500);
-
-    console.log("redirectToGoogleLogin - ECCOCI QUI");
   }
 
   function redirectToQuestionary() {
@@ -177,15 +175,15 @@ export const Web3Provider: React.FC<Web3ProviderProps> = ({ children }) => {
     logoutWalletConnect();
     localStorage.removeItem("provider");
     localStorage.removeItem("loggedAs");
-    console.log("[DEBUG]Effettuando il logout, loggedAs in localStorage:", localStorage.getItem("loggedAs"));
+    //console.log("[DEBUG]Effettuando il logout, loggedAs in localStorage:", localStorage.getItem("loggedAs"));
     window.history.replaceState(null, "", window.location.pathname);
   }
 
 
   //DEBUG
   useEffect(() => {
-    console.log("[DEBUG]loggedAs ripristinato:", loggedAs);
-    console.log("[DEBUG]provider ripristinato:", provider);
+    //console.log("[DEBUG]loggedAs ripristinato:", loggedAs);
+    //console.log("[DEBUG]provider ripristinato:", provider);
   }, [loggedAs, provider]);
 
 
@@ -321,14 +319,14 @@ export const Web3Provider: React.FC<Web3ProviderProps> = ({ children }) => {
   }
 
   useEffect(() => {
-    console.log("[DEBUG] Executing useEffect");
+    //console.log("[DEBUG] Executing useEffect");
     const searchParams = new URLSearchParams(window.location.search);
     const urlProvider = searchParams.get("provider");
     let urlLoggedAs = searchParams.get("loggedAs") || searchParams.get("signedAs");
     const exported = searchParams.get("exported");
     //# 1
     if (urlProvider) {
-      console.log("[DEBUG] #1 - urlProvider:", urlProvider);
+      //console.log("[DEBUG] #1 - urlProvider:", urlProvider);
       setProvider(urlProvider);
       localStorage.setItem("provider", urlProvider);
 
@@ -345,18 +343,18 @@ export const Web3Provider: React.FC<Web3ProviderProps> = ({ children }) => {
 
     //# 2
     if (urlLoggedAs) {
-      console.log("[DEBUG] #2 - urlLoggedAs:", urlLoggedAs);
+      //console.log("[DEBUG] #2 - urlLoggedAs:", urlLoggedAs);
       setLoggedAs(urlLoggedAs);
       localStorage.setItem("loggedAs", urlLoggedAs);
     }
 
     //# 3
     if (!urlProvider && !urlLoggedAs) {
-      console.log("[DEBUG] #3 - !urlProvider && !urlLoggedAs");
+      //console.log("[DEBUG] #3 - !urlProvider && !urlLoggedAs");
       const storedProvider = localStorage.getItem("provider");
       const storedLoggedAs = localStorage.getItem("loggedAs");
-      console.log("[DEBUG] #3 - storedProvider:", storedProvider);
-      console.log("[DEBUG] #3 - storedLoggedAs:", storedLoggedAs);
+      //console.log("[DEBUG] #3 - storedProvider:", storedProvider);
+      //console.log("[DEBUG] #3 - storedLoggedAs:", storedLoggedAs);
       if (storedProvider) {
         setProvider(storedProvider);
         // Inizializza il provider anche per sessioni ripristinate
@@ -372,7 +370,7 @@ export const Web3Provider: React.FC<Web3ProviderProps> = ({ children }) => {
 
     //# 4
     if (urlProvider === 'google' && urlLoggedAs) {
-      console.log("[DEBUG] #4 - urlProvider === 'google' && urlLoggedAs");
+      //console.log("[DEBUG] #4 - urlProvider === 'google' && urlLoggedAs");
       try {
         const jsonRpcProvider = new ethers.JsonRpcProvider("https://base-sepolia.g.alchemy.com/v2/KxxtZXKplWuSt71LXxy-9Mr4BhucrqEP");
         setNoWalletConnectProvider(jsonRpcProvider);
@@ -393,7 +391,6 @@ export const Web3Provider: React.FC<Web3ProviderProps> = ({ children }) => {
       if (forceChainId == 0) {
         return;
       }
-      console.log("Chain cambiata:", chainId);
       const targetChainId = `0x${Number(forceChainId).toString(16)}`;
       // Verifica se la chain è diversa da quella target
       if (chainId !== targetChainId) {
@@ -405,7 +402,7 @@ export const Web3Provider: React.FC<Web3ProviderProps> = ({ children }) => {
             params: [{ chainId: targetChainId }],
           });
         } catch (error) {
-          console.error("Errore nel cambio rete:", error);
+          alert("Errore nel cambio rete:" + error);
         }
       }
     };
@@ -470,7 +467,6 @@ export const Web3Provider: React.FC<Web3ProviderProps> = ({ children }) => {
   const revealPrivateKey = async (token: string) => {
     setIsLoading(true);
     setLoadingText("Revealing private key...");
-    console.log("Revealing private key with token:", token);
     //POST with axios
     const reveal = await axios.post(`${BASE_URL}/wallets/export`, { token: token })
     if (reveal.data.error) {
