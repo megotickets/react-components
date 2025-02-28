@@ -290,3 +290,103 @@
   align-items: center;
   width: 100%;
 }
+
+/* Stili specifici per il modal di pagamento */
+.payment-modal .mego-modal-wrapper {
+  border-radius: 1.5rem 1.5rem 0 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  font-family: 'Satoshi', sans-serif;
+}
+
+.payment-wrapper {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: white;
+  transition: transform 0.3s ease-out;
+  font-family: 'Satoshi', sans-serif;
+}
+
+.payment-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 1.5rem;
+  font-family: 'Satoshi', sans-serif;
+}
+
+.payment-title {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: black;
+  font-family: 'Satoshi', sans-serif;
+}
+
+.payment-details {
+  text-align: center;
+  margin-bottom: 2rem;
+  font-family: 'Satoshi', sans-serif;
+}
+
+.payment-item-name {
+  font-size: 1.5rem;
+  color: white;
+  margin-bottom: 0.5rem;
+  font-family: 'Satoshi', sans-serif;
+}
+
+.payment-amount {
+  font-size: 2rem;
+  font-weight: bold;
+  color: white;
+  font-family: 'Satoshi', sans-serif;
+}
+
+.payment-methods {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  font-family: 'Satoshi', sans-serif;
+}
+
+.payment-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  background-color: white;
+  color: black;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: 'Satoshi', sans-serif;
+}
+
+.payment-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Assicuriamoci che anche il testo all'interno dei bottoni utilizzi Satoshi */
+.payment-button p {
+  font-family: 'Satoshi', sans-serif;
+}
+
+.payment-image {
+  height: 100px;
+  width: auto;
+  object-fit: cover;
+}
+
+.payment-image-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
