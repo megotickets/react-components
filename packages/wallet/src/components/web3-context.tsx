@@ -454,7 +454,7 @@ export const Web3Provider: React.FC<Web3ProviderProps> = ({ children }) => {
 
     //Redirect for request token via google auth
     setTimeout(() => {
-      window.location.href = BASE_URL + "/auth/google" + "?origin=" + window.location.href.replace("https://", "").replace("http://", "") + "&message=EXPORT_WALLET";
+      window.location.href = BASE_URL + "/auth/google" + "?origin=" + window.location.href.split('?')[0].replace("https://", "").replace("http://", "") + "&message=EXPORT_WALLET";
     }, 2500);
 
   }
