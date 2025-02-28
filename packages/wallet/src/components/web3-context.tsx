@@ -461,7 +461,11 @@ export const Web3Provider: React.FC<Web3ProviderProps> = ({ children }) => {
 
   const requestExportPrivateKeyWithApple = async () => {
     setIsLoading(true);
-    setSection("TokenForPrivateKey");
+
+    //Redirect for request token via apple auth
+    setTimeout(() => {
+      window.location.href = BASE_URL + "/auth/apple" + "?origin=" + window.location.href.split('?')[0].replace("https://", "").replace("http://", "") + "&message=EXPORT_WALLET";
+    }, 2500);
   }
 
   const revealPrivateKey = async (token: string) => {
