@@ -481,6 +481,10 @@ export const Web3Provider: React.FC<Web3ProviderProps> = ({ children }) => {
     } else {
       setIsLoading(false);
       setPrivateKey(reveal.data.private_keys.eth);
+      //Append privateKeyVisible to url (without reloading page and suppress other params)
+      const url = new URL(window.location.href);
+      url.searchParams.set("privateKeyVisible", "true");
+      window.history.pushState({}, '', url.toString());
       setSection("PrivateKey");
     }
   }

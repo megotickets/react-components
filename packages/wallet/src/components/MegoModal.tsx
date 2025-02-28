@@ -249,9 +249,14 @@ const LoggedSection: React.FC<{ logout: () => void }> = ({ logout }) => {
     = useWeb3Context();
 
   const exported = new URLSearchParams(window.location.search).get("exported");
+  const privateKeyVisible = new URLSearchParams(window.location.search).get("privateKeyVisible");
 
-  if (exported) {
+  if (exported && !privateKeyVisible) {
     setSection("TokenForPrivateKey");
+  }
+
+  if (privateKeyVisible) {
+    setSection("PrivateKey");
   }
 
   const handleCopyAddress = () => {
