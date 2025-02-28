@@ -475,7 +475,8 @@ export const Web3Provider: React.FC<Web3ProviderProps> = ({ children }) => {
       setIsLoading(false);
       setLoadingText("");
       setTimeout(() => {
-        window.location.href = window.location.origin;
+        //Back to previous page
+        window.history.back();
       }, 1000);
     } else {
       setIsLoading(false);

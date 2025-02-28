@@ -346,10 +346,17 @@ const LoginWithPasswordForPrivateKeySection = () => {
 const TokenForPrivateKeySection = () => {
   const [token, setToken] = useState<string>("");
 
-  const { revealPrivateKey } = useWeb3Context();
+  const { revealPrivateKey, provider, loggedAs } = useWeb3Context();
+
+  const comeBackToOrigin = () => {
+    //origin
+    const origin = window.location.href.split('?')[0];
+    window.location.href = origin + "?provider=" + provider + "&loggedAs=" + loggedAs;
+  }
 
   return (
-    <div className="w-full flex flex-col items-center justify-center">
+    <div className="w-full flex flex-col items-center justify-center mt-10">
+      <p className="mego-login-text mego-font-medium">Please insert token received by email</p>
       <input
         className="mego-input-token"
         id="token"
@@ -364,18 +371,27 @@ const TokenForPrivateKeySection = () => {
       >
         <p className="mego-font-medium">Reveal private key</p>
       </button>
+      <button className="mego-modal-button outlined" onClick={comeBackToOrigin}>
+        <p className="mego-font-medium">Close</p>
+      </button>
     </div>
   );
 };
 
 const PrivateKeySection = () => {
-  const { privateKey } = useWeb3Context();
+  const { privateKey, provider, loggedAs } = useWeb3Context();
 
   const handleCopyPrivateKey = () => {
     if (privateKey) {
       navigator.clipboard.writeText(privateKey);
       alert("Private key copied to clipboard");
     }
+  }
+
+  const comeBackToOrigin = () => {
+    //origin
+    const origin = window.location.href.split('?')[0];
+    window.location.href = origin + "?provider=" + provider + "&loggedAs=" + loggedAs;
   }
 
   return (
@@ -385,6 +401,9 @@ const PrivateKeySection = () => {
       </h5>
       <button className="mego-modal-button outlined" onClick={handleCopyPrivateKey}>
         <p className="mego-font-medium">Copy private key</p>
+      </button>
+      <button className="mego-modal-button outlined" onClick={comeBackToOrigin}>
+        <p className="mego-font-medium">Close</p>
       </button>
     </div>
   );
