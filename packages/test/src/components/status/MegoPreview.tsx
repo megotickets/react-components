@@ -27,7 +27,8 @@ export function MegoPreview() {
   
   // Funzione per firmare il messaggio
   const handleSign = () => {
-    const origin = window.location.origin;
+    const origin = window.location.href.split('?')[0];
+    console.log("origin", origin);
     
     if (provider?.toLowerCase().includes('google')) {
       signMessageWithGoogle(origin, message);
