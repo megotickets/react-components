@@ -17,7 +17,7 @@ export function PaymentPreview() {
                 <button
                     className='bg-blue-500 text-white px-4 py-2 rounded-md'
                     onClick={() => setIsPaymentModalOpen(true)}>
-                    Acquista cubo
+                    Acquista di esempio
                 </button>
 
                 <PaymentModal

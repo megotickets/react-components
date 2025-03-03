@@ -6,7 +6,7 @@ import ErrorIcon from "../icons/ErrorIcon";
 
 export function PaymentStatusModal() {
   const [isClosing, setIsClosing] = useState(false);
-  const [isVisible, setIsVisible] = useState(true);
+  const [isVisible, setIsVisible] = useState(false);
   const [paymentStatus, setPaymentStatus] = useState<'success' | 'canceled' | null>(null);
 
   useEffect(() => {
@@ -52,13 +52,13 @@ export function PaymentStatusModal() {
   if (!isVisible || !paymentStatus) return null;
 
   return (
-    <div className={`${isClosing ? "closing" : ""} mego-modal-container payment-modal`}>
+    <div className={`${isClosing ? "closing" : ""} mego-modal-content payment-modal`}>
       <div className="mego-modal-backdrop" onClick={handleClose}></div>
       <div
         className="mego-modal-wrapper payment-wrapper"
         style={{
-          height: "30vh",
-          maxHeight: "30vh"
+          minHeight: "auto",
+          maxHeight: "90vh"
         }}
       >
         <div className="mego-modal-header">
@@ -74,22 +74,22 @@ export function PaymentStatusModal() {
           </div>
         </div>
         <div className="mego-modal-content payment-content">
-          <div className="payment-details" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%' }}>
+          <div className="payment-details" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '2rem 1rem' }}>
             {paymentStatus === 'success' ? (
               <>
                 <div style={{ marginBottom: '1rem' }}>
                   <CheckIcon height={64} width={64} color="#4CAF50" />
                 </div>
-                <h2 style={{ color: '#4CAF50', marginBottom: '0.5rem' }}>Pagamento completato con successo!</h2>
-                <p>Grazie per il tuo acquisto.</p>
+                <h2 style={{ color: '#4CAF50', marginBottom: '0.5rem', textAlign: 'center' }}>Pagamento completato con successo!</h2>
+                <p style={{ textAlign: 'center' }}>Grazie per il tuo acquisto.</p>
               </>
             ) : (
               <>
                 <div style={{ marginBottom: '1rem' }}>
                   <ErrorIcon height={64} width={64} color="#F44336" />
                 </div>
-                <h2 style={{ color: '#F44336', marginBottom: '0.5rem' }}>Pagamento annullato</h2>
-                <p>Il pagamento è stato annullato.</p>
+                <h2 style={{ color: '#F44336', marginBottom: '0.5rem', textAlign: 'center' }}>Pagamento annullato</h2>
+                <p style={{ textAlign: 'center' }}>Il pagamento è stato annullato.</p>
               </>
             )}
           </div>
