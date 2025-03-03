@@ -58,6 +58,8 @@ interface Web3ContextType {
 
   forceChainId: number;
   setForceChainId: (forceChainId: number) => void;
+  serviceAutoChainChange: boolean;
+  setServiceAutoChainChange: (serviceAutoChainChange: boolean) => void;
 
   //Firma con Apple
   signMessageWithApple: (origin: string, challange: string) => void;
@@ -98,6 +100,7 @@ export const Web3Provider: React.FC<Web3ProviderProps> = ({ children }) => {
   const [privateKey, setPrivateKey] = useState<string | null>(null);
   const [forceChainId, setForceChainId] = useState<number>(0);
   const { address, isConnected } = useAccount();
+  const [serviceAutoChainChange, setServiceAutoChainChange] = useState<boolean>(true);
 
   const openMegoModal = (): void => {
     setIsMegoModalOpen(true);
@@ -388,6 +391,11 @@ export const Web3Provider: React.FC<Web3ProviderProps> = ({ children }) => {
   //Handle chain change
   useEffect(() => {
     const handleChainChanged = async (chainId: string) => {
+      console.log("Detected chain change: ", chainId);
+      if (!serviceAutoChainChange) {
+        console.log("Service auto chain change is disabled");
+        return;
+      }
       if (forceChainId == 0) {
         return;
       }
@@ -416,7 +424,7 @@ export const Web3Provider: React.FC<Web3ProviderProps> = ({ children }) => {
       //@ts-ignore
       window.ethereum?.removeListener('chainChanged', handleChainChanged);
     };
-  }, [forceChainId]);
+  }, [forceChainId, serviceAutoChainChange]);
 
 
   //Usando windows.etherium verificiamo se l'address del wallet cambia (in caso di cambiamento refresh)
@@ -499,7 +507,7 @@ export const Web3Provider: React.FC<Web3ProviderProps> = ({ children }) => {
     redirectToAppleLogin, redirectToGoogleLogin, closeMegoModal, provider, walletConnectProvider, loginWithWalletConnect, section,
     setSection, prevSection, setPrevSection, loggedAs, isLoading, logout, setIsLoading, loadingText, setLoadingText, loginWithEmail, createNewWallet,
     requestExportPrivateKeyWithEmail, requestExportPrivateKeyWithGoogle, requestExportPrivateKeyWithApple, revealPrivateKey, privateKey,
-    forceChainId, setForceChainId, signMessageWithApple, signMessageWithGoogle
+    forceChainId, setForceChainId, signMessageWithApple, signMessageWithGoogle, serviceAutoChainChange, setServiceAutoChainChange
   };
   return (
       <Web3Context.Provider value={value}>

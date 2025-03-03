@@ -8,6 +8,7 @@ import { ChainPayment, PaymentMethod, PaymentModalityProps } from "interfaces/Pa
 import { useAccount, useSendTransaction } from "wagmi";
 import { parseEther } from "viem";
 import { resolveChainIdByName, resolveChainImageByName } from "./CryptoUtils";
+import { useWeb3Context } from "../web3-context";
 interface Chain {
   name: string;
   chainId: number;
@@ -41,7 +42,8 @@ export function PaymentModal({
   paymentModality = {
     stripe: true,
     erc20: true,
-    chains: {eth: true,
+    chains: {
+      eth: true,
       optimism: true,
       arbitrum: true,
       polygon: true,
@@ -57,7 +59,7 @@ export function PaymentModal({
 
   const { isConnected } = useAccount();
   const { sendTransaction, isPending } = useSendTransaction();
-
+  const { loggedAs, setServiceAutoChainChange, provider } = useWeb3Context();
   useEffect(() => {
     if (isOpen) {
       setIsClosing(false);
@@ -73,29 +75,26 @@ export function PaymentModal({
   }
 
   function handlePayment(paymentMethod: PaymentMethod, amount?: number, chainId?: number) {
-    setIsProcessing(true);
-    switch (paymentMethod.type) {
-      case "stripe":
-        handleStripePayment();
-        break;
-      case "eth":
-      case "optimism":
-      case "arbitrum":
-      case "polygon":
-      case "usdcETH":
-      case "usdcPolygon":
-      case "usdtEthereum":
-      case "daiETH":
-        if (!amount || !chainId) {
-          alert("Si prega di fornire l'importo e la catena di rete");
-          return;
-        }
-        handlePayWithCrypto(amount, chainId);
-        break;
-      case "erc20":
-        handleErc20Payment();
-        break;
+
+    if (paymentMethod.type === "stripe") {
+      handleStripePayment();
+      return;
     }
+
+    if (Object.keys(paymentModality?.chains || {}).includes(paymentMethod.type)) {
+      if (!amount || !chainId) {
+        alert("Si prega di fornire l'importo e la catena di rete");
+        return;
+      }
+      handlePayWithCrypto(amount, chainId);
+      return;
+    }
+
+    if (paymentMethod.type === "erc20") {
+      handleErc20Payment();
+      return;
+    }
+
   }
 
   function handleStripePayment() {
@@ -117,27 +116,56 @@ export function PaymentModal({
     }
   }
 
-  function handlePayWithCrypto(amount: number, chainId: number) {
-    if (isConnected) {
-      payWithRainbowkit(amount, chainId);
-    } else {
-      alert("Pagamento con MEGO a breve");
+  async function handlePayWithCrypto(amount: number, chainId: number) {
+    try {
+      // Imposta isProcessing a true all'inizio
+      setIsProcessing(true);
+
+
+      if (isConnected) {
+        payWithRainbowkit(amount, chainId);
+      } else if (loggedAs) {
+        alert("Pagamento con MEGO a breve");
+      } else {
+        alert("Pagamento non disponibile in questo momento");
+      }
+    } catch (error) {
+      console.error("Errore durante il pagamento:", error);
+      alert("Si è verificato un errore durante il pagamento");
+      setIsProcessing(false);
     }
   }
 
-  const payWithRainbowkit = (amount: number, chainId: number) => {
+  const payWithRainbowkit = async (amount: number, chainId: number) => {
     try {
       //Check if connected to a wallet with rainbowkit
       if (!isConnected) {
         alert("Si prega di connettere un wallet con Rainbowkit");
+        setIsProcessing(false);
         return;
       }
 
       if (!receiverAddress) {
         alert("Si prega di fornire l'indirizzo del ricevente");
+        setIsProcessing(false);
         return;
       }
 
+      //Prevent auto change chain
+      setServiceAutoChainChange(false);
+
+      try {
+        // Switch to the correct chain
+        await window.ethereum.request({
+          method: 'wallet_switchEthereumChain',
+          params: [{ chainId: `0x${chainId.toString(16)}` }],
+        });
+        await new Promise(resolve => setTimeout(resolve, 1000));
+      } catch (switchError) {
+        console.error("Errore durante il cambio di catena:", switchError);
+        setIsProcessing(false); // Reset in caso di errore nel cambio catena
+        return;
+      }
       //useSendTransaction for pay with crypto through rainbowkit (use etherium chain)
       sendTransaction({ to: receiverAddress as `0x${string}`, value: parseEther(amount.toString()), chainId: chainId });
 
@@ -217,6 +245,11 @@ export function PaymentModal({
                         amount,
                         resolveChainIdByName(chainName as keyof ChainPayment)
                       )}
+                      disabled={provider !== "walletConnect"}
+                      style={{
+                        opacity: provider === "walletConnect" ? 1 : 0.5,
+                        cursor: provider === "walletConnect" ? "pointer" : "not-allowed"
+                      }}
                     >
                       <img height={20} width={20} src={resolveChainImageByName(chainName as keyof ChainPayment)} alt="Chain" className="payment-chain-image" />
                       <p className="mego-font-medium">Paga con {chainName}</p>
