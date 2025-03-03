@@ -1,7 +1,7 @@
 'use client';
 
 import { WagmiProvider, http } from 'wagmi'
-import { mainnet, polygon, sepolia, optimism, arbitrum } from 'wagmi/chains'
+import { mainnet, polygon, sepolia, optimism, arbitrum, base, baseSepolia } from 'wagmi/chains'
 import '@rainbow-me/rainbowkit/styles.css';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useState } from 'react';
@@ -12,13 +12,15 @@ import { getDefaultConfig, RainbowKitProvider } from '@rainbow-me/rainbowkit'
 export const config = getDefaultConfig({
   appName: 'Mego Wallet',
   projectId: "b04bcb017e647637f86b206334c538e6",
-  chains: [mainnet, polygon, sepolia, optimism, arbitrum],
+  chains: [mainnet, polygon, sepolia, optimism, arbitrum, base, baseSepolia],
   transports: {
     [mainnet.id]: http(),
     [polygon.id]: http(),
     [sepolia.id]: http(),
     [optimism.id]: http(),
     [arbitrum.id]: http(),
+    [base.id]: http(),
+    [baseSepolia.id]: http(),
   },
 })
 

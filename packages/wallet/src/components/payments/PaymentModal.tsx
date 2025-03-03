@@ -5,10 +5,11 @@ import CrossIcon from "../icons/CrossIcon";
 import { processStripePayment } from "./PaymentUtils";
 import MegoIcon from "../icons/MegoIcon";
 import { ChainPayment, PaymentMethod, PaymentModalityProps } from "interfaces/PaymentMethod";
-import { useAccount, useSendTransaction } from "wagmi";
+import { useAccount, useSendTransaction, useSwitchChain } from "wagmi";
 import { parseEther } from "viem";
 import { resolveChainIdByName, resolveChainImageByName } from "./CryptoUtils";
 import { useWeb3Context } from "../web3-context";
+
 interface Chain {
   name: string;
   chainId: number;
@@ -59,12 +60,27 @@ export function PaymentModal({
 
   const { isConnected } = useAccount();
   const { sendTransaction, isPending } = useSendTransaction();
-  const { loggedAs, setServiceAutoChainChange, provider } = useWeb3Context();
+  const { loggedAs, setServiceAutoChainChange, provider, forceChainId } = useWeb3Context();
+  const { switchChain } = useSwitchChain();
+  
+  
   useEffect(() => {
     if (isOpen) {
       setIsClosing(false);
     }
   }, [isOpen]);
+
+  //Afer payment (activate auto chain change)
+  useEffect(() => {
+    if (!isPending && !isProcessing) {
+      setServiceAutoChainChange(true);
+      if (forceChainId !== 0) {
+        switchChain({ chainId: forceChainId });
+      }
+      setIsProcessing(false);
+    }
+  }, [isPending]);
+
 
   function handleClose() {
     setIsClosing(true);
@@ -124,8 +140,6 @@ export function PaymentModal({
 
       if (isConnected) {
         payWithRainbowkit(amount, chainId);
-      } else if (loggedAs) {
-        alert("Pagamento con MEGO a breve");
       } else {
         alert("Pagamento non disponibile in questo momento");
       }
@@ -156,13 +170,12 @@ export function PaymentModal({
 
       try {
         // Switch to the correct chain
-        await window.ethereum.request({
-          method: 'wallet_switchEthereumChain',
-          params: [{ chainId: `0x${chainId.toString(16)}` }],
-        });
+        switchChain({ chainId: chainId });
         await new Promise(resolve => setTimeout(resolve, 1000));
+        
       } catch (switchError) {
         console.error("Errore durante il cambio di catena:", switchError);
+        setServiceAutoChainChange(true);
         setIsProcessing(false); // Reset in caso di errore nel cambio catena
         return;
       }

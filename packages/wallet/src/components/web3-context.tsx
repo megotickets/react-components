@@ -11,7 +11,7 @@ import '@rainbow-me/rainbowkit/styles.css';
 import { BrowserProvider, ethers } from "ethers";
 import axios from "axios";
 import { useConnectModal } from '@rainbow-me/rainbowkit';
-import { useAccount } from 'wagmi';
+import { useAccount, useSwitchChain } from 'wagmi';
 import { disconnect } from 'wagmi/actions'
 import { config } from "./Web3ClientProvider";
 
@@ -101,7 +101,7 @@ export const Web3Provider: React.FC<Web3ProviderProps> = ({ children }) => {
   const [forceChainId, setForceChainId] = useState<number>(0);
   const { address, isConnected } = useAccount();
   const [serviceAutoChainChange, setServiceAutoChainChange] = useState<boolean>(true);
-
+  const { switchChain } = useSwitchChain();
   const openMegoModal = (): void => {
     setIsMegoModalOpen(true);
     setIsLoading(false); // Reset loading state when opening modal
@@ -405,10 +405,8 @@ export const Web3Provider: React.FC<Web3ProviderProps> = ({ children }) => {
         try {
           // Richiedi il cambio di rete
           //@ts-ignore
-          await window.ethereum.request({
-            method: 'wallet_switchEthereumChain',
-            params: [{ chainId: targetChainId }],
-          });
+          await switchChain({ chainId: forceChainId });
+          
         } catch (error) {
           alert("Errore nel cambio rete:" + error);
         }
