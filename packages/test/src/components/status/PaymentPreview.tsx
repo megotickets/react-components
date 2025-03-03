@@ -41,10 +41,20 @@ export function PaymentPreview() {
                     onPaymentComplete={handlePaymentComplete}
                     stripePublicKey={`pk_test_51QxVkcEbY9GFNTL1No0XY30bI0XmTkrTe86m1rcvJsrbA4TtoBjJpe4QbxVNEosIlaqnXwf4kYMzd4pQSfrnzJfq00rCdi9una`}
                     priceId="price_1QxW5jEbY9GFNTL1E2u3VPUl"
+                    receiverAddress="0xA43E845BE8fcD0471A971b7B640Fdb398416E9EF"
                     paymentModality={{
-                        allowStripe: true,
-                        allowMetamask: false,
-                        allowErc20: false
+                        stripe: true,
+                        erc20: true,
+                        chains: {
+                            eth: true,
+                            arbitrum: true,
+                            optimism: true,
+                            polygon: true,
+                            usdcETH: true,
+                            usdcPolygon: true,
+                            usdtEthereum: true,
+                            daiETH: true
+                        }
                     }}
                 />
                 <PaymentStatusModal/>

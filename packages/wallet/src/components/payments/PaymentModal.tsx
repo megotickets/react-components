@@ -1,28 +1,18 @@
 import React, { useEffect, useState } from "react";
 import "../mego-style.css";
 import StripeIcon from "../icons/StripeIcon";
-import WalletIcon from "../icons/WalletConnect";
 import CrossIcon from "../icons/CrossIcon";
 import { processStripePayment } from "./PaymentUtils";
 import MegoIcon from "../icons/MegoIcon";
-import { PaymentMethod } from "interfaces/PaymentMethod";
-
-interface PaymentModalityProps {
-  allowStripe?: boolean;
-  allowMetamask?: boolean;
-  allowErc20?: boolean;
+import { ChainPayment, PaymentMethod, PaymentModalityProps } from "interfaces/PaymentMethod";
+import { useAccount, useSendTransaction } from "wagmi";
+import { parseEther } from "viem";
+import { resolveChainIdByName, resolveChainImageByName } from "./CryptoUtils";
+interface Chain {
+  name: string;
+  chainId: number;
+  icon: string;
 }
-
-/**
- * Props for the PaymentModal component
- * @param isOpen - If the modal is open
- * @param onClose - Function to call when the modal is closed
- * @param amount - Amount to pay
- * @param image - Image to display
- * @param currency - Currency of the payment
- * @param itemName - Name of the item to pay for
- * @param priceId - Price ID of the item to pay for
- */
 interface PaymentModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -32,8 +22,10 @@ interface PaymentModalProps {
   itemName: string;
   priceId: string;
   stripePublicKey?: string;
+  receiverAddress?: string;
   onPaymentComplete?: (paymentId: string) => void;
   paymentModality?: PaymentModalityProps;
+  chains?: ChainPayment;
 }
 
 export function PaymentModal({
@@ -45,21 +37,31 @@ export function PaymentModal({
   itemName,
   priceId,
   stripePublicKey,
+  receiverAddress,
   paymentModality = {
-    allowStripe: true,
-    allowMetamask: true,
-    allowErc20: true
+    stripe: true,
+    erc20: true,
+    chains: {eth: true,
+      optimism: true,
+      arbitrum: true,
+      polygon: true,
+      usdcETH: true,
+      usdcPolygon: true,
+      usdtEthereum: true,
+      daiETH: true
+    }
   }
 }: PaymentModalProps) {
   const [isClosing, setIsClosing] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
 
+  const { isConnected } = useAccount();
+  const { sendTransaction, isPending } = useSendTransaction();
+
   useEffect(() => {
     if (isOpen) {
       setIsClosing(false);
     }
-
-
   }, [isOpen]);
 
   function handleClose() {
@@ -70,14 +72,25 @@ export function PaymentModal({
     }, 300); // Durata dell'animazione
   }
 
-  function handlePayment(paymentMethod: PaymentMethod) {
+  function handlePayment(paymentMethod: PaymentMethod, amount?: number, chainId?: number) {
     setIsProcessing(true);
     switch (paymentMethod.type) {
       case "stripe":
         handleStripePayment();
         break;
-      case "metamask":
-        handleMetamaskPayment();
+      case "eth":
+      case "optimism":
+      case "arbitrum":
+      case "polygon":
+      case "usdcETH":
+      case "usdcPolygon":
+      case "usdtEthereum":
+      case "daiETH":
+        if (!amount || !chainId) {
+          alert("Si prega di fornire l'importo e la catena di rete");
+          return;
+        }
+        handlePayWithCrypto(amount, chainId);
         break;
       case "erc20":
         handleErc20Payment();
@@ -86,19 +99,54 @@ export function PaymentModal({
   }
 
   function handleStripePayment() {
-    if (!priceId) {
-      alert("Si prega di fornire il priceId del prodotto");
-    } else {
-      setIsProcessing(true);
-      processStripePayment({
-        priceId: priceId,
-        stripePublicKey: stripePublicKey || ""
-      });
+    try {
+      if (!priceId) {
+        alert("Si prega di fornire il priceId del prodotto");
+      } else {
+        setIsProcessing(true);
+        processStripePayment({
+          priceId: priceId,
+          stripePublicKey: stripePublicKey || ""
+        });
+      }
+    } catch (error) {
+      console.error("Errore durante il pagamento:", error);
+      alert("Si è verificato un errore durante il pagamento");
+    } finally {
+      setIsProcessing(false);
     }
   }
 
-  function handleMetamaskPayment() {
-    alert("Funzionalità non disponibile");
+  function handlePayWithCrypto(amount: number, chainId: number) {
+    if (isConnected) {
+      payWithRainbowkit(amount, chainId);
+    } else {
+      alert("Pagamento con MEGO a breve");
+    }
+  }
+
+  const payWithRainbowkit = (amount: number, chainId: number) => {
+    try {
+      //Check if connected to a wallet with rainbowkit
+      if (!isConnected) {
+        alert("Si prega di connettere un wallet con Rainbowkit");
+        return;
+      }
+
+      if (!receiverAddress) {
+        alert("Si prega di fornire l'indirizzo del ricevente");
+        return;
+      }
+
+      //useSendTransaction for pay with crypto through rainbowkit (use etherium chain)
+      sendTransaction({ to: receiverAddress as `0x${string}`, value: parseEther(amount.toString()), chainId: chainId });
+
+    } catch (error) {
+      console.error("Errore durante il pagamento:", error);
+      alert("Si è verificato un errore durante il pagamento");
+    } finally {
+      setIsProcessing(false);
+    }
   }
 
   function handleErc20Payment() {
@@ -138,7 +186,7 @@ export function PaymentModal({
             <p className="payment-amount">{amount.toFixed(2)} {currency}</p>
           </div>
 
-          {isProcessing ? (
+          {isProcessing || isPending ? (
             <div className="mego-loader-div">
               <div className="mego-loader" />
               <p className="mego-login-text mego-font-medium" style={{ marginTop: '1rem' }}>
@@ -148,7 +196,7 @@ export function PaymentModal({
           ) : (
             <div className="payment-methods">
               {/* Stripe */}
-              {paymentModality?.allowStripe && (
+              {paymentModality?.stripe && (
                 <button
                   className="mego-modal-button payment-button"
                   onClick={() => handlePayment({ type: "stripe" })}
@@ -158,29 +206,38 @@ export function PaymentModal({
                 </button>
               )}
 
-              {/* Metamask */}
-              {paymentModality?.allowMetamask && (
-                <button
-                  className="mego-modal-button payment-button"
-                  onClick={() => handlePayment({ type: "metamask" })}
-                >
-                <WalletIcon height={20} width={20} style={{ marginRight: '0.5rem' }} />
-                  <p className="mego-font-medium">Paga con Metamask</p>
-                </button>
-              )}
+              {
+                Object.keys(paymentModality?.chains || {}).map((chainName) => {
+                  return (
+                    <button
+                      key={chainName}
+                      className="mego-modal-button payment-button"
+                      onClick={() => handlePayment(
+                        { type: chainName as keyof ChainPayment },
+                        amount,
+                        resolveChainIdByName(chainName as keyof ChainPayment)
+                      )}
+                    >
+                      <img height={20} width={20} src={resolveChainImageByName(chainName as keyof ChainPayment)} alt="Chain" className="payment-chain-image" />
+                      <p className="mego-font-medium">Paga con {chainName}</p>
+                    </button>
+                  )
+                })
+              }
 
               {/* ERC20 */}
-              {paymentModality?.allowErc20 && (
+              {paymentModality?.erc20 && (
                 <button
                   className="mego-modal-button payment-button"
-                onClick={() => handlePayment({ type: "erc20" })}
-              >
-                <MegoIcon height={20} width={20} style={{ marginRight: '0.5rem' }} />
+                  onClick={() => handlePayment({ type: "erc20" })}
+                >
+                  <MegoIcon height={20} width={20} style={{ marginRight: '0.5rem' }} />
                   <p className="mego-font-medium">Paga con ERC20</p>
                 </button>
               )}
             </div>
-          )}
+          )
+          }
         </div>
       </div>
     </div>
