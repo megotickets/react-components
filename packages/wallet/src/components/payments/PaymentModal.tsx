@@ -7,6 +7,16 @@ import { processStripePayment } from "./PaymentUtils";
 import MegoIcon from "../icons/MegoIcon";
 import { PaymentMethod } from "interfaces/PaymentMethod";
 
+/**
+ * Props for the PaymentModal component
+ * @param isOpen - If the modal is open
+ * @param onClose - Function to call when the modal is closed
+ * @param amount - Amount to pay
+ * @param image - Image to display
+ * @param currency - Currency of the payment
+ * @param itemName - Name of the item to pay for
+ * @param priceId - Price ID of the item to pay for
+ */
 interface PaymentModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -14,7 +24,8 @@ interface PaymentModalProps {
   image?: string;
   currency?: string;
   itemName: string;
-  stripeProductLink?: string;
+  priceId: string;
+  stripePublicKey?: string;
   onPaymentComplete?: (paymentId: string) => void;
 }
 
@@ -25,8 +36,8 @@ export function PaymentModal({
   image,
   currency = "EUR",
   itemName,
-  stripeProductLink,
-  onPaymentComplete
+  priceId,
+  stripePublicKey
 }: PaymentModalProps) {
   const [isClosing, setIsClosing] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -35,6 +46,8 @@ export function PaymentModal({
     if (isOpen) {
       setIsClosing(false);
     }
+
+
   }, [isOpen]);
 
   function handleClose() {
@@ -61,19 +74,13 @@ export function PaymentModal({
   }
 
   function handleStripePayment() {
-    if (!stripeProductLink) {
-      alert("Si prega di fornire il link del prodotto Stripe per il pagamento");
+    if (!priceId) {
+      alert("Si prega di fornire il priceId del prodotto");
     } else {
       setIsProcessing(true);
       processStripePayment({
-        payment: {
-          amount: amount,
-          currency: currency,
-          paymentId: "payment_" + Math.random().toString(36).substr(2, 9)
-        },
-        eventIdentifier: itemName,
-        accountAddress: "0x0000000000000000000000000000000000000000",
-        stripeProductLink: stripeProductLink
+        priceId: priceId,
+        stripePublicKey: stripePublicKey || ""
       });
     }
   }

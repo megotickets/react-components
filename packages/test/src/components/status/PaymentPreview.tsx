@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { PaymentModal } from '@megotickets/wallet';
+import { PaymentModal, PaymentStatusModal } from '@megotickets/wallet';
 
 
 export function PaymentPreview() {
@@ -26,9 +26,11 @@ export function PaymentPreview() {
                     amount={50}
                     image="https://chinam.com.hk/media/catalog/product/placeholder/default/Product-Image-Coming-Soon.png"
                     itemName="Abbonamento Premium"
-                    stripeProductLink={`https://buy.stripe.com/test_14k4j73PodMf8OAbII`}
                     onPaymentComplete={handlePaymentComplete}
+                    stripePublicKey={`pk_test_51QxVkcEbY9GFNTL1No0XY30bI0XmTkrTe86m1rcvJsrbA4TtoBjJpe4QbxVNEosIlaqnXwf4kYMzd4pQSfrnzJfq00rCdi9una`}
+                    priceId="price_1QxW5jEbY9GFNTL1E2u3VPUl"
                 />
+                <PaymentStatusModal/>
             </div>
         </div>
     );
