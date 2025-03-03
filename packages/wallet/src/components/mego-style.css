@@ -315,7 +315,6 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   padding: 1.5rem;
   font-family: 'Satoshi', sans-serif;
 }

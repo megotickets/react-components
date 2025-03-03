@@ -29,6 +29,11 @@ export function PaymentPreview() {
                     onPaymentComplete={handlePaymentComplete}
                     stripePublicKey={`pk_test_51QxVkcEbY9GFNTL1No0XY30bI0XmTkrTe86m1rcvJsrbA4TtoBjJpe4QbxVNEosIlaqnXwf4kYMzd4pQSfrnzJfq00rCdi9una`}
                     priceId="price_1QxW5jEbY9GFNTL1E2u3VPUl"
+                    paymentModality={{
+                        allowStripe: true,
+                        allowMetamask: false,
+                        allowErc20: false
+                    }}
                 />
                 <PaymentStatusModal/>
             </div>

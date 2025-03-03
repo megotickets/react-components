@@ -7,6 +7,12 @@ import { processStripePayment } from "./PaymentUtils";
 import MegoIcon from "../icons/MegoIcon";
 import { PaymentMethod } from "interfaces/PaymentMethod";
 
+interface PaymentModalityProps {
+  allowStripe?: boolean;
+  allowMetamask?: boolean;
+  allowErc20?: boolean;
+}
+
 /**
  * Props for the PaymentModal component
  * @param isOpen - If the modal is open
@@ -27,6 +33,7 @@ interface PaymentModalProps {
   priceId: string;
   stripePublicKey?: string;
   onPaymentComplete?: (paymentId: string) => void;
+  paymentModality?: PaymentModalityProps;
 }
 
 export function PaymentModal({
@@ -37,7 +44,12 @@ export function PaymentModal({
   currency = "EUR",
   itemName,
   priceId,
-  stripePublicKey
+  stripePublicKey,
+  paymentModality = {
+    allowStripe: true,
+    allowMetamask: true,
+    allowErc20: true
+  }
 }: PaymentModalProps) {
   const [isClosing, setIsClosing] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -136,31 +148,37 @@ export function PaymentModal({
           ) : (
             <div className="payment-methods">
               {/* Stripe */}
-              <button
-                className="mego-modal-button payment-button"
-                onClick={() => handlePayment({ type: "stripe" })}
-              >
-                <StripeIcon height={20} width={20} style={{ marginRight: '0.5rem' }} />
-                <p className="mego-font-medium">Paga con Stripe</p>
-              </button>
+              {paymentModality?.allowStripe && (
+                <button
+                  className="mego-modal-button payment-button"
+                  onClick={() => handlePayment({ type: "stripe" })}
+                >
+                  <StripeIcon height={20} width={20} style={{ marginRight: '0.5rem' }} />
+                  <p className="mego-font-medium">Paga con Stripe</p>
+                </button>
+              )}
 
               {/* Metamask */}
-              <button
-                className="mego-modal-button payment-button"
-                onClick={() => handlePayment({ type: "metamask" })}
-              >
+              {paymentModality?.allowMetamask && (
+                <button
+                  className="mego-modal-button payment-button"
+                  onClick={() => handlePayment({ type: "metamask" })}
+                >
                 <WalletIcon height={20} width={20} style={{ marginRight: '0.5rem' }} />
-                <p className="mego-font-medium">Paga con Metamask</p>
-              </button>
+                  <p className="mego-font-medium">Paga con Metamask</p>
+                </button>
+              )}
 
               {/* ERC20 */}
-              <button
-                className="mego-modal-button payment-button"
+              {paymentModality?.allowErc20 && (
+                <button
+                  className="mego-modal-button payment-button"
                 onClick={() => handlePayment({ type: "erc20" })}
               >
                 <MegoIcon height={20} width={20} style={{ marginRight: '0.5rem' }} />
-                <p className="mego-font-medium">Paga con ERC20</p>
-              </button>
+                  <p className="mego-font-medium">Paga con ERC20</p>
+                </button>
+              )}
             </div>
           )}
         </div>
