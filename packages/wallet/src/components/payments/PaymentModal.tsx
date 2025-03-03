@@ -7,7 +7,7 @@ import MegoIcon from "../icons/MegoIcon";
 import { ChainPayment, PaymentMethod, PaymentModalityProps } from "interfaces/PaymentMethod";
 import { useAccount, useSendTransaction, useSwitchChain } from "wagmi";
 import { parseEther } from "viem";
-import { resolveChainIdByName, resolveChainImageByName } from "./CryptoUtils";
+import { resolveAmountbyChain, resolveChainIdByName, resolveChainImageByName } from "./CryptoUtils";
 import { useWeb3Context } from "../web3-context";
 
 interface Chain {
@@ -253,9 +253,9 @@ export function PaymentModal({
                     <button
                       key={chainName}
                       className="mego-modal-button payment-button"
-                      onClick={() => handlePayment(
+                      onClick={async () => handlePayment(
                         { type: chainName as keyof ChainPayment },
-                        amount,
+                        await resolveAmountbyChain(chainName as keyof ChainPayment, amount),
                         resolveChainIdByName(chainName as keyof ChainPayment)
                       )}
                       disabled={provider !== "walletConnect"}
