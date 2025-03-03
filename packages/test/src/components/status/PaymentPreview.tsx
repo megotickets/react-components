@@ -11,14 +11,26 @@ export function PaymentPreview() {
     };
 
     return (
-        <div>
-            <h1>Test dei pagamenti</h1>
+        <div className='flex flex-col gap-4 border border-gray-300 rounded-md p-4'>
+            <h2>Test dei pagamenti</h2>
             <div className='flex flex-col gap-4'>
-                <button
-                    className='bg-blue-500 text-white px-4 py-2 rounded-md'
-                    onClick={() => setIsPaymentModalOpen(true)}>
-                    Acquista di esempio
-                </button>
+    
+                <div className='flex flex-col sm:flex-row items-start justify-between'>
+                    <div className='flex items-center md:items-start flex-col sm:items-center sm:flex-row gap-4 w-full'>
+                        <img src="https://chinam.com.hk/media/catalog/product/placeholder/default/Product-Image-Coming-Soon.png" alt="Prodotto" className='w-16 h-16 object-cover rounded-full mb-4'/>
+                        <div>
+                            <h3 className='text-lg font-bold'>Prodotto di esempio</h3>
+                            <p className='text-sm text-white-600'>50€</p>
+                        </div>
+                    </div>
+                    <div className='w-full sm:w-auto'>
+                        <button
+                            className='bg-blue-500 text-white px-4 py-2 rounded-md mt-4 w-full'
+                            onClick={() => setIsPaymentModalOpen(true)}>
+                            Acquista di esempio
+                        </button>
+                    </div>
+                </div>
 
                 <PaymentModal
                     isOpen={isPaymentModalOpen}
