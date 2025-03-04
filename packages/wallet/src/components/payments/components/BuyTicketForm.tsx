@@ -2,13 +2,18 @@ import { useState, useEffect } from 'react';
 import { useBuyTicketContext } from '../context/BuyTicketContext';
 import { Stepper } from '../interfaces/interface-stepper';
 
+
+const fastDebug = true
+
 export const BuyTicketForm: React.FC = () => {
-    const { eventDetails, setStepper, setClaimMetadata } = useBuyTicketContext();
-    const [email, setEmail] = useState('');
-    const [termsAccepted, setTermsAccepted] = useState(false);
-    const [shareEmail, setShareEmail] = useState(false);
+    const { eventDetails, setStepper, setClaimMetadata, setEmailOfBuyer } = useBuyTicketContext();
+    const [email, setEmail] = useState(fastDebug ? "test@test.com" : '');
+    const [termsAccepted, setTermsAccepted] = useState(fastDebug ? true : false);
+    const [shareEmail, setShareEmail] = useState(fastDebug ? true : false);
     const [metadataValues, setMetadataValues] = useState<Record<string, string>>({});
     const [isFormValid, setIsFormValid] = useState(false);
+
+    console.log(eventDetails)
 
     // Inizializza i campi di metadata quando eventDetails cambia
     useEffect(() => {
@@ -24,6 +29,7 @@ export const BuyTicketForm: React.FC = () => {
     const handleCheckout = () => {
         const isFreeTicket = eventDetails?.event?.price === 0;
         if(isFreeTicket) {
+            setEmailOfBuyer(email);
             setClaimMetadata(metadataValues);
             setStepper(Stepper.Processing);
         } else {
@@ -74,19 +80,19 @@ export const BuyTicketForm: React.FC = () => {
 
     return (
         <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <div className='flex flex-col items-center justify-center w-full'>
-                <h1 className='text-center text-2xl font-bold'>{title}</h1>
-                <p className='text-center text-sm text-gray-500'>Enter required information to continue</p>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', width: '100%' }}>
+                <h1 style={{ textAlign: 'center', fontSize: '1.5rem', fontWeight: 'bold' }}>{title}</h1>
+                <p style={{ textAlign: 'center', fontSize: '0.875rem', color: '#6B7280' }}>Enter required information to continue</p>
             </div>
 
-            <div className='flex flex-col items-center justify-center w-full'>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', width: '100%' }}>
                 {eventDetails?.event?.claim_metadata && eventDetails.event.claim_metadata.map((metadata: string, index: number) => {
                     // Determina se il campo richiede un input o una textarea in base alla lunghezza
                     const isLongText = metadata.length > 100;
                     const isFieldEmpty = !metadataValues[index] || metadataValues[index].trim() === '';
                     
                     return (
-                        <div key={index} className="w-full mb-3">
+                        <div key={index} style={{ width: '100%', marginBottom: '0.75rem' }}>
                             {isLongText ? (
                                 <textarea
                                     placeholder={metadata}
@@ -143,28 +149,28 @@ export const BuyTicketForm: React.FC = () => {
                 />
             </div>
 
-            <div className="flex items-start mb-2 w-full">
+            <div style={{ display: 'flex', alignItems: 'flex-start', marginBottom: '0.5rem', width: '100%' }}>
                 <input
                     type="checkbox"
                     id="terms"
                     checked={termsAccepted}
                     onChange={(e) => setTermsAccepted(e.target.checked)}
-                    className="mr-2 mt-1"
+                    style={{ marginRight: '0.5rem', marginTop: '0.25rem' }}
                 />
-                <label htmlFor="terms" className="text-sm text-white">
-                    I agree to the <a href="#" className="text-blue-400 underline">Terms and Conditions</a>.
+                <label htmlFor="terms" style={{ fontSize: '0.875rem', color: 'white' }}>
+                    I agree to the <a href="#" style={{ color: '#60A5FA', textDecoration: 'underline' }}>Terms and Conditions</a>.
                 </label>
             </div>
 
-            <div className="flex items-start mb-4 w-full">
+            <div style={{ display: 'flex', alignItems: 'flex-start', marginBottom: '1rem', width: '100%' }}>
                 <input
                     type="checkbox"
                     id="shareEmail"
                     checked={shareEmail}
                     onChange={(e) => setShareEmail(e.target.checked)}
-                    className="mr-2 mt-1"
+                    style={{ marginRight: '0.5rem', marginTop: '0.25rem' }}
                 />
-                <label htmlFor="shareEmail" className="text-sm text-white">
+                <label htmlFor="shareEmail" style={{ fontSize: '0.875rem', color: 'white' }}>
                     I accept to share my e-mail with event organizers.
                 </label>
             </div>
@@ -172,10 +178,17 @@ export const BuyTicketForm: React.FC = () => {
             <button
                 disabled={!isFormValid}
                 onClick={handleCheckout}
-                className="w-full bg-gradient-to-r from-green-400 to-blue-500 text-white font-bold py-2 px-4 rounded-full hover:opacity-90 transition-opacity"
                 style={{ 
+                    width: '100%', 
+                    background: 'black', 
+                    color: 'white', 
+                    fontWeight: 'bold', 
+                    padding: '0.5rem 1rem', 
+                    borderRadius: '9999px',
+                    border: '1px solid white',
                     opacity: !isFormValid ? 0.5 : 1, 
-                    cursor: !isFormValid ? 'not-allowed' : 'pointer' 
+                    cursor: !isFormValid ? 'not-allowed' : 'pointer',
+                    transition: 'opacity 0.3s'
                 }}
             >
                 Checkout

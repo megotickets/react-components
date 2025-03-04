@@ -17,6 +17,10 @@ interface BuyTicketContextType {
   //Claim metadata
   claimMetadata: any;
   setClaimMetadata: (claimMetadata: any) => void;
+
+  //Email of buyer
+  emailOfBuyer: string | null;
+  setEmailOfBuyer: (emailOfBuyer: string | null) => void;
 }
 
 const BuyTicketContext = createContext<BuyTicketContextType | undefined>(undefined);
@@ -30,6 +34,8 @@ export const BuyTicketProvider: React.FC<BuyTicketProviderProps> = ({ children }
   //Stepper
   const [stepper, setStepper] = useState<Stepper>(Stepper.Form_data);
   const [claimMetadata, setClaimMetadata] = useState<any>(null);
+  const [emailOfBuyer, setEmailOfBuyer] = useState<string | null>(null);
+
   const value = {
     isOpen,
     setIsOpen,
@@ -45,6 +51,10 @@ export const BuyTicketProvider: React.FC<BuyTicketProviderProps> = ({ children }
     //Claim metadata
     claimMetadata,
     setClaimMetadata,
+
+    //Email of buyer
+    emailOfBuyer,
+    setEmailOfBuyer,
   };
 
   return (
