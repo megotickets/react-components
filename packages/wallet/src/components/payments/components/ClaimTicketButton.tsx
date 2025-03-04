@@ -19,7 +19,7 @@ export const ClaimTicketButton: React.FC<ClaimTicketButtonProps> = ({
 
   return (
     <button
-      className={"bg-blue-500 text-white px-4 py-2 rounded-md"}
+      style={{ backgroundColor: '#1E40AF', color: 'white', padding: '0.5rem 1rem', borderRadius: '0.25rem' }}
       onClick={handleOpenModal}
     >
       {buttonText}
