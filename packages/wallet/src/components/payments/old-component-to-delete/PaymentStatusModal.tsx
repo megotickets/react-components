@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import "../mego-style.css";
-import CrossIcon from "../icons/CrossIcon";
-import CheckIcon from "../icons/CheckIcon";
-import ErrorIcon from "../icons/ErrorIcon";
+import "../../mego-style.css";
+import CrossIcon from "../../icons/CrossIcon";
+import CheckIcon from "../../icons/CheckIcon";
+import ErrorIcon from "../../icons/ErrorIcon";
 
 export function PaymentStatusModal() {
   const [isClosing, setIsClosing] = useState(false);

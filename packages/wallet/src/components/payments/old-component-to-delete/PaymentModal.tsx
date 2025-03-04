@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
-import "../mego-style.css";
-import StripeIcon from "../icons/StripeIcon";
-import CrossIcon from "../icons/CrossIcon";
-import { processStripePayment } from "./PaymentUtils";
-import MegoIcon from "../icons/MegoIcon";
+import "../../mego-style.css";
+import StripeIcon from "../../icons/StripeIcon";
+import CrossIcon from "../../icons/CrossIcon";
+import { processStripePayment } from "../utils/PaymentUtils";
+import MegoIcon from "../../icons/MegoIcon";
 import { ChainPayment, PaymentMethod, PaymentModalityProps } from "interfaces/PaymentMethod";
 import { useAccount, useSendTransaction, useSwitchChain } from "wagmi";
 import { parseEther } from "viem";
-import { resolveAmountbyChain, resolveChainIdByName, resolveChainImageByName } from "./CryptoUtils";
-import { useWeb3Context } from "../web3-context";
+import { resolveAmountbyChain, resolveChainIdByName, resolveChainImageByName } from "../utils/CryptoUtils";
+import { useWeb3Context } from "../../web3-context";
 
 interface Chain {
   name: string;

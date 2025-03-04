@@ -2,6 +2,8 @@ import { ChainPayment } from "interfaces/PaymentMethod";
 //Resolve euro -> ether
 import axios from 'axios';
 
+const API_URL = 'https://tickets-api.mego.tools';
+
 export const resolveChainIdByName = (chainName: keyof ChainPayment) => {
     switch (chainName) {
       case "eth":
@@ -47,45 +49,97 @@ export const resolveChainIdByName = (chainName: keyof ChainPayment) => {
 
 
 export const convertEurToEth = async (amountEur: number) => {
-  const response = await axios.get('https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=eur');
-  const ethPrice = response.data.ethereum.eur;
-  return amountEur / ethPrice;
+  const response = await axios.post(
+    API_URL + "/payments",
+    {
+      processor: "ethereum",
+      amount: amountEur,
+      identifier: "event",
+      address: "0x123",
+      discount_code: "",
+      currency: "eur",
+      email: "example@example.com",
+      donation_amount: 0,
+    }
+  );
+  console.log(response.data);
+  return response.data.amount;
 }
 
 export const convertEurToArbitrum = async (amountEur: number) => {
-  const response = await axios.get('https://api.coingecko.com/api/v3/simple/price?ids=arbitrum&vs_currencies=eur');
-  const arbPrice = response.data.arbitrum.eur;
-  return amountEur / arbPrice;
+  return convertEurToEth(amountEur);
 }
 
 export const convertEurToOptimism = async (amountEur: number) => {
-  const response = await axios.get('https://api.coingecko.com/api/v3/simple/price?ids=optimism&vs_currencies=eur');
-  const optPrice = response.data.optimism.eur;
-  return amountEur / optPrice;
+  return convertEurToEth(amountEur);
 }
 
 export const convertEurToPolygon = async (amountEur: number) => {
-  const response = await axios.get('https://api.coingecko.com/api/v3/simple/price?ids=polygon&vs_currencies=eur');
-  const polyPrice = response.data.polygon.eur;
-  return amountEur / polyPrice;
+  const response = await axios.post(
+    API_URL + "/payments",
+    {
+      processor: "polygon",
+      amount: amountEur,
+      identifier: "eur_to_poly",
+      address: "0x123",
+      discount_code: "",
+      currency: "eur",
+      email: "example@example.com",
+      donation_amount: 0,
+    }
+  );
+  return response.data.amount;
 }
 
 export const convertEurToUsdc = async (amountEur: number) => {
-  const response = await axios.get('https://api.coingecko.com/api/v3/simple/price?ids=usdc&vs_currencies=eur');
-  const usdcPrice = response.data.usdc.eur;
-  return amountEur / usdcPrice;
+  const response = await axios.post(
+    API_URL + "/payments",
+    {
+      processor: "usdc",
+      amount: amountEur,
+      identifier: "eur_to_usdc",
+      address: "0x123",
+      discount_code: "",
+      currency: "eur",
+      email: "example@example.com",
+      donation_amount: 0,
+    }
+  );
+  return response.data.amount;
 }
 
 export const convertEurToUsdt = async (amountEur: number) => {
-  const response = await axios.get('https://api.coingecko.com/api/v3/simple/price?ids=usdt&vs_currencies=eur');
-  const usdtPrice = response.data.usdt.eur;
-  return amountEur / usdtPrice;
+  const response = await axios.post(
+    API_URL + "/payments",
+    {
+      processor: "usdt",
+      amount: amountEur,
+      identifier: "eur_to_usdt",
+      address: "0x123",
+      discount_code: "",
+      currency: "eur",
+      email: "example@example.com",
+      donation_amount: 0,
+    }
+  );
+  return response.data.amount;
 }
 
 export const convertEurToDai = async (amountEur: number) => {
-  const response = await axios.get('https://api.coingecko.com/api/v3/simple/price?ids=dai&vs_currencies=eur');
-  const daiPrice = response.data.dai.eur;
-  return amountEur / daiPrice;
+  const response = await axios.post(
+    API_URL + "/payments",
+    {
+      processor: "dai",
+      amount: amountEur,
+      identifier: "eur_to_dai",
+      address: "0x123",
+      discount_code: "",
+      currency: "eur",
+      email: "example@example.com",
+      donation_amount: 0,
+    }
+  );
+  return response.data.amount;
 }
 
 export const resolveAmountbyChain = async (chainName: keyof ChainPayment, amountEur: number) => {

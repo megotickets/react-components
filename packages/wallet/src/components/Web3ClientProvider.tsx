@@ -7,6 +7,8 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useState } from 'react';
 import { CustomizationProvider } from './CustomizationProvider';
 import { getDefaultConfig, RainbowKitProvider } from '@rainbow-me/rainbowkit'
+import { BuyTicketProvider } from './payments/context/BuyTicketContext';
+
 
 
 export const config = getDefaultConfig({
@@ -47,7 +49,9 @@ export function Web3ClientProvider({ children }: Web3ProviderProps) {
       <QueryClientProvider client={queryClient}>
         <WagmiProvider config={config}>
           <RainbowKitProvider>
-            {children}
+            <BuyTicketProvider>
+              {children}
+            </BuyTicketProvider>
           </RainbowKitProvider>
         </WagmiProvider>
       </QueryClientProvider>
