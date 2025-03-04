@@ -47,6 +47,7 @@ export function Web3ClientProvider({ children }: Web3ProviderProps) {
   return (
     <CustomizationProvider>
       <QueryClientProvider client={queryClient}>
+        {/* @ts-ignore */}
         <WagmiProvider config={config}>
           <RainbowKitProvider>
             <BuyTicketProvider>
