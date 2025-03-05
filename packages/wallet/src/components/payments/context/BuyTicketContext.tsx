@@ -2,7 +2,7 @@ import React, { createContext, useContext, useState, ReactNode } from 'react';
 import MegoBuyTicketModal from '../components/MegoBuyTicketModal';
 import { Stepper } from '../interfaces/interface-stepper';
 import { PopupModality } from '../interfaces/popup-enum';
-import { MegoPopup } from '@/components/MegoPopup';
+import { MegoPopup, MegoPopupData } from '@/components/MegoPopup';
 
 interface BuyTicketContextType {
   isOpen: boolean;
@@ -25,7 +25,10 @@ interface BuyTicketContextType {
   setEmailOfBuyer: (emailOfBuyer: string | null) => void;
 
   //Popup
-  openPopup: (title: string, message: string, type: PopupModality) => void;
+  openPopup: (popupData: MegoPopupData) => void;
+
+  //Reset payment processing
+  resetPaymentProcessing: () => void;
 }
 
 const BuyTicketContext = createContext<BuyTicketContextType | undefined>(undefined);
@@ -41,15 +44,24 @@ export const BuyTicketProvider: React.FC<BuyTicketProviderProps> = ({ children }
   const [claimMetadata, setClaimMetadata] = useState<any>(null);
   const [emailOfBuyer, setEmailOfBuyer] = useState<string | null>(null);
 
-  const [popup, setPopup] = useState<{
-    isOpen: boolean;
-    title: string;
-    message: string;
-    type: PopupModality;
-  } | null>(null);
+  const [popup, setPopup] = useState<MegoPopupData>({
+    isOpen: false,
+    message: '',
+    title: '',
+    modality: PopupModality.Info,
+    autoCloseTime: 5000
+  });
   
-  const openPopup = (title: string, message: string, type: PopupModality) => {
-    alert(title + " " + message + " " + type)
+  const openPopup = (popupData: MegoPopupData) => {
+    setPopup(popupData)
+  }
+
+  const resetPaymentProcessing = () => {
+    setStepper(Stepper.Form_data)
+    setEventDetails(null)
+    setClaimMetadata(null)
+    setEmailOfBuyer(null)
+    setIsOpen(false)
   }
 
   const value = {
@@ -74,18 +86,23 @@ export const BuyTicketProvider: React.FC<BuyTicketProviderProps> = ({ children }
 
     //Popup
     openPopup,
+
+    //Reset payment processing
+    resetPaymentProcessing
   };
 
   return (
     <BuyTicketContext.Provider value={value}>
       <MegoBuyTicketModal />
       <MegoPopup 
-        isOpen={popup?.isOpen || false} 
-        onClose={function (): void {
-          throw new Error('Function not implemented.');
-        } } 
-        message={''} 
-        title={''} 
+        popupData={popup}
+        onClose={() => setPopup({
+          isOpen: false,
+          message: '',
+          title: '',
+          modality: PopupModality.Info,
+          autoCloseTime: 5000
+        })}
       />
       {children}
     </BuyTicketContext.Provider>

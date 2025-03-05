@@ -7,7 +7,7 @@ import { Loader } from "@/components/Loader";
 import { PopupModality } from "../interfaces/popup-enum";
 
 export const BuyTicketProcessing = () => {
-    const { eventDetails, emailOfBuyer, openPopup } = useBuyTicketContext()
+    const { eventDetails, emailOfBuyer, openPopup, resetPaymentProcessing } = useBuyTicketContext()
     const { address } = useAccount()
 
 
@@ -37,10 +37,18 @@ export const BuyTicketProcessing = () => {
                     emailOfBuyer || "",
                     eventDetails?.event?.donation_amount || 0
                 )
-                const { message } = paymentDetails
+                let { message } = paymentDetails
+                //Force for testing
+                message = Messages.CANT_BUY_MORE_TICKETS
                 if (message === Messages.CANT_BUY_MORE_TICKETS) {
                     setMessage(Messages.CANT_BUY_MORE_TICKETS)
-                    openPopup("Alert", Messages.CANT_BUY_MORE_TICKETS, PopupModality.Error)
+                    openPopup({
+                        title: 'Alert',
+                        message: Messages.CANT_BUY_MORE_TICKETS,
+                        modality: PopupModality.Error,
+                        isOpen: true
+                    })
+                    resetPaymentProcessing()
                 }
             } else {
                 console.error('Address is undefined');

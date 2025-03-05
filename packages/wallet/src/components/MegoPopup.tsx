@@ -2,8 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { PopupModality } from './payments/interfaces/popup-enum';
 
 interface MegoPopupProps {
-  isOpen: boolean;
+  popupData: MegoPopupData;
   onClose: () => void;
+}
+
+
+export interface MegoPopupData {
+  isOpen: boolean;
   message: string;
   title?: string;
   modality?: PopupModality;
@@ -11,18 +16,14 @@ interface MegoPopupProps {
 }
 
 export const MegoPopup: React.FC<MegoPopupProps> = ({
-  isOpen,
-  onClose,
-  message,
-  title = 'Attention',
-  modality = PopupModality.Info,
-  autoCloseTime = 5000 // 5 secondi di default
+  popupData,
+  onClose
 }) => {
   const [isClosing, setIsClosing] = useState(false);
   const [animationState, setAnimationState] = useState('hidden');
 
   useEffect(() => {
-    if (isOpen) {
+    if (popupData.isOpen) {
       setIsClosing(false);
       setAnimationState('entering');
       const enterTimeout = setTimeout(() => {
@@ -32,14 +33,14 @@ export const MegoPopup: React.FC<MegoPopupProps> = ({
       // Auto-chiusura dopo il tempo specificato
       const autoCloseTimeout = setTimeout(() => {
         handleClose();
-      }, autoCloseTime);
+      }, popupData.autoCloseTime || 1000);
 
       return () => {
         clearTimeout(enterTimeout);
         clearTimeout(autoCloseTimeout);
       };
     }
-  }, [isOpen, autoCloseTime]);
+  }, [popupData.isOpen, popupData.autoCloseTime]);
 
   const handleClose = () => {
     setIsClosing(true);
@@ -51,11 +52,11 @@ export const MegoPopup: React.FC<MegoPopupProps> = ({
     }, 300); // Durata dell'animazione
   };
 
-  if (!isOpen && !isClosing) return null;
+  if (!popupData.isOpen && !isClosing) return null;
 
   // Determina il colore dell'icona in base alla modalità
   const getIconColor = () => {
-    switch (modality) {
+    switch (popupData.modality) {
       case PopupModality.Success:
         return '#10B981'; // verde
       case PopupModality.Error:
@@ -68,7 +69,7 @@ export const MegoPopup: React.FC<MegoPopupProps> = ({
 
   // Determina l'icona in base alla modalità
   const getIcon = () => {
-    switch (modality) {
+    switch (popupData.modality) {
       case PopupModality.Success:
         return (
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke={getIconColor()} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -151,7 +152,7 @@ export const MegoPopup: React.FC<MegoPopupProps> = ({
           margin: '16px 0 8px',
           textAlign: 'center'
         }}>
-          {title}
+          {popupData.title}
         </h3>
         
         <p style={{
@@ -160,7 +161,7 @@ export const MegoPopup: React.FC<MegoPopupProps> = ({
           margin: '0 0 24px',
           textAlign: 'center'
         }}>
-          {message}
+          {popupData.message}
         </p>
         
         <button 
