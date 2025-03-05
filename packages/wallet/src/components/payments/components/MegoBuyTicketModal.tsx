@@ -5,6 +5,8 @@ import { useBuyTicketContext } from "../context/BuyTicketContext";
 import { Stepper } from "../interfaces/interface-stepper";
 import { BuyTicketForm } from "./BuyTicketForm";
 import { BuyTicketProcessing } from "./BuyTicketProcessing";
+import { BuyTicketPayments } from "./BuyTicketPayments";
+import { BuyTicketClaim } from "./BuyTicketClaim";
 
 interface MegoBuyTicketModalProps {
   onClose?: () => void;
@@ -56,6 +58,8 @@ const MegoBuyTicketModal: React.FC<MegoBuyTicketModalProps> = ({ onClose }) => {
         <div className="mego-modal-content payment-content">
           {stepper === Stepper.Form_data && <BuyTicketForm />}
           {stepper === Stepper.Processing && <BuyTicketProcessing />}
+          {stepper === Stepper.Payments && <BuyTicketPayments />}
+          {stepper === Stepper.Claim && <BuyTicketClaim />}
         </div>
       </div>
     </div>

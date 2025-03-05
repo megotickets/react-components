@@ -27,14 +27,9 @@ export const BuyTicketForm: React.FC = () => {
     }, [eventDetails]);
 
     const handleCheckout = () => {
-        const isFreeTicket = eventDetails?.event?.price === 0;
-        if(isFreeTicket) {
-            setEmailOfBuyer(email);
-            setClaimMetadata(metadataValues);
-            setStepper(Stepper.Processing);
-        } else {
-            alert("Buy ticket");
-        }
+        setEmailOfBuyer(email);
+        setClaimMetadata(metadataValues);
+        setStepper(Stepper.Processing);
     };
 
     const handleMetadataChange = (index: number, value: string) => {
@@ -48,13 +43,13 @@ export const BuyTicketForm: React.FC = () => {
     useEffect(() => {
         const isEmailValid = email.trim() !== '' && email.includes('@');
         const areTermsAccepted = termsAccepted && shareEmail;
-        
+
         // Verifica se tutti i campi di metadata sono stati compilati
         let areMetadataFieldsValid = true;
-        
+
         if (eventDetails?.event?.claim_metadata && eventDetails.event.claim_metadata.length > 0) {
             const metadataLength = eventDetails.event.claim_metadata.length;
-            
+
             for (let i = 0; i < metadataLength; i++) {
                 const value = metadataValues[i];
                 if (value === undefined || value.trim() === '') {
@@ -63,7 +58,7 @@ export const BuyTicketForm: React.FC = () => {
                 }
             }
         }
-        
+
         console.log({
             isEmailValid,
             areTermsAccepted,
@@ -72,7 +67,7 @@ export const BuyTicketForm: React.FC = () => {
             metadataLength: eventDetails?.event?.claim_metadata?.length || 0,
             filledMetadataCount: Object.keys(metadataValues).length
         });
-        
+
         setIsFormValid(isEmailValid && areTermsAccepted && areMetadataFieldsValid);
     }, [email, termsAccepted, shareEmail, metadataValues, eventDetails]);
 
@@ -90,7 +85,7 @@ export const BuyTicketForm: React.FC = () => {
                     // Determina se il campo richiede un input o una textarea in base alla lunghezza
                     const isLongText = metadata.length > 100;
                     const isFieldEmpty = !metadataValues[index] || metadataValues[index].trim() === '';
-                    
+
                     return (
                         <div key={index} style={{ width: '100%', marginBottom: '0.75rem' }}>
                             {isLongText ? (
@@ -98,13 +93,13 @@ export const BuyTicketForm: React.FC = () => {
                                     placeholder={metadata}
                                     value={metadataValues[index] || ''}
                                     onChange={(e) => handleMetadataChange(index, e.target.value)}
-                                    style={{ 
-                                        marginBottom: '10px', 
-                                        width: '100%', 
-                                        borderRadius: '20px', 
-                                        border: `1px solid ${isFieldEmpty ? '#FCA5A5' : 'white'}`, 
-                                        backgroundColor: 'black', 
-                                        color: 'white', 
+                                    style={{
+                                        marginBottom: '10px',
+                                        width: '100%',
+                                        borderRadius: '20px',
+                                        border: `1px solid ${isFieldEmpty ? '#FCA5A5' : 'white'}`,
+                                        backgroundColor: 'black',
+                                        color: 'white',
                                         padding: '8px 16px',
                                         resize: 'vertical'
                                     }}
@@ -116,14 +111,14 @@ export const BuyTicketForm: React.FC = () => {
                                     placeholder={metadata}
                                     value={metadataValues[index] || ''}
                                     onChange={(e) => handleMetadataChange(index, e.target.value)}
-                                    style={{ 
-                                        marginBottom: '10px', 
-                                        width: '100%', 
-                                        borderRadius: '20px', 
-                                        border: `1px solid ${isFieldEmpty ? '#FCA5A5' : 'white'}`, 
-                                        backgroundColor: 'black', 
-                                        color: 'white', 
-                                        padding: '8px 16px' 
+                                    style={{
+                                        marginBottom: '10px',
+                                        width: '100%',
+                                        borderRadius: '20px',
+                                        border: `1px solid ${isFieldEmpty ? '#FCA5A5' : 'white'}`,
+                                        backgroundColor: 'black',
+                                        color: 'white',
+                                        padding: '8px 16px'
                                     }}
                                 />
                             )}
@@ -137,14 +132,14 @@ export const BuyTicketForm: React.FC = () => {
                     placeholder="Email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    style={{ 
-                        marginBottom: '10px', 
-                        width: '100%', 
-                        borderRadius: '20px', 
-                        border: `1px solid ${!email || !email.includes('@') ? '#FCA5A5' : 'white'}`, 
-                        backgroundColor: 'black', 
-                        color: 'white', 
-                        padding: '8px 16px' 
+                    style={{
+                        marginBottom: '10px',
+                        width: '100%',
+                        borderRadius: '20px',
+                        border: `1px solid ${!email || !email.includes('@') ? '#FCA5A5' : 'white'}`,
+                        backgroundColor: 'black',
+                        color: 'white',
+                        padding: '8px 16px'
                     }}
                 />
             </div>
@@ -178,15 +173,15 @@ export const BuyTicketForm: React.FC = () => {
             <button
                 disabled={!isFormValid}
                 onClick={handleCheckout}
-                style={{ 
-                    width: '100%', 
-                    background: 'black', 
-                    color: 'white', 
-                    fontWeight: 'bold', 
-                    padding: '0.5rem 1rem', 
+                style={{
+                    width: '100%',
+                    background: 'black',
+                    color: 'white',
+                    fontWeight: 'bold',
+                    padding: '0.5rem 1rem',
                     borderRadius: '9999px',
                     border: '1px solid white',
-                    opacity: !isFormValid ? 0.5 : 1, 
+                    opacity: !isFormValid ? 0.5 : 1,
                     cursor: !isFormValid ? 'not-allowed' : 'pointer',
                     transition: 'opacity 0.3s'
                 }}

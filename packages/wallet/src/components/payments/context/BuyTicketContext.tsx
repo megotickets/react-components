@@ -29,6 +29,10 @@ interface BuyTicketContextType {
 
   //Reset payment processing
   resetPaymentProcessing: () => void;
+
+  //Claim data
+  claimData: any;
+  setClaimData: (claimData: any) => void;
 }
 
 const BuyTicketContext = createContext<BuyTicketContextType | undefined>(undefined);
@@ -43,6 +47,9 @@ export const BuyTicketProvider: React.FC<BuyTicketProviderProps> = ({ children }
   const [stepper, setStepper] = useState<Stepper>(Stepper.Form_data);
   const [claimMetadata, setClaimMetadata] = useState<any>(null);
   const [emailOfBuyer, setEmailOfBuyer] = useState<string | null>(null);
+
+  //Claim data
+  const [claimData, setClaimData] = useState<any>(null);
 
   const [popup, setPopup] = useState<MegoPopupData>({
     isOpen: false,
@@ -62,6 +69,7 @@ export const BuyTicketProvider: React.FC<BuyTicketProviderProps> = ({ children }
     setClaimMetadata(null)
     setEmailOfBuyer(null)
     setIsOpen(false)
+    setClaimData(null)
   }
 
   const value = {
@@ -88,7 +96,11 @@ export const BuyTicketProvider: React.FC<BuyTicketProviderProps> = ({ children }
     openPopup,
 
     //Reset payment processing
-    resetPaymentProcessing
+    resetPaymentProcessing,
+
+    //Claim data
+    claimData,
+    setClaimData
   };
 
   return (
