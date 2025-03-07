@@ -56,7 +56,6 @@ export const BuyTicketProcessing = () => {
                 //Display and check NFT
                 setMessage('Check NFT ...')
                 const res = await checkNFT(eventDetails?.event?.identifier, userAddress);
-                console.log(res)
                 let tokenId = res.tokenId;
                 if (tokenId !== null) {
                     await new Promise(resolve => setTimeout(resolve, 1000));
@@ -78,7 +77,7 @@ export const BuyTicketProcessing = () => {
                     //Re-check NFT while minting is completed
                     let isMinted = false;
                     let retry = 0;
-                    while (!isMinted && retry < 10) {
+                    while (!isMinted && retry < 15) {
                         const res = await checkNFT(eventDetails?.event?.identifier, userAddress);
                         if (res.tokenId !== null) {
                             isMinted = true;
@@ -87,10 +86,15 @@ export const BuyTicketProcessing = () => {
                         retry++;
                         await new Promise(resolve => setTimeout(resolve, 3000));
                     }
-                    setMessage('Please confirm subscription to attend the event.')
+                    if(retry >= 15){
+                        setMessage('Error minting NFT...')
+                        openPopup({ title: 'Alert', message: 'Error minting NFT...', modality: PopupModality.Error, isOpen: true })
+                        resetPaymentProcessing()
+                        return;
+                    }
                     //const res = await mintNFT(eventDetails?.event?.identifier,address);
                 }
-
+                
                 let signature = "";
                 if (isConnectedWithMego() && provider) {
                     await saveMegoPendingClaimProcessing(tokenId, emailOfBuyer || "", eventDetails?.event?.identifier, userAddress, `Claiming token ${tokenId}`, claimMetadata)
@@ -102,6 +106,7 @@ export const BuyTicketProcessing = () => {
                     }
                     return;
                 } else {
+                    setMessage('Please confirm subscription to attend the event.')
                     signature = await signMessage(config, { message: `Claiming token ${tokenId}` })
                 }
 
@@ -190,6 +195,7 @@ export const BuyTicketProcessing = () => {
         }
         setClaimData(claim)
         setStepper(Stepper.Claim)
+        cleanMegoPendingClaimProcessing()
     }
 
 

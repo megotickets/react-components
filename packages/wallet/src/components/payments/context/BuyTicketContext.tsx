@@ -64,6 +64,7 @@ export const BuyTicketProvider: React.FC<BuyTicketProviderProps> = ({ children }
     setPopup(popupData)
   }
 
+  //Reset the entire process for obtain ticket (free & paid scenario)
   const resetPaymentProcessing = () => {
     setStepper(Stepper.Form_data)
     setEventDetails(null)
@@ -79,7 +80,8 @@ export const BuyTicketProvider: React.FC<BuyTicketProviderProps> = ({ children }
   }
 
   const restorePaymentProcessing = async () => {
-    //TODO: Implement
+    setIsOpen(true)
+    setStepper(Stepper.Payments)
   }
 
   //Restore the claim processing started with mego
