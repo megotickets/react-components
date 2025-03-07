@@ -54,7 +54,7 @@ const checkNFT = async (identifier: string, walletAddress: string) => {
 const mintNFT = async (paymentId: string) => {
     try {
         const response = await axios.post(`${baseUrl}/nfts/mint`, {
-            paymentId
+            payment_id: paymentId
         })
         return response.data
     } catch (error) {

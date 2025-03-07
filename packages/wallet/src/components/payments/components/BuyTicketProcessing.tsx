@@ -15,11 +15,11 @@ export const BuyTicketProcessing = () => {
     const { address } = useAccount()
 
     const [message, setMessage] = useState<string>('Processing...')
-
+    let count = 0;
 
     const processing = async () => {
         try {
-            
+
             setMessage('Asking for payment details...')
             const processor = "stripe"
             if (address) {
@@ -33,7 +33,19 @@ export const BuyTicketProcessing = () => {
                     emailOfBuyer || "",
                     eventDetails?.event?.donation_amount || 0
                 )
-                let { message } = paymentDetails
+                let { error, message, payment } = paymentDetails
+
+                if(error){
+                    setMessage('Error asking for payment details...')
+                    openPopup({
+                        title: 'Alert',
+                        message: 'Error asking for payment details...',
+                        modality: PopupModality.Error,
+                        isOpen: true
+                    })
+                    resetPaymentProcessing()
+                    return;
+                }
 
                 //Quit if the user can't buy more tickets
                 if (message === Messages.CANT_BUY_MORE_TICKETS) {
@@ -48,10 +60,10 @@ export const BuyTicketProcessing = () => {
                 }
 
                 //Display free ticket or payment message
-                if(eventDetails?.event?.price <= 0){
+                if (eventDetails?.event?.price <= 0) {
                     setMessage('Claiming free ticket...')
                     await new Promise(resolve => setTimeout(resolve, 1000));
-                }else{
+                } else {
                     setMessage('Processing payment...')
                     await new Promise(resolve => setTimeout(resolve, 1000));
                     setStepper(Stepper.Payments)
@@ -60,35 +72,67 @@ export const BuyTicketProcessing = () => {
 
                 //Display and check NFT
                 setMessage('Check NFT ...')
-                const res = await checkNFT(eventDetails?.event?.identifier,address);
+                const res = await checkNFT(eventDetails?.event?.identifier, address);
                 console.log(res)
                 const { tokenId } = res;
-
-                if(tokenId !== ""){
-                    setMessage('User has NFT...')
+                console.log(tokenId)
+                if (tokenId !== null) {
                     await new Promise(resolve => setTimeout(resolve, 1000));
-                }else {
-                    setMessage('Minting NFT...')
-                    await new Promise(resolve => setTimeout(resolve, 1000));
-                    //const res = await mintNFT(eventDetails?.event?.identifier,address);
-                    return;
-                }
-
-                //Display creating Claim
-                setMessage('Creating claim...')
-                await new Promise(resolve => setTimeout(resolve, 1000));
-                const signature = await signMessage(config, {message: `Claiming token ${tokenId}`})
-                if(!signature){
-                    setMessage('Error creating claim...')
                     openPopup({
-                        title: 'Alert',
-                        message: 'Error creating claim...',
+                        title: 'Ticket already minted',
+                        message: 'You already have a ticket for this payment.',
                         modality: PopupModality.Error,
                         isOpen: true
                     })
                     resetPaymentProcessing()
                     return;
+                } else {
+                    setMessage('Minting NFT...')
+                    //Mint NFT
+                    const res = await mintNFT(payment?.paymentId);
+                    const { error } = res;
+                    if (error) {
+                        setMessage('Error minting NFT...')
+                        openPopup({
+                            title: 'Alert',
+                            message: 'Error minting NFT...',
+                            modality: PopupModality.Error,
+                            isOpen: true
+                        })
+                        resetPaymentProcessing()
+                        return;
+                    }
+                    setMessage('Waiting for minting confirmation..')
+                    //Re-check NFT while minting is completed
+                    let isMinted = false;
+                    let retry = 0;
+                    while (!isMinted && retry < 10) {
+                        const res = await checkNFT(eventDetails?.event?.identifier, address);
+                        if (res.tokenId !== null) {
+                            isMinted = true;
+                        }
+                        retry++;
+                        await new Promise(resolve => setTimeout(resolve, 3000));
+                    }
+                    setMessage('Please confirm subscription to attend the event.')
+                    //const res = await mintNFT(eventDetails?.event?.identifier,address);
                 }
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                const signature = await signMessage(config, { message: `Claiming token ${tokenId}` })
+                if (!signature) {
+                    setMessage('Error creating claim...')
+                    openPopup({
+                        title: 'Alert',
+                        message: 'Error creating claim...',
+                        modality: PopupModality.Error,
+                        isOpen: true,
+                    })
+                    resetPaymentProcessing()
+                    return;
+                }
+
+                //Create claim
+                setMessage('Creating claim...')
                 const claim = await createClaim(
                     signature,
                     tokenId,
@@ -118,7 +162,11 @@ export const BuyTicketProcessing = () => {
 
 
     useEffect(() => {
-        processing()
+        //Prevent strict mode to run the processing twice
+        if(count === 0){
+            processing()
+            count++;
+        }
     }, [])
 
 

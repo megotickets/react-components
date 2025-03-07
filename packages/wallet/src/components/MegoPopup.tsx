@@ -33,7 +33,7 @@ export const MegoPopup: React.FC<MegoPopupProps> = ({
       // Auto-chiusura dopo il tempo specificato
       const autoCloseTimeout = setTimeout(() => {
         handleClose();
-      }, popupData.autoCloseTime || 1000);
+      }, popupData.autoCloseTime || 3000);
 
       return () => {
         clearTimeout(enterTimeout);
