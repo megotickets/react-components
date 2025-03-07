@@ -74,8 +74,7 @@ export const BuyTicketProcessing = () => {
                 setMessage('Check NFT ...')
                 const res = await checkNFT(eventDetails?.event?.identifier, address);
                 console.log(res)
-                const { tokenId } = res;
-                console.log(tokenId)
+                let tokenId = res.tokenId;
                 if (tokenId !== null) {
                     await new Promise(resolve => setTimeout(resolve, 1000));
                     openPopup({
@@ -110,6 +109,7 @@ export const BuyTicketProcessing = () => {
                         const res = await checkNFT(eventDetails?.event?.identifier, address);
                         if (res.tokenId !== null) {
                             isMinted = true;
+                            tokenId = res.tokenId;
                         }
                         retry++;
                         await new Promise(resolve => setTimeout(resolve, 3000));
@@ -143,6 +143,18 @@ export const BuyTicketProcessing = () => {
                     true,
                     claimMetadata
                 );
+                
+                if(claim.error){
+                    setMessage('Error creating claim...')
+                    openPopup({
+                        title: 'Alert',
+                        message: 'Error creating claim...',
+                        modality: PopupModality.Error,
+                        isOpen: true
+                    })
+                    resetPaymentProcessing()
+                    return;
+                }
                 setClaimData(claim)
                 setStepper(Stepper.Claim)
                 return;
