@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useBuyTicketContext } from "../context/BuyTicketContext";
-import { askPaymentDetails, createClaim, getMegoPendingClaimProcessingData, cleanMegoPendingClaimProcessing } from "../utils/BuyTicketUtils";
+import { askPaymentDetails, cleanMegoPendingClaimProcessing } from "../utils/BuyTicketUtils";
 import { useAccount } from "wagmi";
 import { Messages } from "../interfaces/messages-enums";
 import { Loader } from "@/components/Loader";
@@ -10,9 +10,9 @@ import { useWeb3Context } from "@/components/web3-context";
 
 
 export const BuyTicketProcessing = () => {
-    const { eventDetails, emailOfBuyer, openPopup, resetPaymentProcessing, claimMetadata, setStepper, setClaimData, setPaymentsDetails } = useBuyTicketContext()
+    const { eventDetails, emailOfBuyer, openPopup, resetPaymentProcessing, setStepper, setPaymentsDetails } = useBuyTicketContext()
     const { address } = useAccount()
-    const { loggedAs, isConnectedWithMego, provider, signMessageWithGoogle, signMessageWithApple } = useWeb3Context()
+    const { loggedAs } = useWeb3Context()
 
     const [message, setMessage] = useState<string>('Processing...')
     let count = 0;
@@ -78,51 +78,10 @@ export const BuyTicketProcessing = () => {
         }
     }
 
-    const claimProcessingWithMego = async () => {
-        setMessage('Creating claim...')
-        const data = await getMegoPendingClaimProcessingData()
-        //Take query params signature from url
-        const urlParams = new URLSearchParams(window.location.search);
-        const signature = urlParams.get('signature') || "";
-
-        if(!signature){
-            setMessage('Signature error')
-            openPopup({ title: 'Signature error', message: 'Signature not found', modality: PopupModality.Error, isOpen: true })
-            cleanMegoPendingClaimProcessing()
-            resetPaymentProcessing()
-            return;
-        }
-
-        const claim = await createClaim(
-            signature,
-            data?.tokenId || "",
-            data?.emailOfBuyer || "",
-            data?.identifier || "",
-            data?.userAddress || "",
-            data?.message || "",
-            true,
-            data?.claim_metadata || []
-        );
-
-        if (claim.error) {
-            setMessage('Error creating claim...')
-            openPopup({ title: 'Alert', message: 'Error creating claim...', modality: PopupModality.Error, isOpen: true })
-            cleanMegoPendingClaimProcessing()
-            resetPaymentProcessing()
-            return;
-        }
-        setClaimData(claim)
-        setStepper(Stepper.Claim)
-        cleanMegoPendingClaimProcessing()
-    }
-
-
     useEffect(() => {
-        //Prevent strict mode to run the processing twice
         if (count === 0) {
-            const MP_func = localStorage.getItem("MP_func")
-            MP_func === "claim_processing" ? claimProcessingWithMego() : processing()
-            count++;
+            processing()
+            count++
         }
     }, [])
 

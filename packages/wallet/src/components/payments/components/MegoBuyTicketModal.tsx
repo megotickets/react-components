@@ -5,10 +5,7 @@ import { useBuyTicketContext } from "../context/BuyTicketContext";
 import { Stepper } from "../interfaces/interface-stepper";
 import { BuyTicketForm } from "./BuyTicketForm";
 import { BuyTicketProcessing } from "./BuyTicketProcessing";
-import { BuyTicketPayments } from "./BuyTicketPayments";
 import { BuyTicketClaim } from "./BuyTicketClaim";
-import { useWeb3Context } from "@/components/web3-context";
-import { useAccount } from "wagmi";
 import { BuyCheckNFTAndMint } from "./BuyCheckNFTAndMint";
 import { BuyTicketClaimGeneration } from "./BuyTicketClaimGeneration";
 

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react"
 import { useBuyTicketContext } from "../context/BuyTicketContext";
-import { createClaim, saveMegoPendingClaimProcessing } from "../utils/BuyTicketUtils";
+import { cleanMegoPendingClaimProcessing, createClaim, getMegoPendingClaimProcessingData, saveMegoPendingClaimProcessing } from "../utils/BuyTicketUtils";
 import { useAccount } from "wagmi";
 import { Loader } from "@/components/Loader";
 import { PopupModality } from "../interfaces/popup-enum";
@@ -67,10 +67,51 @@ export const BuyTicketClaimGeneration = () => {
         }
     }
 
+    const claimProcessingWithMego = async () => {
+        setMessage('Creating claim...')
+        const data = await getMegoPendingClaimProcessingData()
+        //Take query params signature from url
+        const urlParams = new URLSearchParams(window.location.search);
+        const signature = urlParams.get('signature') || "";
+
+        if(!signature){
+            setMessage('Signature error')
+            openPopup({ title: 'Signature error', message: 'Signature not found', modality: PopupModality.Error, isOpen: true })
+            cleanMegoPendingClaimProcessing()
+            resetPaymentProcessing()
+            return;
+        }
+
+        const claim = await createClaim(
+            signature,
+            data?.tokenId || "",
+            data?.emailOfBuyer || "",
+            data?.identifier || "",
+            data?.userAddress || "",
+            data?.message || "",
+            true,
+            data?.claim_metadata || []
+        );
+
+        if (claim.error) {
+            setMessage('Error creating claim...')
+            openPopup({ title: 'Alert', message: 'Error creating claim...', modality: PopupModality.Error, isOpen: true })
+            cleanMegoPendingClaimProcessing()
+            resetPaymentProcessing()
+            return;
+        }
+        setClaimData(claim)
+        setStepper(Stepper.Claim)
+        cleanMegoPendingClaimProcessing()
+    }
+
+
     useEffect(() => {
+        //Prevent strict mode to run the processing twice
         if (count === 0) {
-            processing()
-            count++
+            const MP_func = localStorage.getItem("MP_func")
+            MP_func === "claim_processing" ? claimProcessingWithMego() : processing()
+            count++;
         }
     }, [])
 

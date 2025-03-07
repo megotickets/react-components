@@ -88,7 +88,7 @@ export const BuyTicketProvider: React.FC<BuyTicketProviderProps> = ({ children }
 
   const restoreClaimProcessing = async () => {
     setIsOpen(true)
-    setStepper(Stepper.Processing)
+    setStepper(Stepper.Claim_Generation)
   }
 
   const restorePaymentProcessing = async () => {
