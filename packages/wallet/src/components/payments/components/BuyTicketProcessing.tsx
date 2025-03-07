@@ -14,7 +14,7 @@ import { useWeb3Context } from "@/components/web3-context";
 export const BuyTicketProcessing = () => {
     const { eventDetails, emailOfBuyer, openPopup, resetPaymentProcessing, claimMetadata, setStepper, setClaimData } = useBuyTicketContext()
     const { address } = useAccount()
-    const { loggedAs } = useWeb3Context()
+    const { loggedAs, isConnectedWithMego } = useWeb3Context()
 
     const [message, setMessage] = useState<string>('Processing...')
     let count = 0;
@@ -70,6 +70,17 @@ export const BuyTicketProcessing = () => {
                     setMessage('Processing payment...')
                     await new Promise(resolve => setTimeout(resolve, 1000));
                     setStepper(Stepper.Payments)
+                    return;
+                }
+
+                if(isConnectedWithMego()){
+                    openPopup({
+                        title: 'Mego not implemented',
+                        message: 'Mego is not implemented yet',
+                        modality: PopupModality.Info,
+                        isOpen: true
+                    })
+                    resetPaymentProcessing()
                     return;
                 }
 
