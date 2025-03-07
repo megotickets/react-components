@@ -7,6 +7,8 @@ import { BuyTicketForm } from "./BuyTicketForm";
 import { BuyTicketProcessing } from "./BuyTicketProcessing";
 import { BuyTicketPayments } from "./BuyTicketPayments";
 import { BuyTicketClaim } from "./BuyTicketClaim";
+import { useWeb3Context } from "@/components/web3-context";
+import { useAccount } from "wagmi";
 
 interface MegoBuyTicketModalProps {
   onClose?: () => void;

@@ -10,6 +10,7 @@ export default function Home() {
     <div>
       <h1>@megotickets/wallet</h1>
       <Web3Provider>
+        {/* @ts-ignore */}
         <Web3MegoClientProvider>
           <MegoWalletButton
             /* providerConfiguration={{

@@ -8,11 +8,13 @@ import { PopupModality } from "../interfaces/popup-enum";
 import { Stepper } from "../interfaces/interface-stepper";
 import { signMessage } from "wagmi/actions";
 import { config } from "@/components/Web3ClientProvider";
+import { useWeb3Context } from "@/components/web3-context";
 
 
 export const BuyTicketProcessing = () => {
     const { eventDetails, emailOfBuyer, openPopup, resetPaymentProcessing, claimMetadata, setStepper, setClaimData } = useBuyTicketContext()
     const { address } = useAccount()
+    const { loggedAs } = useWeb3Context()
 
     const [message, setMessage] = useState<string>('Processing...')
     let count = 0;
@@ -22,12 +24,13 @@ export const BuyTicketProcessing = () => {
 
             setMessage('Asking for payment details...')
             const processor = "stripe"
-            if (address) {
+            const userAddress = address || loggedAs || ""
+            if (userAddress) {
                 const paymentDetails = await askPaymentDetails(
                     processor,
                     1,
                     eventDetails?.event?.identifier,
-                    address,
+                    userAddress,
                     eventDetails?.event?.discount_code || "", // Da capire
                     eventDetails?.event?.currency,
                     emailOfBuyer || "",
@@ -72,7 +75,7 @@ export const BuyTicketProcessing = () => {
 
                 //Display and check NFT
                 setMessage('Check NFT ...')
-                const res = await checkNFT(eventDetails?.event?.identifier, address);
+                const res = await checkNFT(eventDetails?.event?.identifier, userAddress);
                 console.log(res)
                 let tokenId = res.tokenId;
                 if (tokenId !== null) {
@@ -106,7 +109,7 @@ export const BuyTicketProcessing = () => {
                     let isMinted = false;
                     let retry = 0;
                     while (!isMinted && retry < 10) {
-                        const res = await checkNFT(eventDetails?.event?.identifier, address);
+                        const res = await checkNFT(eventDetails?.event?.identifier, userAddress);
                         if (res.tokenId !== null) {
                             isMinted = true;
                             tokenId = res.tokenId;
@@ -138,12 +141,12 @@ export const BuyTicketProcessing = () => {
                     tokenId,
                     emailOfBuyer || "",
                     eventDetails?.event?.identifier,
-                    address,
+                    userAddress,
                     `Claiming token ${tokenId}`,
                     true,
                     claimMetadata
                 );
-                
+
                 if(claim.error){
                     setMessage('Error creating claim...')
                     openPopup({

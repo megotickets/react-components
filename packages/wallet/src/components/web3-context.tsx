@@ -14,7 +14,7 @@ import { useConnectModal } from '@rainbow-me/rainbowkit';
 import { useAccount, useSwitchChain } from 'wagmi';
 import { disconnect } from 'wagmi/actions'
 import { config } from "./Web3ClientProvider";
-
+import { BuyTicketProvider } from "./payments/context/BuyTicketContext";
 type Route =
   | "ChooseType"
   | "Email"
@@ -65,6 +65,8 @@ interface Web3ContextType {
   signMessageWithApple: (origin: string, challange: string) => void;
   //Firma con Google
   signMessageWithGoogle: (origin: string, challange: string) => void;
+
+  isConnectedWithMego: () => boolean;
 }
 
 const Web3Context = createContext<Web3ContextType | undefined>(undefined);
@@ -499,18 +501,29 @@ export const Web3Provider: React.FC<Web3ProviderProps> = ({ children }) => {
     }
   }
 
+  const isConnectedWithMego = () => {
+    const isConnectedWithMego = provider !== 'walletConnect'
+    if (isConnectedWithMego && provider) {
+        return true;
+    }
+    return false;
+}
+
 
   const value: Web3ContextType = {
     getProvider, getSigner, isMegoModalOpen, openMegoModal,
     redirectToAppleLogin, redirectToGoogleLogin, closeMegoModal, provider, walletConnectProvider, loginWithWalletConnect, section,
     setSection, prevSection, setPrevSection, loggedAs, isLoading, logout, setIsLoading, loadingText, setLoadingText, loginWithEmail, createNewWallet,
     requestExportPrivateKeyWithEmail, requestExportPrivateKeyWithGoogle, requestExportPrivateKeyWithApple, revealPrivateKey, privateKey,
-    forceChainId, setForceChainId, signMessageWithApple, signMessageWithGoogle, serviceAutoChainChange, setServiceAutoChainChange
+    forceChainId, setForceChainId, signMessageWithApple, signMessageWithGoogle, serviceAutoChainChange, setServiceAutoChainChange,
+    isConnectedWithMego
   };
   return (
       <Web3Context.Provider value={value}>
-        {children}
-        {isMegoModalOpen && <MegoModal isOpen={isMegoModalOpen} onClose={closeMegoModal} />}
+        <BuyTicketProvider>
+          {children}
+          {isMegoModalOpen && <MegoModal isOpen={isMegoModalOpen} onClose={closeMegoModal} />}
+        </BuyTicketProvider>
       </Web3Context.Provider>
   );
 };
