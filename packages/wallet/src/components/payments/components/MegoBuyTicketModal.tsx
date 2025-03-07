@@ -9,6 +9,8 @@ import { BuyTicketPayments } from "./BuyTicketPayments";
 import { BuyTicketClaim } from "./BuyTicketClaim";
 import { useWeb3Context } from "@/components/web3-context";
 import { useAccount } from "wagmi";
+import { BuyCheckNFTAndMint } from "./BuyCheckNFTAndMint";
+import { BuyTicketClaimGeneration } from "./BuyTicketClaimGeneration";
 
 interface MegoBuyTicketModalProps {
   onClose?: () => void;
@@ -60,7 +62,8 @@ const MegoBuyTicketModal: React.FC<MegoBuyTicketModalProps> = ({ onClose }) => {
         <div className="mego-modal-content payment-content">
           {stepper === Stepper.Form_data && <BuyTicketForm />}
           {stepper === Stepper.Processing && <BuyTicketProcessing />}
-          {stepper === Stepper.Payments && <BuyTicketPayments />}
+          {stepper === Stepper.NFT_Mint && <BuyCheckNFTAndMint />}
+          {stepper === Stepper.Claim_Generation && <BuyTicketClaimGeneration />}
           {stepper === Stepper.Claim && <BuyTicketClaim />}
         </div>
       </div>

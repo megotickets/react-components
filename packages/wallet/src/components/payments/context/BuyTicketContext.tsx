@@ -34,6 +34,14 @@ interface BuyTicketContextType {
   //Claim data
   claimData: any;
   setClaimData: (claimData: any) => void;
+
+  //Payments details
+  paymentsDetails: any;
+  setPaymentsDetails: (paymentsDetails: any) => void;
+
+  //Token id
+  tokenId: string | null;
+  setTokenId: (tokenId: string | null) => void;
 }
 
 const BuyTicketContext = createContext<BuyTicketContextType | undefined>(undefined);
@@ -43,11 +51,13 @@ interface BuyTicketProviderProps {children: ReactNode}
 export const BuyTicketProvider: React.FC<BuyTicketProviderProps> = ({ children }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [eventDetails, setEventDetails] = useState<any>(null);
+  const [paymentsDetails, setPaymentsDetails] = useState<any>(null);
 
   //Stepper
   const [stepper, setStepper] = useState<Stepper>(Stepper.Form_data);
   const [claimMetadata, setClaimMetadata] = useState<any>(null);
   const [emailOfBuyer, setEmailOfBuyer] = useState<string | null>(null);
+  const [tokenId, setTokenId] = useState<string | null>(null);
 
   //Claim data
   const [claimData, setClaimData] = useState<any>(null);
@@ -72,6 +82,8 @@ export const BuyTicketProvider: React.FC<BuyTicketProviderProps> = ({ children }
     setEmailOfBuyer(null)
     setIsOpen(false)
     setClaimData(null)
+    setPaymentsDetails(null)
+    setTokenId(null)
   }
 
   const restoreClaimProcessing = async () => {
@@ -125,7 +137,15 @@ export const BuyTicketProvider: React.FC<BuyTicketProviderProps> = ({ children }
 
     //Claim data
     claimData,
-    setClaimData
+    setClaimData,
+
+    //Payments details
+    paymentsDetails,
+    setPaymentsDetails,
+
+    //Token id
+    tokenId,
+    setTokenId
   };
 
   return (
