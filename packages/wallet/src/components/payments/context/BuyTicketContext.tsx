@@ -1,8 +1,9 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 import MegoBuyTicketModal from '../components/MegoBuyTicketModal';
 import { Stepper } from '../interfaces/interface-stepper';
 import { PopupModality } from '../interfaces/popup-enum';
 import { MegoPopup, MegoPopupData } from '@/components/MegoPopup';
+import { cleanMegoPendingClaimProcessing, getMegoPendingClaimProcessingData } from '../utils/BuyTicketUtils';
 
 interface BuyTicketContextType {
   isOpen: boolean;
@@ -71,6 +72,28 @@ export const BuyTicketProvider: React.FC<BuyTicketProviderProps> = ({ children }
     setIsOpen(false)
     setClaimData(null)
   }
+
+  const restoreClaimProcessing = async () => {
+    setIsOpen(true)
+    setStepper(Stepper.Processing)
+  }
+
+  const restorePaymentProcessing = async () => {
+    //TODO: Implement
+  }
+
+  //Restore the claim processing started with mego
+  useEffect(()=>{
+    //Restore MP_func from local storage
+    const MP_func = localStorage.getItem("MP_func")
+    if(MP_func === "claim_processing"){
+       restoreClaimProcessing()
+    } else if(MP_func === "payment_processing"){  
+      restorePaymentProcessing()
+    } else {
+      cleanMegoPendingClaimProcessing()
+    }
+  },[])
 
   const value = {
     isOpen,
