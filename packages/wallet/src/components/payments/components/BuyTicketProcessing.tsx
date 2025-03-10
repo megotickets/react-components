@@ -10,7 +10,7 @@ import { useWeb3Context } from "@/components/web3-context";
 
 
 export const BuyTicketProcessing = () => {
-    const { eventDetails, emailOfBuyer, openPopup, resetPaymentProcessing, setStepper, setPaymentsDetails } = useBuyTicketContext()
+    const { eventDetails, emailOfBuyer, openPopup, resetPaymentProcessing, setStepper, setPaymentsDetails, processor } = useBuyTicketContext()
     const { address } = useAccount()
     const { loggedAs } = useWeb3Context()
 
@@ -19,14 +19,18 @@ export const BuyTicketProcessing = () => {
 
     const processing = async () => {
         try {
+            if(!processor){
+                openPopup({title: 'Alert', message: 'No processor selected', modality: PopupModality.Error, isOpen: true})
+                resetPaymentProcessing()
+                return
+            }
             setMessage('Asking for payment details...')
-            const processor = "stripe"
             const userAddress = address || loggedAs || ""
             if (userAddress) {
                 const paymentDetails = await askPaymentDetails(processor, 1, eventDetails?.event?.identifier, userAddress, eventDetails?.event?.discount_code || "", eventDetails?.event?.currency, emailOfBuyer || "", eventDetails?.event?.donation_amount || 0)
                 let { error, message, payment } = paymentDetails
 
-                if (error) {
+                if (error && message !== Messages.PAYMENT_EXIST) {
                     setMessage('Error asking for payment details...')
                     openPopup({ title: 'Alert', message: 'Error asking for payment details...', modality: PopupModality.Error, isOpen: true })
                     resetPaymentProcessing()
@@ -51,7 +55,13 @@ export const BuyTicketProcessing = () => {
                 } else {
                     setMessage('Processing payment...')
                     await new Promise(resolve => setTimeout(resolve, 1000));
-                    setStepper(Stepper.Payments)
+                    if(processor === 'stripe'){
+                        console.log('Stripe processor')
+                        setStepper(Stepper.Payments_Stripe)
+                    } else {
+                        console.log('Other processor')
+                        setStepper(Stepper.Payments)
+                    }
                     return;
                 }
             } else {

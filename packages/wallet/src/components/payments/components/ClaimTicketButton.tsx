@@ -1,5 +1,6 @@
 import React from "react";
 import { useBuyTicketContext } from "../context/BuyTicketContext";
+import { Stepper } from "../interfaces/interface-stepper";
 
 interface ClaimTicketButtonProps {
   eventDetails: any;
@@ -10,9 +11,13 @@ export const ClaimTicketButton: React.FC<ClaimTicketButtonProps> = ({
   buttonText = "Acquista Biglietto",
   eventDetails
 }) => {
-  const { setIsOpen, setEventDetails } = useBuyTicketContext();
+  const { setIsOpen, setEventDetails, resetPaymentProcessing, stepper } = useBuyTicketContext();
 
   const handleOpenModal = () => {
+    if (stepper === Stepper.Claim) {
+      // Resetta se il processo di pagamento precedente/corrente si è ultimato
+      resetPaymentProcessing();
+    }
     setEventDetails(eventDetails);
     setIsOpen(true);
   };

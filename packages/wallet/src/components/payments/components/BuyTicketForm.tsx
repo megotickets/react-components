@@ -7,7 +7,7 @@ import { PaymentsCollectors } from './PaymentsCollectors';
 const fastDebug = true
 
 export const BuyTicketForm: React.FC = () => {
-    const { eventDetails, setStepper, setClaimMetadata, setEmailOfBuyer } = useBuyTicketContext();
+    const { eventDetails, setStepper, setClaimMetadata, setEmailOfBuyer, setProcessor } = useBuyTicketContext();
     const [email, setEmail] = useState(fastDebug ? "test@test.com" : '');
     const [termsAccepted, setTermsAccepted] = useState(fastDebug ? true : false);
     const [shareEmail, setShareEmail] = useState(fastDebug ? true : false);
@@ -25,6 +25,12 @@ export const BuyTicketForm: React.FC = () => {
             });
             setMetadataValues(initialValues);
         }
+
+        // Ogni ticket gratuito deve essere pagato con Stripe (0)
+        if (eventDetails?.event?.price === 0) {
+            setProcessor('stripe');
+        }
+        
     }, [eventDetails]);
 
     const handleCheckout = () => {

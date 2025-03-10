@@ -8,6 +8,8 @@ import { BuyTicketProcessing } from "./BuyTicketProcessing";
 import { BuyTicketClaim } from "./BuyTicketClaim";
 import { BuyCheckNFTAndMint } from "./BuyCheckNFTAndMint";
 import { BuyTicketClaimGeneration } from "./BuyTicketClaimGeneration";
+import BuyTicketPayments from "./BuyTicketWithStripe";
+import BuyTicketWithStripe from "./BuyTicketWithStripe";
 
 interface MegoBuyTicketModalProps {
   onClose?: () => void;
@@ -59,6 +61,8 @@ const MegoBuyTicketModal: React.FC<MegoBuyTicketModalProps> = ({ onClose }) => {
         <div className="mego-modal-content payment-content">
           {stepper === Stepper.Form_data && <BuyTicketForm />}
           {stepper === Stepper.Processing && <BuyTicketProcessing />}
+          {stepper === Stepper.Payments && <BuyTicketPayments />}
+          {stepper === Stepper.Payments_Stripe && <BuyTicketWithStripe />}
           {stepper === Stepper.NFT_Mint && <BuyCheckNFTAndMint />}
           {stepper === Stepper.Claim_Generation && <BuyTicketClaimGeneration />}
           {stepper === Stepper.Claim && <BuyTicketClaim />}
