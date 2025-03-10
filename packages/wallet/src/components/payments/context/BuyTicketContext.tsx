@@ -42,6 +42,10 @@ interface BuyTicketContextType {
   //Token id
   tokenId: string | null;
   setTokenId: (tokenId: string | null) => void;
+
+  //processor
+  processor: string | null;
+  setProcessor: (processor: string | null) => void;
 }
 
 const BuyTicketContext = createContext<BuyTicketContextType | undefined>(undefined);
@@ -61,6 +65,9 @@ export const BuyTicketProvider: React.FC<BuyTicketProviderProps> = ({ children }
 
   //Claim data
   const [claimData, setClaimData] = useState<any>(null);
+
+  //Processor
+  const [processor, setProcessor] = useState<string | null>(null);
 
   const [popup, setPopup] = useState<MegoPopupData>({
     isOpen: false,
@@ -84,6 +91,7 @@ export const BuyTicketProvider: React.FC<BuyTicketProviderProps> = ({ children }
     setClaimData(null)
     setPaymentsDetails(null)
     setTokenId(null)
+    setProcessor(null)
   }
 
   const restoreClaimProcessing = async () => {
@@ -145,7 +153,11 @@ export const BuyTicketProvider: React.FC<BuyTicketProviderProps> = ({ children }
 
     //Token id
     tokenId,
-    setTokenId
+    setTokenId,
+
+    //Processor
+    processor,
+    setProcessor
   };
 
   return (

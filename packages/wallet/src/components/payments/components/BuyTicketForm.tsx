@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useBuyTicketContext } from '../context/BuyTicketContext';
 import { Stepper } from '../interfaces/interface-stepper';
+import { PaymentsCollectors } from './PaymentsCollectors';
 
 
 const fastDebug = true
@@ -169,6 +170,8 @@ export const BuyTicketForm: React.FC = () => {
                     I accept to share my e-mail with event organizers.
                 </label>
             </div>
+
+            <PaymentsCollectors />
 
             <button
                 disabled={!isFormValid}
