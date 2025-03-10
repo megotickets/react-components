@@ -62,9 +62,9 @@ interface Web3ContextType {
   setServiceAutoChainChange: (serviceAutoChainChange: boolean) => void;
 
   //Firma con Apple
-  signMessageWithApple: (origin: string, challange: string) => void;
+  signMessageWithApple: (origin: string, challange: string, encoded?: boolean) => void;
   //Firma con Google
-  signMessageWithGoogle: (origin: string, challange: string) => void;
+  signMessageWithGoogle: (origin: string, challange: string, encoded?: boolean) => void;
 
   isConnectedWithMego: () => boolean;
 }
@@ -118,15 +118,15 @@ export const Web3Provider: React.FC<Web3ProviderProps> = ({ children }) => {
     }
   }, [address]);
 
-  useEffect(()=>{
-    if(!isConnected){
+  useEffect(() => {
+    if (!isConnected) {
       setLoggedAs(null);
       setProvider(null);
       setSection("ChooseType");
       localStorage.removeItem("loggedAs");
       localStorage.removeItem("provider");
     }
-  },[isConnected, address])
+  }, [isConnected, address])
 
   const closeMegoModal = (): void => {
     localStorage.setItem("isQuestionary", "false");
@@ -201,19 +201,19 @@ export const Web3Provider: React.FC<Web3ProviderProps> = ({ children }) => {
   };
 
   //Firma con Apple 
-  const signMessageWithApple = (origin: string, challange: string) => {
+  const signMessageWithApple = (origin: string, challange: string, encoded: boolean = false) => {
     localStorage.setItem("reddeemWithMego", "1");
     if (window)
       //@ts-expect-error typing bug
-      window.location = `https://wallet.mego.tools/auth/apple?origin=${origin.replace("http://", "").replace("https://", "")}&message=${challange}`;
+      window.location = `https://wallet.mego.tools/auth/apple?origin=${origin.replace("http://", "").replace("https://", "")}&message=${challange}${encoded ? "&encoded=true" : ""}`;
   };
-  
+
   //Firma con Google
-  const signMessageWithGoogle = (origin: string, challange: string) => {
+  const signMessageWithGoogle = (origin: string, challange: string, encoded: boolean = false) => {
     localStorage.setItem("redeemWithMego", "1");
     if (window)
       //@ts-expect-error typing bug
-      window.location = `https://wallet.mego.tools/auth/google?origin=${origin.replace("http://", "").replace("https://", "")}&message=${challange}`;
+      window.location = `https://wallet.mego.tools/auth/google?origin=${origin.replace("http://", "").replace("https://", "")}&message=${challange}${encoded ? "&encoded=true" : ""}`;
   };
 
   const getSigner = async () => {
@@ -408,7 +408,7 @@ export const Web3Provider: React.FC<Web3ProviderProps> = ({ children }) => {
           // Richiedi il cambio di rete
           //@ts-ignore
           await switchChain({ chainId: forceChainId });
-          
+
         } catch (error) {
           alert("Errore nel cambio rete:" + error);
         }
@@ -504,10 +504,10 @@ export const Web3Provider: React.FC<Web3ProviderProps> = ({ children }) => {
   const isConnectedWithMego = () => {
     const isConnectedWithMego = provider !== 'walletConnect'
     if (isConnectedWithMego && provider) {
-        return true;
+      return true;
     }
     return false;
-}
+  }
 
 
   const value: Web3ContextType = {
@@ -519,12 +519,12 @@ export const Web3Provider: React.FC<Web3ProviderProps> = ({ children }) => {
     isConnectedWithMego
   };
   return (
-      <Web3Context.Provider value={value}>
-        <BuyTicketProvider>
-          {children}
-          {isMegoModalOpen && <MegoModal isOpen={isMegoModalOpen} onClose={closeMegoModal} />}
-        </BuyTicketProvider>
-      </Web3Context.Provider>
+    <Web3Context.Provider value={value}>
+      <BuyTicketProvider>
+        {children}
+        {isMegoModalOpen && <MegoModal isOpen={isMegoModalOpen} onClose={closeMegoModal} />}
+      </BuyTicketProvider>
+    </Web3Context.Provider>
   );
 };
 
