@@ -32,7 +32,7 @@ export const PaymentsCollectors = () => {
             {
                 Object.entries(eventDetails?.event?.collectors || {}).sort(([keyA], [keyB]) => keyA === "stripe" ? -1 : keyB === "stripe" ? 1 : 0).map(([key, value]) => {
                     return (
-                        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: "1rem" }}>
+                        <div key={key} style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: "1rem" }}>
                             <div 
                                 onClick={() => setProcessor(key)} 
                                 style={{ 

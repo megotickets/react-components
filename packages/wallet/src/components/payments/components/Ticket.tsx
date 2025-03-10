@@ -99,6 +99,7 @@ export const Ticket: React.FC<TicketProps> = ({ ticketId }) => {
       padding: '2rem' 
     }}>
       {/* Banner dell'evento */}
+      <p style={{ fontSize: '1.25rem', fontWeight: 'bold', marginBottom: '1rem', color: '#000' }}>Prezzo: {priceText}</p>
       <div style={{ position: 'relative', width: '100%', height: '12rem' }}>
         <img
           src={event.banner || event.image}

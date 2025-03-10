@@ -2,11 +2,13 @@ import { useEffect, useState } from "react";
 import { useBuyTicketContext } from "../context/BuyTicketContext";
 import { loadStripe, Stripe, StripeElements } from "@stripe/stripe-js";
 import { PopupModality } from "../interfaces/popup-enum";
+import { Stepper } from "../interfaces/interface-stepper";
 
 const BuyTicketWithStripe = () => {
-    const { eventDetails, paymentsDetails, openPopup } = useBuyTicketContext();
+    const { eventDetails, paymentsDetails, openPopup, setStepper } = useBuyTicketContext();
     const [stripeElements, setStripeElements] = useState<StripeElements | null>(null);
     const [stripeInstance, setStripeInstance] = useState<Stripe | null>(null);
+    const [isProcessing, setIsProcessing] = useState<boolean>(false);
 
     useEffect(() => {
         const clientSecret = paymentsDetails?.payment?.stripePayment?.client_secret;
@@ -54,7 +56,7 @@ const BuyTicketWithStripe = () => {
         };
 
         initializeStripe();
-    }, [paymentsDetails, openPopup]);
+    }, [paymentsDetails, openPopup, eventDetails]);
     
     const handlePayment = async () => {
         if (!stripeInstance || !stripeElements) {
@@ -68,15 +70,40 @@ const BuyTicketWithStripe = () => {
         }
 
         try {
-            const { error } = await stripeInstance.confirmPayment({
+            setIsProcessing(true);
+            
+            // Conferma il pagamento senza redirect
+            const { error, paymentIntent } = await stripeInstance.confirmPayment({
                 elements: stripeElements,
+                redirect: 'if_required',
                 confirmParams: {
-                    return_url: window.location.origin + "/payment-confirmation",
+                    return_url: window.location.origin,
                 }
             });
 
             if (error) {
                 throw error;
+            }
+
+            console.log('paymentIntent', paymentIntent);
+
+            // Se siamo qui, il pagamento è andato a buon fine
+            if (paymentIntent && paymentIntent.status === 'succeeded') {
+                console.log('Pagamento completato con successo!', paymentIntent);
+                
+                // Passa allo step successivo (NFT_Mint)
+                setStepper(Stepper.NFT_Mint);
+            } else if (paymentIntent && paymentIntent.status === 'processing') {
+                // Il pagamento è in elaborazione
+                openPopup({
+                    title: 'Pagamento in elaborazione', 
+                    message: 'Il tuo pagamento è in fase di elaborazione. Ti avviseremo quando sarà completato.', 
+                    modality: PopupModality.Info, 
+                    isOpen: true
+                });
+            } else {
+                // Gestisci altri stati del pagamento
+                setStepper(Stepper.NFT_Mint); // Per ora procediamo comunque al mint
             }
         } catch (error: any) {
             console.error("Errore durante il pagamento:", error);
@@ -86,6 +113,8 @@ const BuyTicketWithStripe = () => {
                 modality: PopupModality.Error, 
                 isOpen: true
             });
+        } finally {
+            setIsProcessing(false);
         }
     };
     
@@ -94,98 +123,21 @@ const BuyTicketWithStripe = () => {
             <div id="payment-element"></div>
             <button 
                 onClick={handlePayment}
+                disabled={isProcessing}
                 style={{ 
                     marginTop: '20px',
                     padding: '10px 20px',
-                    backgroundColor: '#6772e5',
+                    backgroundColor: isProcessing ? '#a0a0a0' : '#6772e5',
                     color: 'white',
                     border: 'none',
                     borderRadius: '4px',
-                    cursor: 'pointer'
+                    cursor: isProcessing ? 'not-allowed' : 'pointer'
                 }}
             >
-                Paga ora
+                {isProcessing ? 'Elaborazione in corso...' : 'Paga ora'}
             </button>
         </div>
     );
 };
 
 export default BuyTicketWithStripe;
-
-/*
-
-"stripePayment": {
-            "amount_details": {
-                "tip": {}
-            },
-            "metadata": {
-                "identifier": "0xaF81EBE3e7_044539",
-                "purchase_address": "0xd0137252d603a39a191ad0db21EfdA66Be120679",
-                "tierId": "254054d2-ae01-4fb9-9fde-9cd4c8ae72d3",
-                "email": "test@test.com",
-                "paymentId": "2f3b278f-5eeb-4c70-b7e2-03f47a9faf39",
-                "isMego": "true"
-            },
-            "livemode": true,
-            "canceled_at": null,
-            "amount_capturable": 0,
-            "description": null,
-            "source": null,
-            "uuid": "2f3b278f-5eeb-4c70-b7e2-03f47a9faf39",
-            "statement_descriptor": null,
-            "transfer_data": {
-                "destination": "acct_1NDHliICu16Wv12M"
-            },
-            "latest_charge": null,
-            "shipping": null,
-            "automatic_payment_methods": {
-                "allow_redirects": "always",
-                "enabled": true
-            },
-            "review": null,
-            "currency": "eur",
-            "id": "pi_3R13iwEspoeoo84m1mVwChiL",
-            "client_secret": "pi_3R13iwEspoeoo84m1mVwChiL_secret_ODHR4h8Ut0CH4ckE2816r4mRo",
-            "payment_method_options": {
-                "link": {
-                    "persistent_token": null
-                },
-                "card": {
-                    "mandate_options": null,
-                    "installments": null,
-                    "request_three_d_secure": "automatic",
-                    "network": null
-                }
-            },
-            "payment_method": null,
-            "capture_method": "manual",
-            "amount": 10000,
-            "transfer_group": null,
-            "on_behalf_of": "acct_1NDHliICu16Wv12M",
-            "created": 1741603098,
-            "payment_method_types": [
-                "card",
-                "link"
-            ],
-            "amount_received": 0,
-            "setup_future_usage": null,
-            "confirmation_method": "automatic",
-            "cancellation_reason": null,
-            "payment_method_configuration_details": {
-                "parent": "pmc_1NIljsEspoeoo84mYsAMP7Zk",
-                "id": "pmc_1NIlmaICu16Wv12MZjkzfVrp"
-            },
-            "application": null,
-            "receipt_email": null,
-            "last_payment_error": null,
-            "next_action": null,
-            "processing": null,
-            "invoice": null,
-            "statement_descriptor_suffix": null,
-            "application_fee_amount": 880,
-            "object": "payment_intent",
-            "customer": null,
-            "status": "requires_payment_method"
-        },
-
-*/
