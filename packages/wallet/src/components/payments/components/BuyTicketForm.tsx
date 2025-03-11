@@ -19,7 +19,7 @@ export const BuyTicketForm: React.FC = () => {
     const [metadataValues, setMetadataValues] = useState<Record<string, string>>({});
     const [isFormValid, setIsFormValid] = useState(false);
     const { address } = useAccount();
-    const { loggedAs } = useWeb3Context();
+    const { loggedAs, isConnectedWithMego } = useWeb3Context();
     const [isNFTCheckLoading, setIsNFTCheckLoading] = useState(false);
 
     console.log(eventDetails)
@@ -46,6 +46,14 @@ export const BuyTicketForm: React.FC = () => {
             if (tokenId !== null) {
                 await new Promise(resolve => setTimeout(resolve, 1000));
                 openPopup({ title: 'Ticket already minted', message: 'You already have a ticket for this payment.', modality: PopupModality.Error, isOpen: true })
+                resetPaymentProcessing()
+                return;
+            }
+
+            //Check is mego
+            if(isConnectedWithMego() && eventDetails?.event?.price > 0){
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                openPopup({ title: 'Mego wallet not supported', message: 'Please connect your traditional wallet to continue', modality: PopupModality.Error, isOpen: true })
                 resetPaymentProcessing()
                 return;
             }
