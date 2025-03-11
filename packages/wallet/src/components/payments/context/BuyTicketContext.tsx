@@ -46,6 +46,12 @@ interface BuyTicketContextType {
   //processor
   processor: string | null;
   setProcessor: (processor: string | null) => void;
+
+
+  //Restore
+  savePendingProcess: () => void;
+  restorePendingProcess: () => void;
+
 }
 
 const BuyTicketContext = createContext<BuyTicketContextType | undefined>(undefined);
@@ -104,6 +110,55 @@ export const BuyTicketProvider: React.FC<BuyTicketProviderProps> = ({ children }
     setStepper(Stepper.Payments)
   }
 
+  //Save all variable for restore process after redirect operations
+  const savePendingProcess = () => {
+    const pendingProcess = {
+      eventDetails: JSON.stringify(eventDetails),
+      paymentsDetails: JSON.stringify(paymentsDetails),
+      stepper: JSON.stringify(stepper),
+      claimMetadata: JSON.stringify(claimMetadata),
+      emailOfBuyer: JSON.stringify(emailOfBuyer),
+      tokenId: JSON.stringify(tokenId),
+      claimData: JSON.stringify(claimData),
+      processor: JSON.stringify(processor)
+    }
+    localStorage.setItem("pendingProcess", JSON.stringify(pendingProcess))
+  }
+
+  //Restore all variable for restore process after redirect operations
+  const restorePendingProcess = () => {
+    const _pendingProcess = localStorage.getItem("pendingProcess")
+    if(_pendingProcess){
+      const pendingProcess = JSON.parse(_pendingProcess)
+      if(pendingProcess?.eventDetails){
+        setEventDetails(JSON.parse(pendingProcess.eventDetails))
+      }
+      if(pendingProcess?.paymentsDetails){
+        setPaymentsDetails(JSON.parse(pendingProcess.paymentsDetails))
+      }
+      if(pendingProcess?.stepper){
+        setStepper(JSON.parse(pendingProcess.stepper))
+      }
+      if(pendingProcess?.claimMetadata){
+        setClaimMetadata(JSON.parse(pendingProcess.claimMetadata))
+      }
+      if(pendingProcess?.emailOfBuyer){
+        setEmailOfBuyer(JSON.parse(pendingProcess.emailOfBuyer))
+      }
+      if(pendingProcess?.tokenId){
+        setTokenId(JSON.parse(pendingProcess.tokenId))
+      }
+      if(pendingProcess?.claimData){
+        setClaimData(JSON.parse(pendingProcess.claimData))
+      }
+      if(pendingProcess?.processor){
+        setProcessor(JSON.parse(pendingProcess.processor))
+      }
+      localStorage.removeItem("pendingProcess")
+      setIsOpen(true) // Re-open the modal for restore process
+    }
+  } 
+
   //Restore the claim processing started with mego
   useEffect(()=>{
     //Restore MP_func from local storage
@@ -115,6 +170,8 @@ export const BuyTicketProvider: React.FC<BuyTicketProviderProps> = ({ children }
     } else {
       cleanMegoPendingClaimProcessing()
     }
+
+    restorePendingProcess()
   },[])
 
   const value = {
@@ -157,7 +214,11 @@ export const BuyTicketProvider: React.FC<BuyTicketProviderProps> = ({ children }
 
     //Processor
     processor,
-    setProcessor
+    setProcessor,
+
+    //Restore
+    savePendingProcess,
+    restorePendingProcess
   };
 
   return (
