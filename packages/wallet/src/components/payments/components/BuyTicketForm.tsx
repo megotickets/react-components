@@ -2,36 +2,74 @@ import { useState, useEffect } from 'react';
 import { useBuyTicketContext } from '../context/BuyTicketContext';
 import { Stepper } from '../interfaces/interface-stepper';
 import { PaymentsCollectors } from './PaymentsCollectors';
+import { checkNFT } from '../utils/BuyTicketUtils';
+import { PopupModality } from '../interfaces/popup-enum';
+import { useAccount } from 'wagmi';
+import { useWeb3Context } from '@/components/web3-context';
+import { Loader } from '@/components/Loader';
 
 
 const fastDebug = true
 
 export const BuyTicketForm: React.FC = () => {
-    const { eventDetails, setStepper, setClaimMetadata, setEmailOfBuyer, setProcessor } = useBuyTicketContext();
+    const { eventDetails, setStepper, setClaimMetadata, setEmailOfBuyer, setProcessor, openPopup, resetPaymentProcessing } = useBuyTicketContext();
     const [email, setEmail] = useState(fastDebug ? "test@test.com" : '');
     const [termsAccepted, setTermsAccepted] = useState(fastDebug ? true : false);
     const [shareEmail, setShareEmail] = useState(fastDebug ? true : false);
     const [metadataValues, setMetadataValues] = useState<Record<string, string>>({});
     const [isFormValid, setIsFormValid] = useState(false);
+    const { address } = useAccount();
+    const { loggedAs } = useWeb3Context();
+    const [isNFTCheckLoading, setIsNFTCheckLoading] = useState(false);
 
     console.log(eventDetails)
 
+    let count = 0;
+
+
+    const init = async () => {
+        try {
+            const userAddress = address || loggedAs || ""
+
+            if (eventDetails?.event?.claim_metadata && eventDetails.event.claim_metadata.length > 0) {
+                const initialValues: Record<string, string> = {};
+                eventDetails.event.claim_metadata.forEach((_: any, index: string | number) => {
+                    initialValues[index] = '';
+                });
+                setMetadataValues(initialValues);
+            }
+
+            // Check nft before processing other steps
+            setIsNFTCheckLoading(true);
+            const res = await checkNFT(eventDetails?.event?.identifier, userAddress);
+            let tokenId = res.tokenId;
+            if (tokenId !== null) {
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                openPopup({ title: 'Ticket already minted', message: 'You already have a ticket for this payment.', modality: PopupModality.Error, isOpen: true })
+                resetPaymentProcessing()
+                return;
+            }
+
+            // Ogni ticket gratuito deve essere pagato con Stripe (0)
+            if (eventDetails?.event?.price === 0) {
+                setProcessor('stripe');
+            }
+        } catch (error) {
+            openPopup({ title: 'Errore', message: 'Errore generale', modality: PopupModality.Error, isOpen: true })
+            resetPaymentProcessing()
+            return;
+        } finally {
+            setIsNFTCheckLoading(false);
+        }
+    }
+
     // Inizializza i campi di metadata quando eventDetails cambia
     useEffect(() => {
-        if (eventDetails?.event?.claim_metadata && eventDetails.event.claim_metadata.length > 0) {
-            const initialValues: Record<string, string> = {};
-            eventDetails.event.claim_metadata.forEach((_: any, index: string | number) => {
-                initialValues[index] = '';
-            });
-            setMetadataValues(initialValues);
+        if (count === 0) {
+            init();
+            count++;
         }
-
-        // Ogni ticket gratuito deve essere pagato con Stripe (0)
-        if (eventDetails?.event?.price === 0) {
-            setProcessor('stripe');
-        }
-        
-    }, [eventDetails]);
+    }, [count]);
 
     const handleCheckout = () => {
         setEmailOfBuyer(email);
@@ -81,122 +119,134 @@ export const BuyTicketForm: React.FC = () => {
     const title = eventDetails?.event?.price === 0 ? "Claim your free ticket" : "Buy your ticket";
 
     return (
-        <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', width: '100%' }}>
-                <h1 style={{ textAlign: 'center', fontSize: '1.5rem', fontWeight: 'bold' }}>{title}</h1>
-                <p style={{ textAlign: 'center', fontSize: '0.875rem', color: '#6B7280' }}>Enter required information to continue</p>
-            </div>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%' }}>
+            {
+                !isNFTCheckLoading &&
+                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', width: '100%' }}>
+                        <h1 style={{ textAlign: 'center', fontSize: '1.5rem', fontWeight: 'bold' }}>{title}</h1>
+                        <p style={{ textAlign: 'center', fontSize: '0.875rem', color: '#6B7280' }}>Enter required information to continue</p>
+                    </div>
 
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', width: '100%' }}>
-                {eventDetails?.event?.claim_metadata && eventDetails.event.claim_metadata.map((metadata: string, index: number) => {
-                    // Determina se il campo richiede un input o una textarea in base alla lunghezza
-                    const isLongText = metadata.length > 100;
-                    const isFieldEmpty = !metadataValues[index] || metadataValues[index].trim() === '';
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', width: '100%' }}>
+                        {eventDetails?.event?.claim_metadata && eventDetails.event.claim_metadata.map((metadata: string, index: number) => {
+                            // Determina se il campo richiede un input o una textarea in base alla lunghezza
+                            const isLongText = metadata.length > 100;
+                            const isFieldEmpty = !metadataValues[index] || metadataValues[index].trim() === '';
 
-                    return (
-                        <div key={index} style={{ width: '100%', marginBottom: '0.75rem' }}>
-                            {isLongText ? (
-                                <textarea
-                                    placeholder={metadata}
-                                    value={metadataValues[index] || ''}
-                                    onChange={(e) => handleMetadataChange(index, e.target.value)}
-                                    style={{
-                                        marginBottom: '10px',
-                                        width: '100%',
-                                        borderRadius: '20px',
-                                        border: `1px solid ${isFieldEmpty ? '#FCA5A5' : 'white'}`,
-                                        backgroundColor: 'black',
-                                        color: 'white',
-                                        padding: '8px 16px',
-                                        resize: 'vertical'
-                                    }}
-                                    rows={4}
-                                />
-                            ) : (
-                                <input
-                                    type="text"
-                                    placeholder={metadata}
-                                    value={metadataValues[index] || ''}
-                                    onChange={(e) => handleMetadataChange(index, e.target.value)}
-                                    style={{
-                                        marginBottom: '10px',
-                                        width: '100%',
-                                        borderRadius: '20px',
-                                        border: `1px solid ${isFieldEmpty ? '#FCA5A5' : 'white'}`,
-                                        backgroundColor: 'black',
-                                        color: 'white',
-                                        padding: '8px 16px'
-                                    }}
-                                />
-                            )}
-                        </div>
-                    );
-                })}
+                            return (
+                                <div key={index} style={{ width: '100%', marginBottom: '0.75rem' }}>
+                                    {isLongText ? (
+                                        <textarea
+                                            placeholder={metadata}
+                                            value={metadataValues[index] || ''}
+                                            onChange={(e) => handleMetadataChange(index, e.target.value)}
+                                            style={{
+                                                marginBottom: '10px',
+                                                width: '100%',
+                                                borderRadius: '20px',
+                                                border: `1px solid ${isFieldEmpty ? '#FCA5A5' : 'white'}`,
+                                                backgroundColor: 'black',
+                                                color: 'white',
+                                                padding: '8px 16px',
+                                                resize: 'vertical'
+                                            }}
+                                            rows={4}
+                                        />
+                                    ) : (
+                                        <input
+                                            type="text"
+                                            placeholder={metadata}
+                                            value={metadataValues[index] || ''}
+                                            onChange={(e) => handleMetadataChange(index, e.target.value)}
+                                            style={{
+                                                marginBottom: '10px',
+                                                width: '100%',
+                                                borderRadius: '20px',
+                                                border: `1px solid ${isFieldEmpty ? '#FCA5A5' : 'white'}`,
+                                                backgroundColor: 'black',
+                                                color: 'white',
+                                                padding: '8px 16px'
+                                            }}
+                                        />
+                                    )}
+                                </div>
+                            );
+                        })}
 
-                <input
-                    type="email"
-                    id="email"
-                    placeholder="Email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    style={{
-                        marginBottom: '10px',
-                        width: '100%',
-                        borderRadius: '20px',
-                        border: `1px solid ${!email || !email.includes('@') ? '#FCA5A5' : 'white'}`,
-                        backgroundColor: 'black',
-                        color: 'white',
-                        padding: '8px 16px'
-                    }}
-                />
-            </div>
+                        <input
+                            type="email"
+                            id="email"
+                            placeholder="Email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            style={{
+                                marginBottom: '10px',
+                                width: '100%',
+                                borderRadius: '20px',
+                                border: `1px solid ${!email || !email.includes('@') ? '#FCA5A5' : 'white'}`,
+                                backgroundColor: 'black',
+                                color: 'white',
+                                padding: '8px 16px'
+                            }}
+                        />
+                    </div>
 
-            <div style={{ display: 'flex', alignItems: 'flex-start', marginBottom: '0.5rem', width: '100%' }}>
-                <input
-                    type="checkbox"
-                    id="terms"
-                    checked={termsAccepted}
-                    onChange={(e) => setTermsAccepted(e.target.checked)}
-                    style={{ marginRight: '0.5rem', marginTop: '0.25rem' }}
-                />
-                <label htmlFor="terms" style={{ fontSize: '0.875rem', color: 'white' }}>
-                    I agree to the <a href="#" style={{ color: '#60A5FA', textDecoration: 'underline' }}>Terms and Conditions</a>.
-                </label>
-            </div>
+                    <div style={{ display: 'flex', alignItems: 'flex-start', marginBottom: '0.5rem', width: '100%' }}>
+                        <input
+                            type="checkbox"
+                            id="terms"
+                            checked={termsAccepted}
+                            onChange={(e) => setTermsAccepted(e.target.checked)}
+                            style={{ marginRight: '0.5rem', marginTop: '0.25rem' }}
+                        />
+                        <label htmlFor="terms" style={{ fontSize: '0.875rem', color: 'white' }}>
+                            I agree to the <a href="#" style={{ color: '#60A5FA', textDecoration: 'underline' }}>Terms and Conditions</a>.
+                        </label>
+                    </div>
 
-            <div style={{ display: 'flex', alignItems: 'flex-start', marginBottom: '1rem', width: '100%' }}>
-                <input
-                    type="checkbox"
-                    id="shareEmail"
-                    checked={shareEmail}
-                    onChange={(e) => setShareEmail(e.target.checked)}
-                    style={{ marginRight: '0.5rem', marginTop: '0.25rem' }}
-                />
-                <label htmlFor="shareEmail" style={{ fontSize: '0.875rem', color: 'white' }}>
-                    I accept to share my e-mail with event organizers.
-                </label>
-            </div>
+                    <div style={{ display: 'flex', alignItems: 'flex-start', marginBottom: '1rem', width: '100%' }}>
+                        <input
+                            type="checkbox"
+                            id="shareEmail"
+                            checked={shareEmail}
+                            onChange={(e) => setShareEmail(e.target.checked)}
+                            style={{ marginRight: '0.5rem', marginTop: '0.25rem' }}
+                        />
+                        <label htmlFor="shareEmail" style={{ fontSize: '0.875rem', color: 'white' }}>
+                            I accept to share my e-mail with event organizers.
+                        </label>
+                    </div>
 
-            <PaymentsCollectors />
+                    <PaymentsCollectors />
 
-            <button
-                disabled={!isFormValid}
-                onClick={handleCheckout}
-                style={{
-                    width: '100%',
-                    background: 'black',
-                    color: 'white',
-                    fontWeight: 'bold',
-                    padding: '0.5rem 1rem',
-                    borderRadius: '9999px',
-                    border: '1px solid white',
-                    opacity: !isFormValid ? 0.5 : 1,
-                    cursor: !isFormValid ? 'not-allowed' : 'pointer',
-                    transition: 'opacity 0.3s'
-                }}
-            >
-                Checkout
-            </button>
+                    <button
+                        disabled={!isFormValid}
+                        onClick={handleCheckout}
+                        style={{
+                            width: '100%',
+                            background: 'black',
+                            color: 'white',
+                            fontWeight: 'bold',
+                            padding: '0.5rem 1rem',
+                            borderRadius: '9999px',
+                            border: '1px solid white',
+                            opacity: !isFormValid ? 0.5 : 1,
+                            cursor: !isFormValid ? 'not-allowed' : 'pointer',
+                            transition: 'opacity 0.3s'
+                        }}
+                    >
+                        Checkout
+                    </button>
+                </div>
+            }
+            {
+                isNFTCheckLoading && 
+                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%', height: '100%'}}>
+                    <Loader message={"Checking NFT..."} />
+                </div>
+            }
         </div>
     );
 };
+
