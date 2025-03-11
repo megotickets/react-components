@@ -33,6 +33,27 @@ const askPaymentDetails = async (processor: string, amount: number, identifier: 
     }
 }
 
+const getPayment = async (paymentId: string) => {
+    try{
+        const response = await axios.get(`${baseUrl}/payments/${paymentId}`)
+        return response.data
+    }catch(error){
+        console.error('Errore nel ottenere il pagamento:', error);
+        throw error;
+    }
+}
+
+const checkPayment = async (paymentId: string) => {
+    try{
+        const response = await axios.post(`${baseUrl}/payments/check`, {
+            payment_id: paymentId
+        })
+        return response.data
+    }catch(error){
+        console.error('Errore nel controllare il pagamento:', error);
+        throw error;
+    }
+}
 /**
  * Check if the NFT is already minted
  * @param identifier - The identifier of the payment
@@ -173,6 +194,6 @@ const getMegoPendingClaimProcessingData = async () => {
 
 
 export { 
-    askPaymentDetails, checkNFT, mintNFT, createClaim, saveMegoPendingClaimProcessing, getMegoPendingClaimProcessingData, cleanMegoPendingClaimProcessing
+    askPaymentDetails, checkNFT, mintNFT, createClaim, saveMegoPendingClaimProcessing, getMegoPendingClaimProcessingData, cleanMegoPendingClaimProcessing, getPayment, checkPayment
 }
 

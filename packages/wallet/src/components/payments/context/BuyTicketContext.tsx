@@ -49,7 +49,7 @@ interface BuyTicketContextType {
 
 
   //Restore
-  savePendingProcess: () => void;
+  savePendingProcess: (label?: string) => void;
   restorePendingProcess: () => void;
 
 }
@@ -111,7 +111,7 @@ export const BuyTicketProvider: React.FC<BuyTicketProviderProps> = ({ children }
   }
 
   //Save all variable for restore process after redirect operations
-  const savePendingProcess = () => {
+  const savePendingProcess = (label?: string) => {
     const pendingProcess = {
       eventDetails: JSON.stringify(eventDetails),
       paymentsDetails: JSON.stringify(paymentsDetails),
@@ -123,6 +123,10 @@ export const BuyTicketProvider: React.FC<BuyTicketProviderProps> = ({ children }
       processor: JSON.stringify(processor)
     }
     localStorage.setItem("pendingProcess", JSON.stringify(pendingProcess))
+    //Is variable for understand why the process was suspended
+    if(label){
+      localStorage.setItem("_func", label)
+    }
   }
 
   //Restore all variable for restore process after redirect operations
