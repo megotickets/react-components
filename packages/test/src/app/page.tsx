@@ -1,6 +1,8 @@
 "use client";
 
-import { Web3Provider, MegoWalletButton, Web3MegoClientProvider } from "@megotickets/wallet";
+import { MegoWalletButton, Web3MegoClientProvider } from "@megotickets/wallet";
+import {Web3Provider} from "@megotickets/core"
+
 import "@megotickets/wallet/dist/index.css";
 import { MegoPreview } from "../components/status/MegoPreview";
 //import "./globals.css";

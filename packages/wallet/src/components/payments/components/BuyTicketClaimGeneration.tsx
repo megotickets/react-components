@@ -7,7 +7,7 @@ import { PopupModality } from "../interfaces/popup-enum";
 import { Stepper } from "../interfaces/interface-stepper";
 import { useWeb3Context } from "@/components/web3-context";
 import { signMessage } from "wagmi/actions";
-import { config } from "@/components/Web3ClientProvider";
+import { config } from "@megotickets/core";
 
 export const BuyTicketClaimGeneration = () => {
     const { eventDetails, openPopup, resetPaymentProcessing, setStepper, emailOfBuyer, setClaimData, claimMetadata, tokenId } = useBuyTicketContext()

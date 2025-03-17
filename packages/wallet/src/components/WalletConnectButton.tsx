@@ -1,9 +1,9 @@
 import React from "react";
-import { ConnectButton } from "@rainbow-me/rainbowkit";
+import { ConnectWallet } from "@megotickets/core";
 import { useWeb3Context } from "./web3-context";
 import "./mego-style.css";
 import WalletConnectIcon from "./icons/WalletConnect";
-import { useCustomization } from "./CustomizationProvider";
+import { useCustomization } from "@megotickets/core";
 
 interface WalletConnectStatusProps {
   account?: any;
@@ -55,7 +55,7 @@ export function WalletConnectButton() {
   const { loginWithWalletConnect, loggedAs } = useWeb3Context();
 
   return (
-    <ConnectButton.Custom>
+    <ConnectWallet.Custom>
       {({
         account,
         chain,
@@ -75,7 +75,7 @@ export function WalletConnectButton() {
           loggedAs={loggedAs ?? undefined}
         />
       )}
-    </ConnectButton.Custom>
+    </ConnectWallet.Custom>
   );
 };
 

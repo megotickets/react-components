@@ -11,9 +11,9 @@ import '@rainbow-me/rainbowkit/styles.css';
 import { BrowserProvider, ethers } from "ethers";
 import axios from "axios";
 import { useConnectModal } from '@rainbow-me/rainbowkit';
-import { useAccount, useSwitchChain } from 'wagmi';
-import { disconnect } from 'wagmi/actions'
-import { config } from "./Web3ClientProvider";
+import { useAccount, useSwitchChain } from '@megotickets/core';
+import { disconnect } from '@megotickets/core'
+import { config } from "@megotickets/core";
 import { BuyTicketProvider } from "./payments/context/BuyTicketContext";
 type Route =
   | "ChooseType"

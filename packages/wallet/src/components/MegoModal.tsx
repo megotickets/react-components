@@ -11,7 +11,7 @@ import ExportKeyIcon from "./icons/ExportKeyIcon";
 import GoogleIcon from "./icons/GoogleIcon";
 import MegoIcon from "./icons/MegoIcon";
 import MegoLetter from "./icons/MegoLetter";
-import { useCustomization } from "./CustomizationProvider";
+import { useCustomization } from "@megotickets/core";
 
 
 interface MegoModalProps {

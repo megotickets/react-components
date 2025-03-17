@@ -1,7 +1,7 @@
 import React, { useEffect } from "react"
 import { useWeb3Context } from "./web3-context"
 import "./mego-style.css";
-import { useCustomization } from "./CustomizationProvider";
+import { useCustomization } from "@megotickets/core";
 import { CustomStyle, providerConfiguration } from "interfaces/CustomStyle";
 
 const GlobalStyle = `

@@ -1,4 +1,5 @@
-import { PaymentModal, useAccount, useWeb3Context } from "@megotickets/wallet";
+import { PaymentModal, useWeb3Context } from "@megotickets/wallet";
+import {useAccount} from "@megotickets/core"
 import { useEffect, useState } from "react";
 import { PaymentPreview } from "./PaymentPreview";
 

@@ -1,4 +1,4 @@
-import { CustomStyle, providerConfiguration } from 'interfaces/CustomStyle';
+import { CustomStyle, providerConfiguration } from '../interfaces/CustomStyle';
 import React, { createContext, useContext, ReactNode } from 'react';
 
 interface CustomizationContextType {

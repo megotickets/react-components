@@ -9,7 +9,8 @@
     "start": "next start"
   },
   "dependencies": {
-    "@megotickets/wallet": "workspace:*",
+    "@megotickets/wallet": "workspace:wallet",
+    "@megotickets/core": "workspace:core",
     "@tanstack/react-query": "^5.0.0",
     "encoding": "^0.1.13",
     "lokijs": "^1.5.12",

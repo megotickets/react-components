@@ -9,7 +9,6 @@ import { CustomizationProvider } from './CustomizationProvider';
 import { getDefaultConfig, RainbowKitProvider } from '@rainbow-me/rainbowkit'
 
 
-
 export const config = getDefaultConfig({
   appName: 'Mego Wallet',
   projectId: "b04bcb017e647637f86b206334c538e6",
