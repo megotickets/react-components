@@ -6,7 +6,9 @@
     "dev:mego": "pnpm --filter '@megotickets/wallet' dev",
 
     "build": "pnpm --filter './packages/**' build",
-    "build:mego": "pnpm --filter '@megotickets/wallet' build"
+    "build:mego": "pnpm --filter '@megotickets/wallet' build",
+
+    "build:core": "pnpm --filter '@megotickets/core' build"
   },
   "devDependencies": {
     "gh-pages": "^6.0.0"
