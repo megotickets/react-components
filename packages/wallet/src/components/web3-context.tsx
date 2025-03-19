@@ -115,6 +115,7 @@ export const Web3Provider: React.FC<Web3ProviderProps> = ({ children }) => {
       setSection("Logged");
       localStorage.setItem("loggedAs", address);
       setProvider("walletConnect");
+      closeMegoModal();
     }
   }, [address]);
 
@@ -352,7 +353,7 @@ export const Web3Provider: React.FC<Web3ProviderProps> = ({ children }) => {
       setLoggedAs(urlLoggedAs);
       localStorage.setItem("loggedAs", urlLoggedAs);
     }
-
+  
     //# 3
     if (!urlProvider && !urlLoggedAs) {
       //console.log("[DEBUG] #3 - !urlProvider && !urlLoggedAs");
@@ -383,6 +384,9 @@ export const Web3Provider: React.FC<Web3ProviderProps> = ({ children }) => {
         setLoggedAs(urlLoggedAs);
         localStorage.setItem("provider", 'google');
         localStorage.setItem("loggedAs", urlLoggedAs);
+        if (!exported) {
+          closeMegoModal();
+        }
       } catch (error) {
         console.error("[Google Auth] Error initializing provider:", error);
       }
