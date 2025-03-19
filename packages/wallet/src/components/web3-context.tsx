@@ -337,7 +337,7 @@ export const Web3Provider: React.FC<Web3ProviderProps> = ({ children }) => {
       localStorage.setItem("provider", urlProvider);
 
       // Inizializza il provider JSON-RPC per Google
-      if (urlProvider === 'google') {
+      if (urlProvider === 'google' || urlProvider === 'apple') {
         const jsonRpcProvider = new ethers.JsonRpcProvider(process.env.REACT_APP_JSON_RPC_PROVIDER);
         setNoWalletConnectProvider(jsonRpcProvider);
       }
@@ -364,7 +364,7 @@ export const Web3Provider: React.FC<Web3ProviderProps> = ({ children }) => {
       if (storedProvider) {
         setProvider(storedProvider);
         // Inizializza il provider anche per sessioni ripristinate
-        if (storedProvider === 'google') {
+        if (storedProvider === 'google' || storedProvider === 'apple') {
           const jsonRpcProvider = new ethers.JsonRpcProvider(process.env.REACT_APP_JSON_RPC_PROVIDER);
           setNoWalletConnectProvider(jsonRpcProvider);
         } else if (storedProvider === 'walletConnect') {
@@ -375,14 +375,18 @@ export const Web3Provider: React.FC<Web3ProviderProps> = ({ children }) => {
     }
 
     //# 4
-    if (urlProvider === 'google' && urlLoggedAs) {
+    if ((urlProvider === 'google' || urlProvider === 'apple') && urlLoggedAs) {
       //console.log("[DEBUG] #4 - urlProvider === 'google' && urlLoggedAs");
       try {
-        const jsonRpcProvider = new ethers.JsonRpcProvider("https://base-sepolia.g.alchemy.com/v2/KxxtZXKplWuSt71LXxy-9Mr4BhucrqEP");
+        const jsonRpcProvider = new ethers.JsonRpcProvider("");
         setNoWalletConnectProvider(jsonRpcProvider);
-        setProvider('google');
+        if (urlProvider === 'google') {
+          setProvider('google');
+        } else if (urlProvider === 'apple') {
+          setProvider('apple');
+        }
         setLoggedAs(urlLoggedAs);
-        localStorage.setItem("provider", 'google');
+        localStorage.setItem("provider", urlProvider);
         localStorage.setItem("loggedAs", urlLoggedAs);
         if (!exported) {
           closeMegoModal();
