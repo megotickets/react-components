@@ -1,21 +1,27 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useBuyTicketContext } from "../context/BuyTicketContext";
 import { askPaymentDetails, cleanMegoPendingClaimProcessing } from "../utils/BuyTicketUtils";
-import { useAccount } from "wagmi";
+import { useAccount } from '@megotickets/core';
 import { Messages } from "../interfaces/messages-enums";
-import { Loader } from "@/components/Loader";
+import { Loader } from '@megotickets/core';
 import { PopupModality } from "../interfaces/popup-enum";
 import { Stepper } from "../interfaces/interface-stepper";
-import { useWeb3Context } from "@/components/web3-context";
 
 
 export const BuyTicketProcessing = () => {
     const { eventDetails, emailOfBuyer, openPopup, resetPaymentProcessing, setStepper, setPaymentsDetails, processor } = useBuyTicketContext()
     const { address } = useAccount()
-    const { loggedAs } = useWeb3Context()
 
     const [message, setMessage] = useState<string>('Processing...')
     let count = 0;
+
+    const userAddress = useMemo(() => {
+        //Search loggedAs o signedAs nei params dell'url
+        const urlParams = new URLSearchParams(window.location.search);
+        const loggedAs = urlParams.get('loggedAs');
+        const signedAs = urlParams.get('signedAs');
+        return address || loggedAs || signedAs || ""
+    }, [address, window.location.search])
 
     const processing = async () => {
         try {
@@ -25,7 +31,6 @@ export const BuyTicketProcessing = () => {
                 return
             }
             setMessage('Asking for payment details...')
-            const userAddress = address || loggedAs || ""
             if (userAddress) {
                 const paymentDetails = await askPaymentDetails(processor, 1, eventDetails?.event?.identifier, userAddress, eventDetails?.event?.discount_code || "", eventDetails?.event?.currency, emailOfBuyer || "", eventDetails?.event?.donation_amount || 0)
                 let { error, message, payment } = paymentDetails

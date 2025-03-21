@@ -1,0 +1,392 @@
+/* .graci{
+  --loading-color: #000;
+  --primary-bg-color: #c1c7b8;
+  --secondary-bg-color: #000;
+  --header-color: #c1c7b8;
+}
+.cottanera{
+  --loading-color: #3e3439;
+  --primary-bg-color: #d2be8e;
+  --secondary-bg-color: #3e3439;
+  --header-color: #af9967;
+} */
+
+
+.mego-modal-container {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  font-family: 'Lato';
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  z-index: 1000;
+}
+
+.graci .mego-modal-container,
+.cottanera .mego-modal-container,
+.custodi .mego-modal-container,
+.benanti .mego-modal-container,
+.russo .mego-modal-container {
+  background-color: #c1c7b8;
+  color: purple;
+  filter: none;
+}
+
+.etna-survey__nav-button {
+  color: black;
+}
+
+.mego-apple img,
+.mego-email img,
+.mego-modal-header img {
+  filter: none;
+}
+
+.mego-modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(5px);
+  animation: fadeIn 0.3s ease-out;
+}
+
+.mego-modal-wrapper {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 700px;
+  margin: 0 auto;
+  background-color: white;
+  border-radius: 1.5rem 1.5rem 0 0;
+  animation: slideUp 0.3s ease-out;
+  bottom: 0;
+}
+
+/* Add closing animations */
+.mego-modal-container.closing .mego-modal-backdrop {
+  animation: fadeOut 0.3s ease-in forwards;
+}
+
+.mego-modal-container.closing .mego-modal-wrapper {
+  animation: slideDown 0.3s ease-in forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+  }
+
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateY(0);
+  }
+
+  to {
+    transform: translateY(100%);
+  }
+}
+
+.mego-modal-content {
+  background-color: black;
+  min-height: 313px;
+  padding: 1.5rem;
+  border-radius: 1.5rem 1.5rem 0 0;
+  overflow-y: overlay;
+}
+
+.mego-modal-container {
+  height: auto;
+  display: flex;
+  flex-direction: column-reverse;
+  background-color: unset;
+}
+
+.mego-modal-button {
+  width: 100%;
+  padding: 0.9rem;
+  max-width: 315px;
+  color: black;
+  margin: auto;
+  margin-bottom: 0.85rem;
+  background-color: white;
+  border-radius: 0.6rem;
+  border: none;
+  outline: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.mego-modal-button.outlined {
+  background-color: #000;
+  border: 0.1rem solid white;
+  color: white;
+}
+
+.mego-modal-button img {
+  min-height: 20px;
+  margin-right: 0.75rem;
+}
+
+/* Aggiungi il loader */
+.mego-loader {
+  width: 50px;
+  padding: 8px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: white;
+  --_m: 
+    conic-gradient(#0000 10%, #000),
+    linear-gradient(#000 0 0) content-box;
+  -webkit-mask: var(--_m);
+          mask: var(--_m);
+  -webkit-mask-composite: source-out;
+          mask-composite: subtract;
+  animation: mego-spin 1s infinite linear;
+  margin: auto;
+}
+
+@keyframes mego-spin {
+  to { transform: rotate(1turn) }
+}
+
+.mego-loader-div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Mostra il loader quando è in attesa */
+
+.font-bold {
+  font-weight: bold;
+}
+
+.mego-modal-header {
+  display: flex;
+  justify-content: space-between;
+
+  padding: 12px 16px;
+}
+
+.mego-input {
+  background-color: #000;
+  border: 0.1rem solid white;
+  padding: 0.9rem;
+  border-radius: 0.6rem;
+  margin-bottom: 1rem;
+  outline: none;
+  max-width: 365px;
+  color: white;
+  width: 100%;
+}
+
+.mego-input-token {
+  background-color: #000;
+  border: 0.1rem solid white;
+  padding: 0.9rem;
+  border-radius: 0.6rem;
+  margin-bottom: 1rem;
+  outline: none;
+  width: 100%;
+  color: white;
+  width: 100%;
+}
+
+.mego-input::placeholder {
+  opacity: 1;
+  color: white;
+}
+
+.mego-input:user-invalid {
+  border-color: red;
+}
+
+.mego-login-text {
+  color: white;
+  text-align: center;
+  font-size: 1rem;
+  margin-top: -2rem;
+  margin-bottom: 2rem;
+}
+
+.mego-modal-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.mego-modal-buttons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.mego-wallet-icon-container {
+  cursor: pointer;
+  border: 3px solid white;
+  border-radius: 50px;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+}
+
+.mego-wallet-icon-container:hover {
+  background-color: lightgray;
+}
+
+.mego-modal-title {
+  font-size: 1.5rem;
+  color: white;
+  margin-left: auto;
+  margin-right: auto;
+  font-weight: bold;
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.mego-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+/* Stili specifici per il modal di pagamento */
+.payment-modal .mego-modal-wrapper {
+  border-radius: 1.5rem 1.5rem 0 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  font-family: 'Satoshi', sans-serif;
+}
+
+.payment-wrapper {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: white;
+  transition: transform 0.3s ease-out;
+  font-family: 'Satoshi', sans-serif;
+}
+
+.payment-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem;
+  font-family: 'Satoshi', sans-serif;
+}
+
+.payment-title {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: black;
+  font-family: 'Satoshi', sans-serif;
+}
+
+.payment-details {
+  text-align: center;
+  margin-bottom: 2rem;
+  font-family: 'Satoshi', sans-serif;
+}
+
+.payment-item-name {
+  font-size: 1.5rem;
+  color: white;
+  margin-bottom: 0.5rem;
+  font-family: 'Satoshi', sans-serif;
+}
+
+.payment-amount {
+  font-size: 2rem;
+  font-weight: bold;
+  color: white;
+  font-family: 'Satoshi', sans-serif;
+}
+
+.payment-methods {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  font-family: 'Satoshi', sans-serif;
+}
+
+.payment-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  background-color: white;
+  color: black;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: 'Satoshi', sans-serif;
+}
+
+.payment-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Assicuriamoci che anche il testo all'interno dei bottoni utilizzi Satoshi */
+.payment-button p {
+  font-family: 'Satoshi', sans-serif;
+}
+
+.payment-image {
+  height: 100px;
+  width: auto;
+  object-fit: cover;
+}
+
+.payment-image-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+}

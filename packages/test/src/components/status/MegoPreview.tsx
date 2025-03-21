@@ -2,9 +2,10 @@ import { useWeb3Context } from "@megotickets/wallet";
 import {useAccount} from "@megotickets/core"
 import { useEffect, useState } from "react";
 import { PaymentPreview } from "./PaymentPreview";
+import { signMessageWithApple, signMessageWithGoogle } from "@megotickets/core";
 
 export function MegoPreview() {
-  const { loggedAs, provider, signMessageWithGoogle, signMessageWithApple } = useWeb3Context();
+  const { loggedAs, provider } = useWeb3Context();
   const { isConnected } = useAccount();
   const [message, setMessage] = useState<string>("");
   const [signature, setSignature] = useState<string | null>(null);

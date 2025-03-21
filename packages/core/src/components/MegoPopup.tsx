@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { PopupModality } from './payments/interfaces/popup-enum';
+import { PopupModality } from '../interfaces/popup-enum'
 
 interface MegoPopupProps {
   popupData: MegoPopupData;

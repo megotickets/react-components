@@ -85,10 +85,12 @@ const MapContainer: React.FC<MapContainerProps> = ({ location }) => {
           <p style={{ color: '#9CA3AF' }}>Caricamento mappa...</p>
         </div>
       )}
+      {/* @ts-ignore */}
       <LoadScript 
         googleMapsApiKey={apiKey} 
         onError={onError}
       >
+        {/* @ts-ignore */}
         <GoogleMap
           mapContainerStyle={containerStyle}
           center={center}
@@ -103,6 +105,7 @@ const MapContainer: React.FC<MapContainerProps> = ({ location }) => {
             disableDefaultUI: true,
           }}
         >
+          {/* @ts-ignore */}
           <Marker position={center} />
         </GoogleMap>
       </LoadScript>

@@ -1,10 +1,10 @@
 import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 import MegoBuyTicketModal from '../components/MegoBuyTicketModal';
 import { Stepper } from '../interfaces/interface-stepper';
+import { cleanMegoPendingClaimProcessing } from '../utils/BuyTicketUtils';
+import { MegoPopup } from '@megotickets/core';
 import { PopupModality } from '../interfaces/popup-enum';
-import { MegoPopup, MegoPopupData } from '@/components/MegoPopup';
-import { cleanMegoPendingClaimProcessing, getMegoPendingClaimProcessingData } from '../utils/BuyTicketUtils';
-
+import { MegoPopupData } from '@megotickets/core';
 interface BuyTicketContextType {
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;

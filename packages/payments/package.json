@@ -1,6 +1,7 @@
 {
-  "name": "@megotickets/wallet",
-  "version": "0.1.0",
+  "name": "@megotickets/payments",
+  "version": "1.0.0",
+  "description": "",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
@@ -8,22 +9,16 @@
     "build": "tsup src/index.tsx --format cjs,esm --dts --external react --tsconfig tsconfig.json",
     "dev": "tsup src/index.tsx --format cjs,esm --dts --external react --watch --tsconfig tsconfig.json"
   },
-  "peerDependencies": {
-    "react": "^18.0.0",
-    "react-dom": "^18.0.0"
-  },
   "dependencies": {
     "@megotickets/core": "workspace:core",
-    "@rainbow-me/rainbowkit": "^2.0.0",
-    "@tanstack/react-query": "^5.0.0",
-    "axios": "^1.7.7",
-    "encoding": "^0.1.13",
-    "ethers": "^6.13.4",
-    "lokijs": "^1.5.12",
-    "pino-pretty": "^10.0.0",
-    "viem": "^2.0.0",
-    "wagmi": "^2.0.0"
+    "@stripe/stripe-js": "^5.8.0",
+    "@react-google-maps/api": "^2.20.6",
+    "axios": "^1.7.7"
   },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.4.1",
   "devDependencies": {
     "@types/react": "^18.2.0",
     "@types/react-dom": "^18.2.0",

@@ -1,25 +1,40 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, useMemo } from "react"
 import { useBuyTicketContext } from "../context/BuyTicketContext";
 import { cleanMegoPendingClaimProcessing, createClaim, getMegoPendingClaimProcessingData, saveMegoPendingClaimProcessing } from "../utils/BuyTicketUtils";
-import { useAccount } from "wagmi";
-import { Loader } from "@/components/Loader";
+import { useAccount } from "@megotickets/core";
+import { Loader } from "@megotickets/core";
 import { PopupModality } from "../interfaces/popup-enum";
 import { Stepper } from "../interfaces/interface-stepper";
-import { useWeb3Context } from "@/components/web3-context";
-import { signMessage } from "wagmi/actions";
+import { signMessage } from "@megotickets/core";
 import { config } from "@megotickets/core";
+import { isConnectedWithMego, getProvider } from "../utils/utils";
+import { signMessageWithGoogle, signMessageWithApple } from "@megotickets/core";
 
 export const BuyTicketClaimGeneration = () => {
     const { eventDetails, openPopup, resetPaymentProcessing, setStepper, emailOfBuyer, setClaimData, claimMetadata, tokenId } = useBuyTicketContext()
     const [message, setMessage] = useState<string>('Processing...')
     const { address } = useAccount()
-    const { loggedAs, isConnectedWithMego, provider, signMessageWithGoogle, signMessageWithApple } = useWeb3Context()
+
 
     let count = 0;
 
+    const provider = useMemo(() => {
+        return getProvider()
+    }, [window.location.search])
+
+    //UseMemo for resolve address
+    const userAddress = useMemo(() => {
+        //Search loggedAs o signedAs nei params dell'url
+        const urlParams = new URLSearchParams(window.location.search);
+        const loggedAs = urlParams.get('loggedAs');
+        const signedAs = urlParams.get('signedAs');
+        return address || loggedAs || signedAs || ""
+    }, [address, window.location.search])
+
+
+
     const processing = async () => {
         try {
-            const userAddress = address || loggedAs || ""
             let signature = ""
             if (isConnectedWithMego() && provider) {
                 await saveMegoPendingClaimProcessing(tokenId || "", emailOfBuyer || "", eventDetails?.event?.identifier, userAddress, `Claiming token ${tokenId}`, claimMetadata)

@@ -1,9 +1,9 @@
 import React from 'react';
 import { useBuyTicketContext } from "../context/BuyTicketContext"
-import { useAccount } from 'wagmi';
-import AppleWalletIcon from '@/components/icons/AppleWalletIcon';
-import GoogleWalletIcon from '@/components/icons/GoogleWalletIcon';
-import QrCodeIcon from '@/components/icons/QrCodeIcon';
+import { useAccount } from "@megotickets/core";
+import AppleWalletIcon from './icons/AppleWalletIcon';
+import GoogleWalletIcon from './icons/GoogleWalletIcon';
+import QrCodeIcon from './icons/QrCodeIcon';
 
 export const BuyTicketClaim: React.FC = () => {
 

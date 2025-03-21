@@ -14,7 +14,6 @@ import { useConnectModal } from '@rainbow-me/rainbowkit';
 import { useAccount, useSwitchChain } from '@megotickets/core';
 import { disconnect } from '@megotickets/core'
 import { config } from "@megotickets/core";
-import { BuyTicketProvider } from "./payments/context/BuyTicketContext";
 type Route =
   | "ChooseType"
   | "Email"
@@ -60,11 +59,6 @@ interface Web3ContextType {
   setForceChainId: (forceChainId: number) => void;
   serviceAutoChainChange: boolean;
   setServiceAutoChainChange: (serviceAutoChainChange: boolean) => void;
-
-  //Firma con Apple
-  signMessageWithApple: (origin: string, challange: string, encoded?: boolean) => void;
-  //Firma con Google
-  signMessageWithGoogle: (origin: string, challange: string, encoded?: boolean) => void;
 
   isConnectedWithMego: () => boolean;
 }
@@ -199,22 +193,6 @@ export const Web3Provider: React.FC<Web3ProviderProps> = ({ children }) => {
     } else {
       return noWalletConnectProvider;
     }
-  };
-
-  //Firma con Apple 
-  const signMessageWithApple = (origin: string, challange: string, encoded: boolean = false) => {
-    localStorage.setItem("reddeemWithMego", "1");
-    if (window)
-      //@ts-expect-error typing bug
-      window.location = `https://wallet.mego.tools/auth/apple?origin=${origin.replace("http://", "").replace("https://", "")}&message=${challange}${encoded ? "&encoded=true" : ""}`;
-  };
-
-  //Firma con Google
-  const signMessageWithGoogle = (origin: string, challange: string, encoded: boolean = false) => {
-    localStorage.setItem("redeemWithMego", "1");
-    if (window)
-      //@ts-expect-error typing bug
-      window.location = `https://wallet.mego.tools/auth/google?origin=${origin.replace("http://", "").replace("https://", "")}&message=${challange}${encoded ? "&encoded=true" : ""}`;
   };
 
   const getSigner = async () => {
@@ -523,15 +501,13 @@ export const Web3Provider: React.FC<Web3ProviderProps> = ({ children }) => {
     redirectToAppleLogin, redirectToGoogleLogin, closeMegoModal, provider, walletConnectProvider, loginWithWalletConnect, section,
     setSection, prevSection, setPrevSection, loggedAs, isLoading, logout, setIsLoading, loadingText, setLoadingText, loginWithEmail, createNewWallet,
     requestExportPrivateKeyWithEmail, requestExportPrivateKeyWithGoogle, requestExportPrivateKeyWithApple, revealPrivateKey, privateKey,
-    forceChainId, setForceChainId, signMessageWithApple, signMessageWithGoogle, serviceAutoChainChange, setServiceAutoChainChange,
+    forceChainId, setForceChainId, serviceAutoChainChange, setServiceAutoChainChange,
     isConnectedWithMego
   };
   return (
     <Web3Context.Provider value={value}>
-      <BuyTicketProvider>
         {children}
         {isMegoModalOpen && <MegoModal isOpen={isMegoModalOpen} onClose={closeMegoModal} />}
-      </BuyTicketProvider>
     </Web3Context.Provider>
   );
 };

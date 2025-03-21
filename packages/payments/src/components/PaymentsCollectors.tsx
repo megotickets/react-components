@@ -1,10 +1,10 @@
 import { useBuyTicketContext } from "../context/BuyTicketContext";
-import ArbitrumIcon from "../../icons/cryptos/ArbitrumIcon";
-import UsdcIcon from "../../icons/cryptos/UsdcIcon";
-import PolygonIcon from "../../icons/cryptos/PolygonIcon";
-import StripeIcon from "../../icons/cryptos/StripeIcon";
-import EtheriumIcon from "../../icons/cryptos/EtheriumIcon";
-import OptimismIcon from "@/components/icons/cryptos/OptimismIcon";
+import ArbitrumIcon from "./icons/cryptos/ArbitrumIcon";
+import UsdcIcon from "./icons/cryptos/UsdcIcon";
+import PolygonIcon from "./icons/cryptos/PolygonIcon";
+import StripeIcon from "./icons/cryptos/StripeIcon";
+import EtheriumIcon from "./icons/cryptos/EtheriumIcon";
+import OptimismIcon from "./icons/cryptos/OptimismIcon";
 import { useEffect, useState } from "react";
 
 export const PaymentsCollectors = () => {

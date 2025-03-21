@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { Ticket } from '@megotickets/wallet';
+import React from 'react';
+import { Ticket } from '@megotickets/payments';
 
 export function PaymentPreview() {
 

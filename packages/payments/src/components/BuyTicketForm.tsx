@@ -1,12 +1,12 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useBuyTicketContext } from '../context/BuyTicketContext';
 import { Stepper } from '../interfaces/interface-stepper';
 import { PaymentsCollectors } from './PaymentsCollectors';
 import { checkNFT } from '../utils/BuyTicketUtils';
 import { PopupModality } from '../interfaces/popup-enum';
-import { useAccount } from 'wagmi';
-import { useWeb3Context } from '@/components/web3-context';
-import { Loader } from '@/components/Loader';
+import { useAccount } from '@megotickets/core';
+import { Loader } from '@megotickets/core';
+import { isConnectedWithMego } from '../utils/utils';
 
 
 const fastDebug = true
@@ -19,17 +19,23 @@ export const BuyTicketForm: React.FC = () => {
     const [metadataValues, setMetadataValues] = useState<Record<string, string>>({});
     const [isFormValid, setIsFormValid] = useState(false);
     const { address } = useAccount();
-    const { loggedAs, isConnectedWithMego } = useWeb3Context();
     const [isNFTCheckLoading, setIsNFTCheckLoading] = useState(false);
 
     console.log(eventDetails)
 
     let count = 0;
 
+    const userAddress = useMemo(() => {
+        //Search loggedAs o signedAs nei params dell'url
+        const urlParams = new URLSearchParams(window.location.search);
+        const loggedAs = urlParams.get('loggedAs');
+        const signedAs = urlParams.get('signedAs');
+        return address || loggedAs || signedAs || ""
+    }, [address, window.location.search])
+
 
     const init = async () => {
         try {
-            const userAddress = address || loggedAs || ""
 
             if (eventDetails?.event?.claim_metadata && eventDetails.event.claim_metadata.length > 0) {
                 const initialValues: Record<string, string> = {};

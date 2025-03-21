@@ -1,12 +1,12 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useBuyTicketContext } from "../context/BuyTicketContext";
 import { loadStripe, Stripe, StripeElements } from "@stripe/stripe-js";
 import { PopupModality } from "../interfaces/popup-enum";
 import { Stepper } from "../interfaces/interface-stepper";
 import { checkPayment, getPayment } from "../utils/BuyTicketUtils";
-import { useAccount } from "wagmi";
-import { Loader } from "@/components/Loader";
-import { useWeb3Context } from "@/components/web3-context";
+import { useAccount } from "@megotickets/core";
+import { Loader } from "@megotickets/core";
+
 
 const BuyTicketWithStripe = () => {
     const { eventDetails, paymentsDetails, openPopup, setStepper, savePendingProcess } = useBuyTicketContext();
@@ -14,13 +14,20 @@ const BuyTicketWithStripe = () => {
     const [stripeInstance, setStripeInstance] = useState<Stripe | null>(null);
     const [isProcessing, setIsProcessing] = useState<boolean>(false);
     const { address } = useAccount();
-    const { loggedAs } = useWeb3Context();
     const [message, setMessage] = useState<string>("");
 
     const [waitForPaymentConfirmation, setWaitForPaymentConfirmation] = useState<boolean>(false);
 
     console.log('paymentsDetails', paymentsDetails);
     console.log('eventDetails', eventDetails);
+
+    const userAddress = useMemo(() => {
+        //Search loggedAs o signedAs nei params dell'url
+        const urlParams = new URLSearchParams(window.location.search);
+        const loggedAs = urlParams.get('loggedAs');
+        const signedAs = urlParams.get('signedAs');
+        return address || loggedAs || signedAs || ""
+    }, [address, window.location.search])
 
 
     const waitBackendConfirmationOfPayment = async () => {
@@ -161,7 +168,6 @@ const BuyTicketWithStripe = () => {
         try {
             setIsProcessing(true);
             savePendingProcess("stripe_payment"); //For redirect
-            const userAddress = loggedAs || address;
             // Conferma il pagamento con redirect personalizzato
             const { error } = await stripeInstance.confirmPayment({
                 elements: stripeElements,

@@ -1,23 +1,25 @@
 import { useState, useEffect } from "react"
 import { useBuyTicketContext } from "../context/BuyTicketContext";
 import { checkNFT, mintNFT, cleanMegoPendingClaimProcessing } from "../utils/BuyTicketUtils";
-import { useAccount } from "wagmi";
-import { Loader } from "@/components/Loader";
+import { useAccount } from "@megotickets/core";
+import { Loader } from "@megotickets/core";
 import { PopupModality } from "../interfaces/popup-enum";
 import { Stepper } from "../interfaces/interface-stepper";
-import { useWeb3Context } from "@/components/web3-context";
 
 export const BuyCheckNFTAndMint = () => {
     const { eventDetails, paymentsDetails, openPopup, resetPaymentProcessing, setStepper, setTokenId } = useBuyTicketContext()
     const [message, setMessage] = useState<string>('Processing...')
     const { address } = useAccount()
-    const { loggedAs } = useWeb3Context()
 
     let count = 0;
 
     const processing = async () => {
         try {
-            const userAddress = address || loggedAs || ""
+            //Search loggedAs o signedAs nei params dell'url
+            const urlParams = new URLSearchParams(window.location.search);
+            const loggedAs = urlParams.get('loggedAs');
+            const signedAs = urlParams.get('signedAs');
+            const userAddress = address || loggedAs || signedAs || ""
             const res = await checkNFT(eventDetails?.event?.identifier, userAddress);
             let tokenId = res.tokenId;
             if (tokenId !== null) {
