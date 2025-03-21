@@ -28,6 +28,9 @@ jobs:
 
       - name: Build core package
         run: pnpm build:core
+      
+      - name: Build payments package
+        run: pnpm build:payments
         
       - name: Build wallet package
         run: pnpm build:mego
