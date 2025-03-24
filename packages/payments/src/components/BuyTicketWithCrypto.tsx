@@ -1,12 +1,12 @@
 import { useBuyTicketContext } from "@/context/BuyTicketContext";
 import { Stepper } from "@/interfaces/interface-stepper";
 import { PopupModality } from "@/interfaces/popup-enum";
-import { checkPayment, checkUserBalance, getPayment } from "@/utils/BuyTicketUtils";
-import { Loader, useAccount, } from "@megotickets/core";
+import { checkPayment, checkUserBalance, getPayment, resolveProcessor, switchNetwork } from "@/utils/BuyTicketUtils";
+import { Loader, switchChain, useAccount, createWalletClient, config } from "@megotickets/core";
 import { useEffect, useState } from "react";
-import { useSendTransaction, config, ethers, useWaitForTransactionReceipt } from "@megotickets/core";
+import { useSendTransaction, ethers, useWaitForTransactionReceipt } from "@megotickets/core";
 
-//https://wagmi.sh/react/guides/send-transaction
+
 const BuyTicketWithCrypto = () => {
 
     const { eventDetails, paymentsDetails, openPopup, setStepper, processor, resetPaymentProcessing } = useBuyTicketContext();
@@ -15,6 +15,8 @@ const BuyTicketWithCrypto = () => {
     const {address} = useAccount();
     const { data: hash, error, isPending, sendTransaction } = useSendTransaction()
     const { isLoading: isConfirming, isSuccess: isConfirmed } = useWaitForTransactionReceipt({hash})
+
+    let count = 0;
 
     const waitBackendConfirmationOfPayment = async () => {
         try {
@@ -61,18 +63,15 @@ const BuyTicketWithCrypto = () => {
             }
         } catch (error: any) {
             console.error("Errore nell'attesa della conferma del pagamento:", error);
-            openPopup({
-                title: 'Errore',
-                message: `Errore nell'attesa della conferma del pagamento: ${error.message || 'Errore sconosciuto'}`,
-                modality: PopupModality.Error,
-                isOpen: true
-            });
+            openPopup({title: 'Errore',message: `Errore nell'attesa della conferma del pagamento: ${error.message || 'Errore sconosciuto'}`,modality: PopupModality.Error,isOpen: true});
             resetPaymentProcessing()
             setIsProcessing(false);
         } finally {
             localStorage.removeItem("_func");
         }
     };
+
+    
 
     const payWithCrypto = async () => {
         if(!address){
@@ -89,13 +88,26 @@ const BuyTicketWithCrypto = () => {
             return;
         }
 
-        //TODO: Check if balance is enough to buy the tickets
-
-        
         // Opening metamask modal for payment
         setMessage("Please confirm the operation in your wallet...");
         const to = paymentsDetails?.payment?.payment_intent;
         const value = ethers.parseEther(paymentsDetails?.payment?.amount.toString());
+
+        //Switch to the correct network
+        const chainId = resolveProcessor(processor || "");
+        if(chainId == -1){
+            openPopup({title: 'Errore', message: `Impossibile passare alla rete ${processor}`, modality: PopupModality.Error, isOpen: true});
+            resetPaymentProcessing();
+            setIsProcessing(false);
+            return;
+        }
+        const networkChanged = await switchNetwork(chainId);
+        if (!networkChanged) {
+            openPopup({title: 'Errore', message: `Impossibile passare alla rete ${processor}`, modality: PopupModality.Error, isOpen: true});
+            resetPaymentProcessing();
+            setIsProcessing(false);
+            return;
+        }
 
         // wait for tx confirmation
         sendTransaction({to,value})
@@ -119,7 +131,10 @@ const BuyTicketWithCrypto = () => {
     }, [hash, isConfirming, isConfirmed, error]);
 
     useEffect(() => {
-        payWithCrypto();
+        if(count == 0){
+            payWithCrypto();
+            count++;
+        }
     }, []);
 
 

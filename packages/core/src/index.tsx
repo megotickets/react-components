@@ -6,7 +6,7 @@ export * from 'wagmi/actions';
 export { ethers } from 'ethers';
 export { RainbowKitProvider } from '@rainbow-me/rainbowkit';
 export { http, createWalletClient, custom } from 'viem';
-export { optimism, optimismSepolia } from 'viem/chains'; 
+export { optimism, optimismSepolia, mainnet, arbitrum, goerli, polygon } from 'viem/chains'; 
 export { Loader } from '@/components/Loader';
 export { signMessageWithApple, signMessageWithGoogle } from './components/SignMessage';
 export { MegoPopup } from './components/MegoPopup';

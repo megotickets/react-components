@@ -1,5 +1,6 @@
 import axios from 'axios';
 const baseUrl = 'https://tickets-api.mego.tools'
+import { mainnet, optimism, arbitrum, goerli, polygon, config, switchChain } from "@megotickets/core";
 //const baseUrl = 'https://tickets-api-dev.mego.tools'
 
 /**
@@ -33,22 +34,22 @@ const askPaymentDetails = async (processor: string, amount: number, identifier: 
 }
 
 const getPayment = async (paymentId: string) => {
-    try{
+    try {
         const response = await axios.get(`${baseUrl}/payments/${paymentId}`)
         return response.data
-    }catch(error){
+    } catch (error) {
         console.error('Errore nel ottenere il pagamento:', error);
         throw error;
     }
 }
 
 const checkPayment = async (paymentId: string) => {
-    try{
+    try {
         const response = await axios.post(`${baseUrl}/payments/check`, {
             payment_id: paymentId
         })
         return response.data
-    }catch(error){
+    } catch (error) {
         console.error('Errore nel controllare il pagamento:', error);
         throw error;
     }
@@ -108,7 +109,7 @@ const createClaim = async (signature: string, tokenId: string, email: string, ti
             claim_metadata
         })
         return response.data
-    }catch (error) {
+    } catch (error) {
         console.error('Errore nel creare la richiesta:', error);
         throw error;
     }
@@ -137,8 +138,8 @@ export const getEventDetails = async (identifier: string) => {
  * @param message - The message of the claim
  * @param claim_metadata - The claim metadata of the claim
  */
-const saveMegoPendingClaimProcessing = async (tokenId: string, emailOfBuyer: string, identifier:string, userAddress:string, message:string, claim_metadata:Array<any>) => {
-    try{
+const saveMegoPendingClaimProcessing = async (tokenId: string, emailOfBuyer: string, identifier: string, userAddress: string, message: string, claim_metadata: Array<any>) => {
+    try {
         //Local storage
         localStorage.setItem("MP_func", "claim_processing");
         localStorage.setItem("MP_tokenId", tokenId);
@@ -147,7 +148,7 @@ const saveMegoPendingClaimProcessing = async (tokenId: string, emailOfBuyer: str
         localStorage.setItem("MP_userAddress", userAddress);
         localStorage.setItem("MP_message", message);
         localStorage.setItem("MP_claim_metadata", JSON.stringify(claim_metadata));
-    }catch(error){
+    } catch (error) {
         console.error('Errore nel salvare la richiesta:', error);
         throw error;
     }
@@ -157,7 +158,7 @@ const saveMegoPendingClaimProcessing = async (tokenId: string, emailOfBuyer: str
  * Clean the mego pending claim processing
  */
 const cleanMegoPendingClaimProcessing = async () => {
-    try{
+    try {
         localStorage.removeItem("MP_func")
         localStorage.removeItem("MP_tokenId")
         localStorage.removeItem("MP_emailOfBuyer")
@@ -165,7 +166,7 @@ const cleanMegoPendingClaimProcessing = async () => {
         localStorage.removeItem("MP_userAddress")
         localStorage.removeItem("MP_message")
         localStorage.removeItem("MP_claim_metadata")
-    }catch(error){
+    } catch (error) {
         console.error('Errore nel pulire la richiesta:', error);
         throw error;
     }
@@ -175,7 +176,7 @@ const cleanMegoPendingClaimProcessing = async () => {
  * Get the data of the pending claim processing
  */
 const getMegoPendingClaimProcessingData = async () => {
-    try{
+    try {
         return {
             func: localStorage.getItem("MP_func"),
             tokenId: localStorage.getItem("MP_tokenId"),
@@ -185,7 +186,7 @@ const getMegoPendingClaimProcessingData = async () => {
             message: localStorage.getItem("MP_message"),
             claim_metadata: JSON.parse(localStorage.getItem("MP_claim_metadata") || "[]")
         }
-    }catch(error){
+    } catch (error) {
         console.error('Errore nel ottenere i dati della richiesta:', error);
         throw error;
     }
@@ -198,7 +199,7 @@ const getMegoPendingClaimProcessingData = async () => {
  */
 const checkUserBalance = async (address: string, processor: string | null) => {
     try {
-        if(!processor){
+        if (!processor) {
             return { balance: "-1", formattedBalance: "-1", success: false };
         }
         console.log('💰 Checking user balance for address:', address, 'with processor:', processor);
@@ -218,7 +219,35 @@ const checkUserBalance = async (address: string, processor: string | null) => {
     }
 }
 
-export { 
-    askPaymentDetails, checkNFT, mintNFT, createClaim, saveMegoPendingClaimProcessing, getMegoPendingClaimProcessingData, cleanMegoPendingClaimProcessing, getPayment, checkPayment, checkUserBalance
+const resolveProcessor = (processor: string) => {
+    switch (processor) {
+        case "ethereum":
+            return mainnet.id;
+        case "optimism":
+            return optimism.id;
+        case "arbitrum":
+            return arbitrum.id;
+        case "goerli":
+            return goerli.id;
+        case "polygon":
+            return polygon.id;
+        default:
+            return -1;
+    }
+};
+
+const switchNetwork = async (chainId: number) => {
+    try {
+        //@ts-ignore
+        await switchChain(config, { chainId });
+        return true;
+    } catch (error: any) {
+        console.error("Errore nel cambio di rete:", error);
+        return false;
+    }
+};
+
+export {
+    askPaymentDetails, checkNFT, mintNFT, createClaim, saveMegoPendingClaimProcessing, getMegoPendingClaimProcessingData, cleanMegoPendingClaimProcessing, getPayment, checkPayment, checkUserBalance, resolveProcessor, switchNetwork
 }
 
