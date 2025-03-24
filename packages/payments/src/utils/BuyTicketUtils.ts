@@ -255,6 +255,20 @@ const resolveProcessor = (processor: string) => {
     }
 };
 
+const getDecimals = (contract_address: string) => {
+    console.log("Contract address:", contract_address);
+    
+    switch(contract_address.toLowerCase()) {
+        case "0xdac17f958d2ee523a2206206994597c13d831ec7": // USDT su Ethereum
+        case "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48": // USDC su Ethereum
+        case "0x2791bca1f2de4661ed88a30c99a7a9449aa84174": // USDC su Polygon
+            console.log("Token con 6 decimali");
+            return 6;
+        default:
+            return 18; // Default per DAI e altri token
+    }
+}
+
 const switchNetwork = async (chainId: number) => {
     try {
         //@ts-ignore
@@ -282,6 +296,6 @@ const obtainNfts = async (eventIdentifier: string, walletAddress: string) => {
 }
 
 export {
-    askPaymentDetails, checkNFT, mintNFT, createClaim, saveMegoPendingClaimProcessing, getMegoPendingClaimProcessingData, cleanMegoPendingClaimProcessing, getPayment, checkPayment, checkUserBalance, resolveProcessor, switchNetwork, obtainNfts
+    askPaymentDetails, checkNFT, mintNFT, createClaim, saveMegoPendingClaimProcessing, getMegoPendingClaimProcessingData, cleanMegoPendingClaimProcessing, getPayment, checkPayment, checkUserBalance, resolveProcessor, switchNetwork, obtainNfts, getDecimals
 }
 

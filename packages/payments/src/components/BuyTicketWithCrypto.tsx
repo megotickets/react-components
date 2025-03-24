@@ -1,20 +1,20 @@
 import { useBuyTicketContext } from "@/context/BuyTicketContext";
 import { Stepper } from "@/interfaces/interface-stepper";
 import { PopupModality } from "@/interfaces/popup-enum";
-import { checkPayment, checkUserBalance, getPayment, resolveProcessor, switchNetwork } from "@/utils/BuyTicketUtils";
+import { checkPayment, checkUserBalance, getDecimals, getPayment, resolveProcessor, switchNetwork } from "@/utils/BuyTicketUtils";
 import { Loader, switchChain, useAccount, createWalletClient, config } from "@megotickets/core";
 import { useEffect, useState } from "react";
-import { useSendTransaction, ethers, useWaitForTransactionReceipt } from "@megotickets/core";
-
+import { useSendTransaction, ethers, useWaitForTransactionReceipt, writeContract } from "@megotickets/core";
+import { erc20ABI } from "@/contracts/ABIErc20";
 
 const BuyTicketWithCrypto = () => {
 
     const { eventDetails, paymentsDetails, openPopup, setStepper, processor, resetPaymentProcessing } = useBuyTicketContext();
     const [isProcessing, setIsProcessing] = useState(false);
     const [message, setMessage] = useState("");
-    const {address} = useAccount();
+    const { address } = useAccount();
     const { data: hash, error, isPending, sendTransaction } = useSendTransaction()
-    const { isLoading: isConfirming, isSuccess: isConfirmed } = useWaitForTransactionReceipt({hash})
+    const { isLoading: isConfirming, isSuccess: isConfirmed } = useWaitForTransactionReceipt({ hash })
 
     let count = 0;
 
@@ -36,7 +36,7 @@ const BuyTicketWithCrypto = () => {
                         if (result.error == false) {
                             clearInterval(interval);
                             setStepper(Stepper.NFT_Mint);
-                        }else{
+                        } else {
                             console.log("Ancora error = false")
                         }
                     }, 5000);
@@ -63,7 +63,7 @@ const BuyTicketWithCrypto = () => {
             }
         } catch (error: any) {
             console.error("Errore nell'attesa della conferma del pagamento:", error);
-            openPopup({title: 'Errore',message: `Errore nell'attesa della conferma del pagamento: ${error.message || 'Errore sconosciuto'}`,modality: PopupModality.Error,isOpen: true});
+            openPopup({ title: 'Errore', message: `Errore nell'attesa della conferma del pagamento: ${error.message || 'Errore sconosciuto'}`, modality: PopupModality.Error, isOpen: true });
             resetPaymentProcessing()
             setIsProcessing(false);
         } finally {
@@ -73,10 +73,33 @@ const BuyTicketWithCrypto = () => {
 
     // Funzione per pagare con token ERC20
     const payWithErc20 = async () => {
-        // Mostra popup "Under construction"
-        openPopup({title: 'Funzionalità in costruzione', message: 'Il pagamento con token ERC20 è attualmente in fase di sviluppo.',modality: PopupModality.Info,isOpen: true});
-        resetPaymentProcessing();
-        setIsProcessing(false);
+        //Preleviamo il contract address del token
+        const contract_address = processor?.split(":")[2];
+        if (!contract_address) {
+            openPopup({ title: 'Errore', message: 'Impossibile prelevare il contract address del token erc20', modality: PopupModality.Error, isOpen: true });
+            resetPaymentProcessing();
+            setIsProcessing(false);
+            return;
+        }
+
+        //Call transfer function of the contractù
+        const decimals = getDecimals(contract_address);
+
+        const amount = ethers.parseUnits(
+            paymentsDetails?.payment?.amount.toString(),
+            decimals
+        );
+        const tx = await writeContract(config, {
+            address: contract_address as `0x${string}`,
+            abi: erc20ABI,
+            functionName: "transfer",
+            args: [paymentsDetails?.payment?.payment_intent, amount],
+            account: address,
+        });
+
+        console.log('tx', tx);
+
+
     };
 
     // Funzione per pagare con criptovalute native (ETH, MATIC, ecc.)
@@ -86,36 +109,36 @@ const BuyTicketWithCrypto = () => {
         const to = paymentsDetails?.payment?.payment_intent;
         const value = ethers.parseEther(paymentsDetails?.payment?.amount.toString());
         // Invia la transazione
-        sendTransaction({to, value});
+        sendTransaction({ to, value });
     };
 
     const payWithCrypto = async () => {
-        if(!address){
-            openPopup({title: 'Errore', message: 'Please connect your wallet', modality: PopupModality.Error, isOpen: true});
+        if (!address) {
+            openPopup({ title: 'Errore', message: 'Please connect your wallet', modality: PopupModality.Error, isOpen: true });
             return;
         }
         setIsProcessing(true);
         setMessage("Processing payment...");
         await new Promise(resolve => setTimeout(resolve, 1000));
-        
+
         //Check user has enough balance
         const { balance, formattedBalance, success, reason } = await checkUserBalance(address, processor);
-        if(!success){
-            openPopup({title: 'Errore', message: reason || 'Errore sconosciuto', modality: PopupModality.Error, isOpen: true});
+        if (!success) {
+            openPopup({ title: 'Errore', message: reason || 'Errore sconosciuto', modality: PopupModality.Error, isOpen: true });
             return;
         }
 
         //Switch to the correct network
         const chainId = resolveProcessor(processor || "");
-        if(chainId == -1){
-            openPopup({title: 'Errore', message: `Impossibile passare alla rete ${processor}`, modality: PopupModality.Error, isOpen: true});
+        if (chainId == -1) {
+            openPopup({ title: 'Errore', message: `Impossibile passare alla rete ${processor}`, modality: PopupModality.Error, isOpen: true });
             resetPaymentProcessing();
             setIsProcessing(false);
             return;
         }
         const networkChanged = await switchNetwork(chainId);
         if (!networkChanged) {
-            openPopup({title: 'Errore', message: `Impossibile passare alla rete ${processor}`, modality: PopupModality.Error, isOpen: true});
+            openPopup({ title: 'Errore', message: `Impossibile passare alla rete ${processor}`, modality: PopupModality.Error, isOpen: true });
             resetPaymentProcessing();
             setIsProcessing(false);
             return;
@@ -131,23 +154,23 @@ const BuyTicketWithCrypto = () => {
 
     //await hash
     useEffect(() => {
-        if(isConfirming){
+        if (isConfirming) {
             setMessage("Transaction is being confirmed...");
         }
-        if(isConfirmed){
+        if (isConfirmed) {
             setMessage("Transaction confirmed!");
             waitBackendConfirmationOfPayment();
         }
-        if(error){
+        if (error) {
             setMessage("Transaction failed!");
-            openPopup({title: 'Errore', message: error.message || 'Errore sconosciuto', modality: PopupModality.Error, isOpen: true});
+            openPopup({ title: 'Errore', message: error.message || 'Errore sconosciuto', modality: PopupModality.Error, isOpen: true });
             resetPaymentProcessing()
             setIsProcessing(false);
         }
     }, [hash, isConfirming, isConfirmed, error]);
 
     useEffect(() => {
-        if(count == 0){
+        if (count == 0) {
             payWithCrypto();
             count++;
         }
@@ -155,7 +178,7 @@ const BuyTicketWithCrypto = () => {
 
 
     return (
-        <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%', height: '100%'}}>
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%', height: '100%' }}>
             {
                 isProcessing &&
                 <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%', height: '100%' }}>
