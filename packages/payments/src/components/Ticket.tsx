@@ -115,7 +115,7 @@ export const Ticket: React.FC<TicketProps> = ({ ticketId }) => {
       />
       
       {/* User's NFT Tickets Section (at the bottom) */}
-      <TicketUserNFT userId={ticketId} />
+      <TicketUserNFT  userId={ticketId} eventIdentifier={event.identifier} />
     </div>
   );
 };

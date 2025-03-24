@@ -247,7 +247,22 @@ const switchNetwork = async (chainId: number) => {
     }
 };
 
+/**
+ * Ottieni gli NFT posseduti per un determinato evento e indirizzo
+ * @param eventIdentifier - L'identificatore dell'evento
+ * @param walletAddress - L'indirizzo del wallet
+ */
+const obtainNfts = async (eventIdentifier: string, walletAddress: string) => {
+    try {
+        const response = await axios.get(`${baseUrl}/nfts/owned/${eventIdentifier}/${walletAddress}`);
+        return response.data;
+    } catch (error) {
+        console.error('Errore nel ottenere gli NFT:', error);
+        throw error;
+    }
+}
+
 export {
-    askPaymentDetails, checkNFT, mintNFT, createClaim, saveMegoPendingClaimProcessing, getMegoPendingClaimProcessingData, cleanMegoPendingClaimProcessing, getPayment, checkPayment, checkUserBalance, resolveProcessor, switchNetwork
+    askPaymentDetails, checkNFT, mintNFT, createClaim, saveMegoPendingClaimProcessing, getMegoPendingClaimProcessingData, cleanMegoPendingClaimProcessing, getPayment, checkPayment, checkUserBalance, resolveProcessor, switchNetwork, obtainNfts
 }
 
