@@ -6,6 +6,7 @@ import { Messages } from "../interfaces/messages-enums";
 import { Loader } from '@megotickets/core';
 import { PopupModality } from "../interfaces/popup-enum";
 import { Stepper } from "../interfaces/interface-stepper";
+import "./mego-style.css";
 
 
 export const BuyTicketProcessing = () => {
@@ -37,7 +38,7 @@ export const BuyTicketProcessing = () => {
 
                 if (error && message !== Messages.PAYMENT_EXIST) {
                     setMessage('Error asking for payment details...')
-                    openPopup({ title: 'Alert', message: 'Error asking for payment details...', modality: PopupModality.Error, isOpen: true })
+                    openPopup({ title: 'Alert', message: message, modality: PopupModality.Error, isOpen: true })
                     resetPaymentProcessing()
                     return;
                 }
@@ -65,7 +66,7 @@ export const BuyTicketProcessing = () => {
                         setStepper(Stepper.Payments_Stripe)
                     } else {
                         console.log('Other processor')
-                        setStepper(Stepper.Payments)
+                        setStepper(Stepper.Payments_crypto)
                     }
                     return;
                 }

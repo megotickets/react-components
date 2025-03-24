@@ -1,4 +1,4 @@
-import { ChainPayment } from "interfaces/PaymentMethod";
+import { ChainPayment } from "../interfaces/PaymentMethod";
 //Resolve euro -> ether
 import axios from 'axios';
 

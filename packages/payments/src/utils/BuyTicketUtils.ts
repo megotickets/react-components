@@ -1,4 +1,3 @@
-
 import axios from 'axios';
 const baseUrl = 'https://tickets-api.mego.tools'
 //const baseUrl = 'https://tickets-api-dev.mego.tools'
@@ -192,8 +191,34 @@ const getMegoPendingClaimProcessingData = async () => {
     }
 }
 
+/**
+ * Check the user balance
+ * @param address - The address of the user
+ * @param processor - The processor of the user
+ */
+const checkUserBalance = async (address: string, processor: string | null) => {
+    try {
+        if(!processor){
+            return { balance: "-1", formattedBalance: "-1", success: false };
+        }
+        const response = await axios.get(`${baseUrl}/users/balance/${address}/${processor}`);
+        
+        if (!response.data.error) {
+            console.log('💰 User balance is:', response.data.balance, 'WEI');
+            const balance = (Number(response.data.balance) / 1e18).toString();
+            console.log('💰 User balance is:', balance, 'ETH');
+            return { balance: response.data.balance, formattedBalance: balance, success: true };
+        } else {
+            console.log("Balance errored, let user pay anyway");
+            return { balance: "99999999999999999", formattedBalance: "99999999999999999", success: true };
+        }
+    } catch (error) {
+        console.error('Errore nel controllare il saldo dell\'utente:', error);
+        return { balance: "-1", formattedBalance: "-1", success: false, reason: "Errore nel controllare il saldo dell'utente" };
+    }
+}
 
 export { 
-    askPaymentDetails, checkNFT, mintNFT, createClaim, saveMegoPendingClaimProcessing, getMegoPendingClaimProcessingData, cleanMegoPendingClaimProcessing, getPayment, checkPayment
+    askPaymentDetails, checkNFT, mintNFT, createClaim, saveMegoPendingClaimProcessing, getMegoPendingClaimProcessingData, cleanMegoPendingClaimProcessing, getPayment, checkPayment, checkUserBalance
 }
 

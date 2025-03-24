@@ -5,6 +5,7 @@ import { useAccount } from "@megotickets/core";
 import { Loader } from "@megotickets/core";
 import { PopupModality } from "../interfaces/popup-enum";
 import { Stepper } from "../interfaces/interface-stepper";
+import "./mego-style.css";
 
 export const BuyCheckNFTAndMint = () => {
     const { eventDetails, paymentsDetails, openPopup, resetPaymentProcessing, setStepper, setTokenId } = useBuyTicketContext()

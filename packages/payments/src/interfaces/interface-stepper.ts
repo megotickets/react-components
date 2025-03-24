@@ -11,6 +11,7 @@ export enum Stepper {
     "Information",
     "Payments",
     "Payments_Stripe",
+    "Payments_crypto",
     "Claim",
     "Claim_Generation",
     "NFT_Mint"

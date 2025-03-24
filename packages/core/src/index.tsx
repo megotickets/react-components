@@ -3,6 +3,7 @@ export {useCustomization} from './components/CustomizationProvider';
 export { ConnectButton as ConnectWallet } from '@rainbow-me/rainbowkit';
 export * from 'wagmi';
 export * from 'wagmi/actions';
+export { ethers } from 'ethers';
 export { RainbowKitProvider } from '@rainbow-me/rainbowkit';
 export { http, createWalletClient, custom } from 'viem';
 export { optimism, optimismSepolia } from 'viem/chains'; 

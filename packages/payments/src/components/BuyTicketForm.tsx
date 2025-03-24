@@ -7,6 +7,7 @@ import { PopupModality } from '../interfaces/popup-enum';
 import { useAccount } from '@megotickets/core';
 import { Loader } from '@megotickets/core';
 import { isConnectedWithMego } from '../utils/utils';
+import "./mego-style.css";
 
 
 const fastDebug = true
@@ -46,7 +47,7 @@ export const BuyTicketForm: React.FC = () => {
             }
 
             // Check nft before processing other steps
-            setIsNFTCheckLoading(true);
+/*             setIsNFTCheckLoading(true);
             const res = await checkNFT(eventDetails?.event?.identifier, userAddress);
             let tokenId = res.tokenId;
             if (tokenId !== null) {
@@ -54,7 +55,7 @@ export const BuyTicketForm: React.FC = () => {
                 openPopup({ title: 'Ticket already minted', message: 'You already have a ticket for this payment.', modality: PopupModality.Error, isOpen: true })
                 resetPaymentProcessing()
                 return;
-            }
+            } */
 
             //Check is mego
             if(isConnectedWithMego() && eventDetails?.event?.price > 0){
@@ -133,10 +134,10 @@ export const BuyTicketForm: React.FC = () => {
     const title = eventDetails?.event?.price === 0 ? "Claim your free ticket" : "Buy your ticket";
 
     return (
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-start', height: '100%' }}>
             {
                 !isNFTCheckLoading &&
-                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
                     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', width: '100%' }}>
                         <h1 style={{ textAlign: 'center', fontSize: '1.5rem', fontWeight: 'bold' }}>{title}</h1>
                         <p style={{ textAlign: 'center', fontSize: '0.875rem', color: '#6B7280' }}>Enter required information to continue</p>

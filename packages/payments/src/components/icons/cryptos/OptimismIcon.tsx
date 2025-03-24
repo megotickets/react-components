@@ -1,10 +1,12 @@
 import * as React from "react"
+
 const OptimismIcon = (props: React.SVGProps<SVGSVGElement>) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 500 500"
+    width={props.width || "24"}
+    height={props.height || "24"}
     fill="currentColor"
-    width={500}
-    height={500}
     {...props}
   >
     <circle cx={250} cy={250} r={250} fill="#FF0420" />
@@ -14,4 +16,5 @@ const OptimismIcon = (props: React.SVGProps<SVGSVGElement>) => (
     />
   </svg>
 )
+
 export default OptimismIcon
