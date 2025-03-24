@@ -89,6 +89,8 @@ const BuyTicketWithCrypto = () => {
             return;
         }
 
+        //TODO: Check if balance is enough to buy the tickets
+
         
         // Opening metamask modal for payment
         setMessage("Please confirm the operation in your wallet...");

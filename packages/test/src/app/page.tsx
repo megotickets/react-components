@@ -24,7 +24,7 @@ export default function Home() {
                 emailProvider: false,
                 walletConnectProvider: false,
               }} */
-              forceChainId={10}
+              forceChainId={0}
               customStyle={{
                 /* megoWalletIconStyle: {
                   stroke: 'black',

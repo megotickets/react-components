@@ -201,8 +201,8 @@ const checkUserBalance = async (address: string, processor: string | null) => {
         if(!processor){
             return { balance: "-1", formattedBalance: "-1", success: false };
         }
+        console.log('💰 Checking user balance for address:', address, 'with processor:', processor);
         const response = await axios.get(`${baseUrl}/users/balance/${address}/${processor}`);
-        
         if (!response.data.error) {
             console.log('💰 User balance is:', response.data.balance, 'WEI');
             const balance = (Number(response.data.balance) / 1e18).toString();
