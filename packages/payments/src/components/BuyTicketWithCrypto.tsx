@@ -71,7 +71,23 @@ const BuyTicketWithCrypto = () => {
         }
     };
 
-    
+    // Funzione per pagare con token ERC20
+    const payWithErc20 = async () => {
+        // Mostra popup "Under construction"
+        openPopup({title: 'Funzionalità in costruzione', message: 'Il pagamento con token ERC20 è attualmente in fase di sviluppo.',modality: PopupModality.Info,isOpen: true});
+        resetPaymentProcessing();
+        setIsProcessing(false);
+    };
+
+    // Funzione per pagare con criptovalute native (ETH, MATIC, ecc.)
+    const payWithNativeCrypto = async () => {
+        // Opening metamask modal for payment
+        setMessage("Please confirm the operation in your wallet...");
+        const to = paymentsDetails?.payment?.payment_intent;
+        const value = ethers.parseEther(paymentsDetails?.payment?.amount.toString());
+        // Invia la transazione
+        sendTransaction({to, value});
+    };
 
     const payWithCrypto = async () => {
         if(!address){
@@ -81,17 +97,13 @@ const BuyTicketWithCrypto = () => {
         setIsProcessing(true);
         setMessage("Processing payment...");
         await new Promise(resolve => setTimeout(resolve, 1000));
+        
         //Check user has enough balance
         const { balance, formattedBalance, success, reason } = await checkUserBalance(address, processor);
         if(!success){
             openPopup({title: 'Errore', message: reason || 'Errore sconosciuto', modality: PopupModality.Error, isOpen: true});
             return;
         }
-
-        // Opening metamask modal for payment
-        setMessage("Please confirm the operation in your wallet...");
-        const to = paymentsDetails?.payment?.payment_intent;
-        const value = ethers.parseEther(paymentsDetails?.payment?.amount.toString());
 
         //Switch to the correct network
         const chainId = resolveProcessor(processor || "");
@@ -109,8 +121,12 @@ const BuyTicketWithCrypto = () => {
             return;
         }
 
-        // wait for tx confirmation
-        sendTransaction({to,value})
+        // Controlla se si tratta di un token ERC20 o di una criptovaluta nativa
+        if (processor?.includes('erc20:')) {
+            await payWithErc20();
+        } else {
+            await payWithNativeCrypto();
+        }
     }
 
     //await hash

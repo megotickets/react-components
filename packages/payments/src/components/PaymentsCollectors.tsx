@@ -30,11 +30,25 @@ export const PaymentsCollectors = () => {
     }, [processor]);
 
     return (
-        <div style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "flex-start", gap: "2rem", overflowX: "auto", width: "100%" }}>
+        <div style={{ 
+            display: "flex", 
+            flexDirection: "row", 
+            alignItems: "center", 
+            justifyContent: "flex-start", 
+            flexWrap: "wrap",
+            gap: "1rem",
+            width: "100%" 
+        }}>
             {
                 Object.entries(eventDetails?.event?.collectors || {}).sort(([keyA], [keyB]) => keyA === "stripe" ? -1 : keyB === "stripe" ? 1 : 0).map(([key, value]) => {
                     return (
-                        <div key={key} style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: "1rem" }}>
+                        <div key={key} style={{ 
+                            display: "flex", 
+                            flexDirection: "column", 
+                            alignItems: "center", 
+                            justifyContent: "center",
+                            margin: "0.5rem",
+                        }}>
                             <div 
                                 onClick={() => {
                                     console.log("Settato il processor a: ", key)

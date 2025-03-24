@@ -220,19 +220,38 @@ const checkUserBalance = async (address: string, processor: string | null) => {
 }
 
 const resolveProcessor = (processor: string) => {
-    switch (processor) {
-        case "ethereum":
-            return mainnet.id;
-        case "optimism":
-            return optimism.id;
-        case "arbitrum":
-            return arbitrum.id;
-        case "goerli":
-            return goerli.id;
-        case "polygon":
-            return polygon.id;
-        default:
-            return -1;
+    // USDC su Polygon
+    if (processor.includes("0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174")) {
+        return polygon.id;
+    }
+    // USDC su Ethereum
+    else if (processor.includes("0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48")) {
+        return mainnet.id;
+    }
+    // DAI su Ethereum
+    else if (processor.includes("0x6b175474e89094c44da98b954eedeac495271d0f")) {
+        return mainnet.id;
+    }
+    // USDT su Ethereum
+    else if (processor.includes("0xdac17f958d2ee523a2206206994597c13d831ec7")) {
+        return mainnet.id;
+    }
+    // Gestione delle blockchain standard
+    else {
+        switch (processor) {
+            case "ethereum":
+                return mainnet.id;
+            case "optimism":
+                return optimism.id;
+            case "arbitrum":
+                return arbitrum.id;
+            case "goerli":
+                return goerli.id;
+            case "polygon":
+                return polygon.id;
+            default:
+                return -1;
+        }
     }
 };
 
