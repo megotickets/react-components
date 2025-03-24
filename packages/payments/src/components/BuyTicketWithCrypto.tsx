@@ -2,7 +2,7 @@ import { useBuyTicketContext } from "@/context/BuyTicketContext";
 import { Stepper } from "@/interfaces/interface-stepper";
 import { PopupModality } from "@/interfaces/popup-enum";
 import { checkPayment, checkUserBalance, getDecimals, getPayment, resolveProcessor, switchNetwork } from "@/utils/BuyTicketUtils";
-import { Loader, switchChain, useAccount, createWalletClient, config } from "@megotickets/core";
+import { Loader, switchChain, useAccount, createWalletClient, config, waitForTransactionReceipt } from "@megotickets/core";
 import { useEffect, useState } from "react";
 import { useSendTransaction, ethers, useWaitForTransactionReceipt, writeContract } from "@megotickets/core";
 import { erc20ABI } from "@/contracts/ABIErc20";
@@ -72,34 +72,45 @@ const BuyTicketWithCrypto = () => {
     };
 
     // Funzione per pagare con token ERC20
-    const payWithErc20 = async () => {
-        //Preleviamo il contract address del token
-        const contract_address = processor?.split(":")[2];
-        if (!contract_address) {
-            openPopup({ title: 'Errore', message: 'Impossibile prelevare il contract address del token erc20', modality: PopupModality.Error, isOpen: true });
+    const payWithErc20 = async (chainId: number) => {
+        try {
+            const contract_address = processor?.split(":")[2];
+            if (!contract_address) {
+                openPopup({ title: 'Errore', message: 'Impossibile prelevare il contract address del token erc20', modality: PopupModality.Error, isOpen: true });
+                resetPaymentProcessing();
+                setIsProcessing(false);
+                return;
+            }
+            const decimals = getDecimals(contract_address);
+            const amount = ethers.parseUnits(
+                paymentsDetails?.payment?.amount.toString(),
+                decimals
+            );
+            const tx = await writeContract(config, {
+                //@ts-ignore
+                chainId: chainId,
+                address: contract_address as `0x${string}`,
+                abi: erc20ABI,
+                functionName: "transfer",
+                args: [paymentsDetails?.payment?.payment_intent, amount],
+                account: address,
+            });
+            console.log('tx', tx);
+            setMessage("Waiting for transaction confirmation...");
+            const transactionReceipt = await waitForTransactionReceipt(config, { 
+                hash: tx, 
+                //@ts-ignore
+                chainId: chainId 
+            });
+            console.log('transactionReceipt', transactionReceipt);
+            setMessage("Transaction confirmed!");
+            waitBackendConfirmationOfPayment();
+        } catch (error: any) {
+            console.error("Errore nel pagamento con token ERC20:", error);
+            openPopup({ title: 'Errore', message: `Errore nel pagamento con token ERC20`, modality: PopupModality.Error, isOpen: true });
             resetPaymentProcessing();
             setIsProcessing(false);
-            return;
         }
-
-        //Call transfer function of the contractù
-        const decimals = getDecimals(contract_address);
-
-        const amount = ethers.parseUnits(
-            paymentsDetails?.payment?.amount.toString(),
-            decimals
-        );
-        const tx = await writeContract(config, {
-            address: contract_address as `0x${string}`,
-            abi: erc20ABI,
-            functionName: "transfer",
-            args: [paymentsDetails?.payment?.payment_intent, amount],
-            account: address,
-        });
-
-        console.log('tx', tx);
-
-
     };
 
     // Funzione per pagare con criptovalute native (ETH, MATIC, ecc.)
@@ -146,7 +157,7 @@ const BuyTicketWithCrypto = () => {
 
         // Controlla se si tratta di un token ERC20 o di una criptovaluta nativa
         if (processor?.includes('erc20:')) {
-            await payWithErc20();
+            await payWithErc20(chainId);
         } else {
             await payWithNativeCrypto();
         }
