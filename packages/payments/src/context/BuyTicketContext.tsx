@@ -105,6 +105,7 @@ export const BuyTicketProvider: React.FC<BuyTicketProviderProps> = ({ children }
     setPaymentsDetails(null)
     setTokenId(null)
     setProcessor(null)
+    setDiscountCode(null)
   }
 
   const restoreClaimProcessing = async () => {
@@ -170,8 +171,17 @@ export const BuyTicketProvider: React.FC<BuyTicketProviderProps> = ({ children }
     }
   } 
 
+  const checkDiscountCode = async () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const promoCode = urlParams.get('promo');
+    if(promoCode && !discountCode){
+      setDiscountCode(promoCode)
+    }
+  }
+
   //Restore the claim processing started with mego
   useEffect(()=>{
+    checkDiscountCode()
     //Restore MP_func from local storage
     const MP_func = localStorage.getItem("MP_func")
     if(MP_func === "claim_processing"){
