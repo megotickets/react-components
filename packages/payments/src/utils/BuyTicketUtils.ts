@@ -14,7 +14,7 @@ import { mainnet, optimism, arbitrum, goerli, polygon, config, switchChain } fro
  * @param email - The email of the payment
  * @param donation_amount - The donation amount of the payment
  */
-const askPaymentDetails = async (processor: string, amount: number, identifier: string, address: string, discount_code: number, currency: string, email: string, donation_amount: number) => {
+const askPaymentDetails = async (processor: string, amount: number, identifier: string, address: string, discount_code: string, currency: string, email: string, donation_amount: number) => {
     try {
         const response = await axios.post(`${baseUrl}/payments`, {
             processor,

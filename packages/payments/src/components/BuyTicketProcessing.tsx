@@ -10,7 +10,7 @@ import "./mego-style.css";
 
 
 export const BuyTicketProcessing = () => {
-    const { eventDetails, emailOfBuyer, openPopup, resetPaymentProcessing, setStepper, setPaymentsDetails, processor } = useBuyTicketContext()
+    const { eventDetails, emailOfBuyer, openPopup, resetPaymentProcessing, setStepper, setPaymentsDetails, processor, discountCode } = useBuyTicketContext()
     const { address } = useAccount()
 
     const [message, setMessage] = useState<string>('Processing...')
@@ -33,7 +33,7 @@ export const BuyTicketProcessing = () => {
             }
             setMessage('Asking for payment details...')
             if (userAddress) {
-                const paymentDetails = await askPaymentDetails(processor, 1, eventDetails?.event?.identifier, userAddress, eventDetails?.event?.discount_code || "", eventDetails?.event?.currency, emailOfBuyer || "", eventDetails?.event?.donation_amount || 0)
+                const paymentDetails = await askPaymentDetails(processor, 1, eventDetails?.event?.identifier, userAddress, discountCode || "", eventDetails?.event?.currency, emailOfBuyer || "", eventDetails?.event?.donation_amount || 0)
                 let { error, message, payment } = paymentDetails
 
                 if (error && message !== Messages.PAYMENT_EXIST) {
@@ -52,8 +52,8 @@ export const BuyTicketProcessing = () => {
                     resetPaymentProcessing()
                 }
 
-                //Display free ticket or payment message
-                if (eventDetails?.event?.price <= 0) {
+                //Display free ticket (reason: discount code 100% off or free ticket)
+                if (eventDetails?.event?.price <= 0 || message === "Free ticket claimed correctly.") {
                     setMessage('Claiming free ticket...')
                     await new Promise(resolve => setTimeout(resolve, 1000));
                     setStepper(Stepper.NFT_Mint)

@@ -6,9 +6,9 @@ export function PaymentPreview() {
     return (
         <div className='flex flex-col gap-4 p-4'>
             <h2 className='text-xl font-bold mb-4'>Dettagli Evento</h2>
-            <Ticket ticketId='694b4ce9-9f0c-4756-8dcb-ad0889078da6' />
-            <Ticket ticketId='f8e4bc90-aaf3-42ba-a9c3-514af7131c4a' /> 
-            {/* <Ticket ticketId='b5af9d49-d865-4238-a4e3-9dc48ed280d0' /> */}
+{/*             <Ticket ticketId='694b4ce9-9f0c-4756-8dcb-ad0889078da6' />
+            <Ticket ticketId='f8e4bc90-aaf3-42ba-a9c3-514af7131c4a' />  */}
+            <Ticket ticketId='b5af9d49-d865-4238-a4e3-9dc48ed280d0' />
         </div>
     );
 }
