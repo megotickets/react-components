@@ -13,7 +13,7 @@ import "./mego-style.css";
 const fastDebug = true
 
 export const BuyTicketForm: React.FC = () => {
-    const { eventDetails, setStepper, setClaimMetadata, setEmailOfBuyer, setProcessor, openPopup, resetPaymentProcessing } = useBuyTicketContext();
+    const { eventDetails, setStepper, setClaimMetadata, setEmailOfBuyer, setProcessor, openPopup, resetPaymentProcessing, discountCode, setDiscountCode } = useBuyTicketContext();
     const [email, setEmail] = useState(fastDebug ? "test@test.com" : '');
     const [termsAccepted, setTermsAccepted] = useState(fastDebug ? true : false);
     const [shareEmail, setShareEmail] = useState(fastDebug ? true : false);
@@ -46,19 +46,8 @@ export const BuyTicketForm: React.FC = () => {
                 setMetadataValues(initialValues);
             }
 
-            // Check nft before processing other steps
-/*             setIsNFTCheckLoading(true);
-            const res = await checkNFT(eventDetails?.event?.identifier, userAddress);
-            let tokenId = res.tokenId;
-            if (tokenId !== null) {
-                await new Promise(resolve => setTimeout(resolve, 1000));
-                openPopup({ title: 'Ticket already minted', message: 'You already have a ticket for this payment.', modality: PopupModality.Error, isOpen: true })
-                resetPaymentProcessing()
-                return;
-            } */
-
             //Check is mego
-            if(isConnectedWithMego() && eventDetails?.event?.price > 0){
+            if (isConnectedWithMego() && eventDetails?.event?.price > 0) {
                 await new Promise(resolve => setTimeout(resolve, 1000));
                 openPopup({ title: 'Mego wallet not supported', message: 'Please connect your traditional wallet to continue', modality: PopupModality.Error, isOpen: true })
                 resetPaymentProcessing()
@@ -142,6 +131,26 @@ export const BuyTicketForm: React.FC = () => {
                         <h1 style={{ textAlign: 'center', fontSize: '1.5rem', fontWeight: 'bold' }}>{title}</h1>
                         <p style={{ textAlign: 'center', fontSize: '0.875rem', color: '#6B7280' }}>Enter required information to continue</p>
                     </div>
+
+                    {eventDetails?.event?.price > 0 && (
+                        <div style={{ width: '100%', marginBottom: '0.75rem' }}>
+                            <input
+                                type="text"
+                                placeholder="Codice sconto (opzionale)"
+                                value={discountCode || ''}
+                                onChange={(e) => setDiscountCode(e.target.value)}
+                                style={{
+                                    marginBottom: '10px',
+                                    width: '100%',
+                                    borderRadius: '20px',
+                                    border: '1px solid white',
+                                    backgroundColor: 'black',
+                                    color: 'white',
+                                    padding: '8px 16px'
+                                }}
+                            />
+                        </div>
+                    )}
 
                     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', width: '100%' }}>
                         {eventDetails?.event?.claim_metadata && eventDetails.event.claim_metadata.map((metadata: string, index: number) => {
@@ -256,8 +265,8 @@ export const BuyTicketForm: React.FC = () => {
                 </div>
             }
             {
-                isNFTCheckLoading && 
-                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%', height: '100%'}}>
+                isNFTCheckLoading &&
+                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%', height: '100%' }}>
                     <Loader message={"Checking NFT..."} />
                 </div>
             }

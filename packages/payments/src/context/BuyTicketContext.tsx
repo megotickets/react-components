@@ -52,6 +52,10 @@ interface BuyTicketContextType {
   savePendingProcess: (label?: string) => void;
   restorePendingProcess: () => void;
 
+  //Discount code
+  discountCode: string | null;
+  setDiscountCode: (discountCode: string | null) => void;
+
 }
 
 const BuyTicketContext = createContext<BuyTicketContextType | undefined>(undefined);
@@ -74,6 +78,9 @@ export const BuyTicketProvider: React.FC<BuyTicketProviderProps> = ({ children }
 
   //Processor
   const [processor, setProcessor] = useState<string | null>(null);
+
+  //Discount code
+  const [discountCode, setDiscountCode] = useState<string | null>(null);
 
   const [popup, setPopup] = useState<MegoPopupData>({
     isOpen: false,
@@ -222,7 +229,11 @@ export const BuyTicketProvider: React.FC<BuyTicketProviderProps> = ({ children }
 
     //Restore
     savePendingProcess,
-    restorePendingProcess
+    restorePendingProcess,
+
+    //Discount code
+    discountCode,
+    setDiscountCode
   };
 
   return (
