@@ -17,6 +17,7 @@ const BuyTicketWithStripe = () => {
     const [message, setMessage] = useState<string>("");
 
     const [waitForPaymentConfirmation, setWaitForPaymentConfirmation] = useState<boolean>(false);
+    const [isCanceledAllowed, setIsCanceledAllowed] = useState<boolean>(true);
 
     console.log('paymentsDetails', paymentsDetails);
     console.log('eventDetails', eventDetails);
@@ -38,6 +39,7 @@ const BuyTicketWithStripe = () => {
     const waitBackendConfirmationOfPayment = async () => {
         try {
             setWaitForPaymentConfirmation(true);
+            setIsCanceledAllowed(false);
             setMessage("Attendere la conferma del pagamento...")
             //Check params from url
             const urlParams = new URLSearchParams(window.location.search);
@@ -229,8 +231,10 @@ const BuyTicketWithStripe = () => {
                     <Loader message={message} />
                 </div>
             }
-            <button
-                onClick={handleCancel}
+            {
+                isCanceledAllowed &&
+                <button
+                    onClick={handleCancel}
                 style={{
                     marginTop: '20px',
                     padding: '10px 20px',
@@ -241,8 +245,9 @@ const BuyTicketWithStripe = () => {
                     cursor: 'pointer'
                 }}
             >
-                Annulla operazione
-            </button>
+                    Annulla operazione
+                </button>
+            }
         </div>
     );
 };
