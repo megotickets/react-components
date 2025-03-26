@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { useBuyTicketContext } from "../context/BuyTicketContext";
 import { Stepper } from "../interfaces/interface-stepper";
+import { useAccount } from "@megotickets/core";
 
 interface ClaimTicketButtonProps {
   eventDetails: any;
@@ -13,8 +14,9 @@ export const ClaimTicketButton: React.FC<ClaimTicketButtonProps> = ({
   eventDetails,
   overrideButton
 }) => {
-  
+
   const { setIsOpen, setEventDetails, resetPaymentProcessing, stepper } = useBuyTicketContext();
+  const { address } = useAccount();
 
   const handleOpenModal = () => {
     if (stepper === Stepper.Claim) {
@@ -25,29 +27,47 @@ export const ClaimTicketButton: React.FC<ClaimTicketButtonProps> = ({
     setIsOpen(true);
   };
 
+  const userAddress = useMemo(() => {
+    //Search loggedAs o signedAs nei params dell'url
+    const urlParams = new URLSearchParams(window.location.search);
+    const loggedAs = urlParams.get('loggedAs');
+    const signedAs = urlParams.get('signedAs');
+    return address || loggedAs || signedAs || ""
+  }, [address, window.location.search])
+
+
   if (overrideButton) {
-    return <div onClick={handleOpenModal}>{overrideButton}</div>;
+    return <div
+      onClick={() => userAddress ? handleOpenModal() : null}
+      style={{
+        opacity: userAddress ? 1 : 0.5,
+        cursor: userAddress ? 'pointer' : 'not-allowed'
+      }}
+    >
+      {overrideButton}
+    </div>;
   }
 
   return (
     <button
-      style={{ 
-        backgroundColor: '#3B82F6', 
-        color: 'white', 
-        padding: '0.75rem 1.5rem', 
+      style={{
+        backgroundColor: '#3B82F6',
+        color: 'white',
+        padding: '0.75rem 1.5rem',
         borderRadius: '0.5rem',
         fontSize: '1rem',
         fontWeight: '600',
         border: 'none',
-        cursor: 'pointer',
         transition: 'all 0.2s ease',
         boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        gap: '0.5rem'
+        gap: '0.5rem',
+        opacity: userAddress ? 1 : 0.5,
+        cursor: userAddress ? 'pointer' : 'not-allowed'
       }}
-      onClick={handleOpenModal}
+      onClick={() => userAddress ? handleOpenModal() : null}
       onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#2563EB'}
       onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#3B82F6'}
     >
