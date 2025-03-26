@@ -9,7 +9,7 @@ import { Loader } from "@megotickets/core";
 
 
 const BuyTicketWithStripe = () => {
-    const { eventDetails, paymentsDetails, openPopup, setStepper, savePendingProcess } = useBuyTicketContext();
+    const { eventDetails, paymentsDetails, openPopup, setStepper, savePendingProcess, resetPaymentProcessing } = useBuyTicketContext();
     const [stripeElements, setStripeElements] = useState<StripeElements | null>(null);
     const [stripeInstance, setStripeInstance] = useState<Stripe | null>(null);
     const [isProcessing, setIsProcessing] = useState<boolean>(false);
@@ -29,6 +29,11 @@ const BuyTicketWithStripe = () => {
         return address || loggedAs || signedAs || ""
     }, [address, window.location.search])
 
+    const handleCancel = () => {
+        localStorage.removeItem("_func");
+        setIsProcessing(false);
+        resetPaymentProcessing();
+    }
 
     const waitBackendConfirmationOfPayment = async () => {
         try {
@@ -62,7 +67,7 @@ const BuyTicketWithStripe = () => {
                             clearInterval(interval);
                             localStorage.removeItem("_func");
                             setStepper(Stepper.NFT_Mint);
-                        }else{
+                        } else {
                             console.log("Ancore error = false")
                         }
                     }, 5000);
@@ -192,13 +197,14 @@ const BuyTicketWithStripe = () => {
                 modality: PopupModality.Error,
                 isOpen: true
             });
+            localStorage.removeItem("_func");
         } finally {
             setIsProcessing(false);
         }
     };
 
     return (
-        <div>
+        <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
             <div id="payment-element"></div>
             {
                 !waitForPaymentConfirmation && <button
@@ -223,6 +229,20 @@ const BuyTicketWithStripe = () => {
                     <Loader message={message} />
                 </div>
             }
+            <button
+                onClick={handleCancel}
+                style={{
+                    marginTop: '20px',
+                    padding: '10px 20px',
+                    backgroundColor: 'transparent',
+                    color: '#6772e5',
+                    border: '1px solid #6772e5',
+                    borderRadius: '4px',
+                    cursor: 'pointer'
+                }}
+            >
+                Annulla operazione
+            </button>
         </div>
     );
 };
