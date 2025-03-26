@@ -5,12 +5,14 @@ import { TicketHeader } from './TicketHeader';
 import { TicketPayment } from './TicketPayment';
 import { TicketLocation } from './TicketLocation';
 import { TicketUserNFT } from './TicketUserNFT';
+import { ClaimTicketButton } from './ClaimTicketButton';
 
 interface TicketProps {
   ticketId: string;
+  showOnlyButton?: boolean;
 }
 
-export const Ticket: React.FC<TicketProps> = ({ ticketId }) => {
+export const Ticket: React.FC<TicketProps> = ({ ticketId, showOnlyButton }) => {
   const [eventDetails, setEventDetails] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -41,11 +43,11 @@ export const Ticket: React.FC<TicketProps> = ({ ticketId }) => {
 
   if (error) {
     return (
-      <div style={{ 
-        backgroundColor: '#FEE2E2', 
-        border: '1px solid #F87171', 
-        color: '#B91C1C', 
-        padding: '0.75rem 1rem', 
+      <div style={{
+        backgroundColor: '#FEE2E2',
+        border: '1px solid #F87171',
+        color: '#B91C1C',
+        padding: '0.75rem 1rem',
         borderRadius: '0.25rem',
         margin: '1rem'
       }}>
@@ -56,11 +58,11 @@ export const Ticket: React.FC<TicketProps> = ({ ticketId }) => {
 
   if (!eventDetails || !eventDetails.event) {
     return (
-      <div style={{ 
-        backgroundColor: '#FEF3C7', 
-        border: '1px solid #F59E0B', 
-        color: '#92400E', 
-        padding: '0.75rem 1rem', 
+      <div style={{
+        backgroundColor: '#FEF3C7',
+        border: '1px solid #F59E0B',
+        color: '#92400E',
+        padding: '0.75rem 1rem',
         borderRadius: '0.25rem',
         margin: '1rem'
       }}>
@@ -75,17 +77,28 @@ export const Ticket: React.FC<TicketProps> = ({ ticketId }) => {
 
   const startDate = formatDate(event.timestamp_start);
   const endDate = formatDate(event.timestamp_end);
-  
+
   const isPriceZero = event.price === 0;
   const priceText = isPriceZero ? 'Gratuito' : `${event.price} ${event.currency.toUpperCase()}`;
-  
+
   const availableTickets = event.supply - event.minted;
   const supplyText = event.show_supply ? `${availableTickets} / ${event.supply} ticket disponibili` : '';
 
+  if (showOnlyButton) {
+    return (
+      <div>
+        <ClaimTicketButton
+          eventDetails={eventDetails}
+          buttonText={isPriceZero ? "Claim Free Ticket" : "Buy Ticket"}
+        />
+      </div>
+    )
+  }
+
   return (
-    <div style={{ 
-      display: 'flex', 
-      flexDirection: 'column', 
+    <div style={{
+      display: 'flex',
+      flexDirection: 'column',
       maxWidth: '800px',
       margin: '0 auto',
       backgroundColor: '#121212',
@@ -95,27 +108,27 @@ export const Ticket: React.FC<TicketProps> = ({ ticketId }) => {
       boxShadow: '0 4px 30px rgba(0, 0, 0, 0.1)',
     }}>
       {/* Header Section with Banner and Event Info */}
-      <TicketHeader 
-        event={event} 
-        startDate={startDate} 
-        endDate={endDate} 
+      <TicketHeader
+        event={event}
+        startDate={startDate}
+        endDate={endDate}
       />
-      
+
       {/* Price and Buy Button Section */}
-      <TicketPayment 
-        eventDetails={eventDetails} 
-        isPriceZero={isPriceZero} 
-        priceText={priceText} 
-        supplyText={supplyText} 
+      <TicketPayment
+        eventDetails={eventDetails}
+        isPriceZero={isPriceZero}
+        priceText={priceText}
+        supplyText={supplyText}
       />
-      
+
       {/* Event Location and Details Section */}
-      <TicketLocation 
-        event={event} 
+      <TicketLocation
+        event={event}
       />
-      
+
       {/* User's NFT Tickets Section (at the bottom) */}
-      <TicketUserNFT  userId={ticketId} eventIdentifier={event.identifier} />
+      <TicketUserNFT userId={ticketId} eventIdentifier={event.identifier} />
     </div>
   );
 };
