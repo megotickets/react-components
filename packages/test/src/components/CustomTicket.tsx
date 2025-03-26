@@ -28,6 +28,7 @@ export const CustomTicket: React.FC<CustomTicketProps> = ({
             <Ticket
                 ticketId='694b4ce9-9f0c-4756-8dcb-ad0889078da6'
                 showOnlyButton={true}
+                overrideButton={<button className='bg-blue-500 text-white px-4 py-2 rounded-md'>Ottieni</button>}
             />
         </div>
     );

@@ -10,9 +10,10 @@ import { ClaimTicketButton } from './ClaimTicketButton';
 interface TicketProps {
   ticketId: string;
   showOnlyButton?: boolean;
+  overrideButton?: React.ReactNode;
 }
 
-export const Ticket: React.FC<TicketProps> = ({ ticketId, showOnlyButton }) => {
+export const Ticket: React.FC<TicketProps> = ({ ticketId, showOnlyButton, overrideButton }) => {
   const [eventDetails, setEventDetails] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -90,6 +91,7 @@ export const Ticket: React.FC<TicketProps> = ({ ticketId, showOnlyButton }) => {
         <ClaimTicketButton
           eventDetails={eventDetails}
           buttonText={isPriceZero ? "Claim Free Ticket" : "Buy Ticket"}
+          overrideButton={overrideButton}
         />
       </div>
     )
@@ -120,6 +122,7 @@ export const Ticket: React.FC<TicketProps> = ({ ticketId, showOnlyButton }) => {
         isPriceZero={isPriceZero}
         priceText={priceText}
         supplyText={supplyText}
+        overrideButton={overrideButton}
       />
 
       {/* Event Location and Details Section */}

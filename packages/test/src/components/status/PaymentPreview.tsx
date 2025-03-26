@@ -12,7 +12,9 @@ export function PaymentPreview() {
                 description='Test associazione'
             />
 
-            <Ticket ticketId='f8e4bc90-aaf3-42ba-a9c3-514af7131c4a' />
+            <Ticket 
+                ticketId='f8e4bc90-aaf3-42ba-a9c3-514af7131c4a'
+            />
 
             {
                 /* 

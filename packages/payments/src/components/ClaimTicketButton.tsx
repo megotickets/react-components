@@ -5,12 +5,15 @@ import { Stepper } from "../interfaces/interface-stepper";
 interface ClaimTicketButtonProps {
   eventDetails: any;
   buttonText?: string;
+  overrideButton?: React.ReactNode;
 }
 
 export const ClaimTicketButton: React.FC<ClaimTicketButtonProps> = ({
   buttonText = "Acquista Biglietto",
-  eventDetails
+  eventDetails,
+  overrideButton
 }) => {
+  
   const { setIsOpen, setEventDetails, resetPaymentProcessing, stepper } = useBuyTicketContext();
 
   const handleOpenModal = () => {
@@ -21,6 +24,10 @@ export const ClaimTicketButton: React.FC<ClaimTicketButtonProps> = ({
     setEventDetails(eventDetails);
     setIsOpen(true);
   };
+
+  if (overrideButton) {
+    return <div onClick={handleOpenModal}>{overrideButton}</div>;
+  }
 
   return (
     <button

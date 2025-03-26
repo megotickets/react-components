@@ -6,13 +6,15 @@ interface TicketPaymentProps {
   isPriceZero: boolean;
   priceText: string;
   supplyText: string;
+  overrideButton?: React.ReactNode;
 }
 
 export const TicketPayment: React.FC<TicketPaymentProps> = ({ 
   eventDetails, 
   isPriceZero, 
   priceText, 
-  supplyText 
+  supplyText,
+  overrideButton
 }) => {
   return (
     <div style={{ padding: '1.5rem', backgroundColor: '#1E1E1E', borderBottom: '1px solid rgba(255, 255, 255, 0.1)' }}>
@@ -24,6 +26,7 @@ export const TicketPayment: React.FC<TicketPaymentProps> = ({
         <ClaimTicketButton 
           eventDetails={eventDetails}
           buttonText={isPriceZero ? "Claim Free Ticket" : "Buy Ticket"}
+          overrideButton={overrideButton}
         />
       </div>
     </div>
