@@ -41,7 +41,8 @@ export const ClaimTicketButton: React.FC<ClaimTicketButtonProps> = ({
       onClick={() => userAddress ? handleOpenModal() : null}
       style={{
         opacity: userAddress ? 1 : 0.5,
-        cursor: userAddress ? 'pointer' : 'not-allowed'
+        cursor: userAddress ? 'pointer' : 'not-allowed',
+        pointerEvents: userAddress ? 'auto' : 'none'
       }}
     >
       {overrideButton}
