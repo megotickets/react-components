@@ -11,7 +11,7 @@ import ExportKeyIcon from "./icons/ExportKeyIcon";
 import GoogleIcon from "./icons/GoogleIcon";
 import MegoIcon from "./icons/MegoIcon";
 import MegoLetter from "./icons/MegoLetter";
-import { useCustomization } from "@megotickets/core";
+import { Loader, useCustomization } from "@megotickets/core";
 
 
 interface MegoModalProps {
@@ -139,14 +139,7 @@ export function MegoModal({ isOpen, onClose }: MegoModalProps) {
               {section === "Register" ? "REGISTER" : "LOGIN"}
             </div>
 
-            {isLoading ? (
-              <div className="mego-loader-div">
-                <div className="mego-loader" />
-                <p className="mego-login-text mego-font-medium" style={{ marginTop: '1rem' }}>
-                  {loadingText || "Loading data..."}
-                </p>
-              </div>
-            ) : (
+            {isLoading ? <div style={{marginTop: '1rem',marginBottom: '1rem'}}><Loader /></div> : (
               returnCurrentSection()
             )}
           </span>
