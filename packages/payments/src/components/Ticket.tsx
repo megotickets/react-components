@@ -101,7 +101,7 @@ export const Ticket: React.FC<TicketProps> = ({ ticketId, showOnlyButton, overri
     <div style={{
       display: 'flex',
       flexDirection: 'column',
-      maxWidth: '800px',
+      width: '100%',
       margin: '0 auto',
       backgroundColor: '#121212',
       color: '#fff',

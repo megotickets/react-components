@@ -50,12 +50,6 @@ export function MegoPreview() {
     }
   };
 
-  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
-
-  const handlePaymentComplete = () => {
-    console.log("Pagamento completato");
-  };
-
   return (
     <div className="flex flex-col gap-4 p-6 bg-gradient-to-r from-gray-900 to-gray-800 rounded-xl shadow-lg border border-gray-700">
       <div className="flex items-center gap-3">

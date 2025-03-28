@@ -13,7 +13,7 @@ export const CustomTicket: React.FC<CustomTicketProps> = ({
     description = "Descrizione dell'evento. Questo è un esempio di testo descrittivo che potrebbe essere più lungo e contenere dettagli importanti sull'evento."
 }) => {
     return (
-        <div className="bg-blue-50 p-4 rounded-xl mb-4 max-w-[400px]">
+        <div className="bg-blue-50 p-4 rounded-xl mb-4 w-full">
             <img
                 src={imageUrl}
                 alt="Evento"
