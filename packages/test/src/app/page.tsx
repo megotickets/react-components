@@ -3,7 +3,6 @@
 import { MegoWalletButton, Web3MegoClientProvider } from "@megotickets/wallet";
 import { Web3Provider } from "@megotickets/core"
 import { BuyTicketProvider } from "@megotickets/payments";
-import "@megotickets/wallet/dist/index.css";
 import { MegoPreview } from "../components/status/MegoPreview";
 
 //import "./globals.css";
