@@ -8,6 +8,6 @@ export { RainbowKitProvider } from '@rainbow-me/rainbowkit';
 export { http, createWalletClient, custom } from 'viem';
 export { optimism, optimismSepolia, mainnet, arbitrum, goerli, polygon } from 'viem/chains'; 
 export { Loader } from '@/components/Loader';
-export { signMessageWithApple, signMessageWithGoogle } from './components/SignMessage';
+export { signMessageWithApple, signMessageWithGoogle, signMessageWithPopupApple, signMessageWithPopupGoogle } from './components/SignMessage';
 export { MegoPopup } from './components/MegoPopup';
 export type { MegoPopupData } from './interfaces/MegoPopupData';

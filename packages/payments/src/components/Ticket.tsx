@@ -36,8 +36,8 @@ export const Ticket: React.FC<TicketProps> = ({ ticketId, showOnlyButton, overri
 
   if (loading) {
     return (
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '2rem', height: '100vh' }}>
-        <p style={{ color: '#fff' }}>Caricamento in corso...</p>
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '2rem' }}>
+        <p style={{ color: '#808080' }}>Caricamento in corso...</p>
       </div>
     );
   }

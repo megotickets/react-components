@@ -46,13 +46,7 @@ export const BuyTicketForm: React.FC = () => {
                 setMetadataValues(initialValues);
             }
 
-            //Check is mego
-            if (isConnectedWithMego() && eventDetails?.event?.price > 0) {
-                await new Promise(resolve => setTimeout(resolve, 1000));
-                openPopup({ title: 'Mego wallet not supported', message: 'Please connect your traditional wallet to continue', modality: PopupModality.Error, isOpen: true })
-                resetPaymentProcessing()
-                return;
-            }
+
 
             // Ogni ticket gratuito deve essere pagato con Stripe (0)
             if (eventDetails?.event?.price === 0) {

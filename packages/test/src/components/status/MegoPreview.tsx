@@ -2,13 +2,15 @@ import { useWeb3Context } from "@megotickets/wallet";
 import {useAccount} from "@megotickets/core"
 import { useEffect, useState } from "react";
 import { PaymentPreview } from "./PaymentPreview";
-import { signMessageWithApple, signMessageWithGoogle } from "@megotickets/core";
+import { signMessageWithPopupApple, signMessageWithPopupGoogle } from "@megotickets/core";
 
 export function MegoPreview() {
   const { loggedAs, provider } = useWeb3Context();
   const { isConnected } = useAccount();
   const [message, setMessage] = useState<string>("");
   const [signature, setSignature] = useState<string | null>(null);
+  const [isSigning, setIsSigning] = useState(false);
+
   // Funzione per formattare il provider
   const formatProvider = (providerString: string | null) => {
     if (!providerString) return "Nessun provider";
@@ -19,25 +21,32 @@ export function MegoPreview() {
     return providerString;
   };
 
-  //Use effect per controllare se ci sono parametri nell'url
-  useEffect(() => {
-    const searchParams = new URLSearchParams(window?.location?.search);
-    const sig = searchParams.get("signature");
-    if (sig) {
-      setSignature(sig);
-    }
-  }, []);
-
   // Funzione per firmare il messaggio
-  const handleSign = () => {
+  const handleSign = async () => {
     const origin = window.location.href.split('?')[0];
+    setIsSigning(true);
 
-    if (provider?.toLowerCase().includes('google')) {
-      signMessageWithGoogle(origin, message);
-    } else if (provider?.toLowerCase().includes('apple')) {
-      signMessageWithApple(origin, message);
-    } else {
-      alert("Firma disponibile solo con provider Google o Apple");
+    try {
+      let result;
+      if (provider?.toLowerCase().includes('google')) {
+        result = await signMessageWithPopupGoogle(origin, message);
+      } else if (provider?.toLowerCase().includes('apple')) {
+        result = await signMessageWithPopupApple(origin, message);
+      } else {
+        alert("Firma disponibile solo con provider Google o Apple");
+        return;
+      }
+
+      if (result.error) {
+        alert("Errore durante la firma");
+      } else {
+        setSignature(result.signature);
+      }
+    } catch (error) {
+      console.error("Errore durante la firma:", error);
+      alert("Errore durante la firma");
+    } finally {
+      setIsSigning(false);
     }
   };
 
@@ -63,7 +72,7 @@ export function MegoPreview() {
 
       {loggedAs && (provider?.toLowerCase().includes('google') || provider?.toLowerCase().includes('apple')) && (
         <div className="mt-4 bg-gray-800 p-4 rounded-lg">
-          <h3 className="text-white font-medium mb-3">Test Firma con Mego</h3>
+          <h3 className="text-white font-medium mb-3">Test Firma con Mego (popup version)</h3>
 
           <div className="mb-3">
             <label className="text-sm text-gray-400 block mb-1">Messaggio da firmare</label>
@@ -77,10 +86,10 @@ export function MegoPreview() {
 
           <button
             onClick={handleSign}
-            disabled={message.length === 0}
-            className={`bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition-colors ${message.length === 0 ? 'opacity-50 cursor-not-allowed' : ''}`}
+            disabled={message.length === 0 || isSigning}
+            className={`bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition-colors ${message.length === 0 || isSigning ? 'opacity-50 cursor-not-allowed' : ''}`}
           >
-            Firma con {formatProvider(provider)}
+            {isSigning ? "Firma in corso..." : `Firma con ${formatProvider(provider)}`}
           </button>
           {signature && (
             <div className="mt-4 bg-gray-800 p-4 rounded-lg">
@@ -90,7 +99,6 @@ export function MegoPreview() {
           )}
         </div>
       )}
-
 
       <PaymentPreview />
       
