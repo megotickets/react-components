@@ -49,8 +49,8 @@ const MapContainer: React.FC<MapContainerProps> = ({ location }) => {
   if (!apiKey || mapError) {
     return (
       <div className="ticket-map-container">
-        <p style={{ color: '#9CA3AF', marginBottom: '0.5rem' }}>Impossibile caricare la mappa</p>
-        <p style={{ color: '#E5E7EB', fontSize: '0.875rem' }}>{location}</p>
+        <p className="font-satoshi" style={{ color: '#9CA3AF', marginBottom: '0.5rem' }}>Impossibile caricare la mappa</p>
+        <p className="font-satoshi" style={{ color: '#E5E7EB', fontSize: '0.875rem' }}>{location}</p>
       </div>
     );
   }
@@ -59,7 +59,7 @@ const MapContainer: React.FC<MapContainerProps> = ({ location }) => {
     <div>
       {isLoading && (
         <div className="ticket-map-loader-container">
-          <p style={{ color: '#9CA3AF' }}>Caricamento mappa...</p>
+          <p className="font-satoshi" style={{ color: '#9CA3AF' }}>Caricamento mappa...</p>
         </div>
       )}
       {/* @ts-ignore */}

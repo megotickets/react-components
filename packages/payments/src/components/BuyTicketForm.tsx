@@ -120,8 +120,8 @@ export const BuyTicketForm: React.FC = () => {
                 !isNFTCheckLoading &&
                 <div style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
                     <div className="title-subtitle-container">
-                        <h1 className="title">{title}</h1>
-                        <p className="subtitle">Enter required information to continue</p>
+                        <h1 className="font-satoshi title">{title}</h1>
+                        <p className="font-satoshi subtitle">Enter required information to continue</p>
                     </div>
 
                     {eventDetails?.event?.price > 0 && (
@@ -186,7 +186,7 @@ export const BuyTicketForm: React.FC = () => {
                             onChange={(e) => setTermsAccepted(e.target.checked)}
                             style={{ marginRight: '0.5rem', marginTop: '0.25rem' }}
                         />
-                        <label htmlFor="terms" className="checkbox-label">
+                        <label htmlFor="terms" className="font-satoshi checkbox-label">
                             I agree to the <a href="#" style={{ color: '#60A5FA', textDecoration: 'underline' }}>Terms and Conditions</a>.
                         </label>
                     </div>
@@ -199,7 +199,7 @@ export const BuyTicketForm: React.FC = () => {
                             onChange={(e) => setShareEmail(e.target.checked)}
                             style={{ marginRight: '0.5rem', marginTop: '0.25rem' }}
                         />
-                        <label htmlFor="shareEmail" className="checkbox-label">
+                        <label htmlFor="shareEmail" className="font-satoshi checkbox-label">
                             I accept to share my e-mail with event organizers.
                         </label>
                     </div>
@@ -209,7 +209,7 @@ export const BuyTicketForm: React.FC = () => {
                     <button
                         disabled={!isFormValid}
                         onClick={handleCheckout}
-                        className="checkout-btn"
+                        className="checkout-btn font-satoshi"
                         style={{
                             opacity: !isFormValid ? 0.5 : 1,
                             cursor: !isFormValid ? 'not-allowed' : 'pointer',

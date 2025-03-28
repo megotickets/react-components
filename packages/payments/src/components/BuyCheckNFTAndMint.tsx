@@ -6,6 +6,8 @@ import { Loader } from "@megotickets/core";
 import { PopupModality } from "../interfaces/popup-enum";
 import { Stepper } from "../interfaces/interface-stepper";
 import "../css/pay.css";
+
+
 export const BuyCheckNFTAndMint = () => {
     const { eventDetails, paymentsDetails, openPopup, resetPaymentProcessing, setStepper, setTokenId } = useBuyTicketContext()
     const [message, setMessage] = useState<string>('Processing...')

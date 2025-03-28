@@ -212,7 +212,7 @@ const BuyTicketWithStripe = () => {
                 !waitForPaymentConfirmation && <button
                     onClick={handlePayment}
                     disabled={isProcessing}
-                    className="checkout-btn"
+                    className="checkout-btn font-satoshi"
                     style={{
                         cursor: isProcessing ? 'not-allowed' : 'pointer'
                     }}
@@ -230,7 +230,7 @@ const BuyTicketWithStripe = () => {
                 isCanceledAllowed &&
                 <button
                     onClick={handleCancel}
-                    className="ticket-stripe-cancel-btn"
+                    className="ticket-stripe-cancel-btn font-satoshi"
             >
                     Annulla operazione
                 </button>

@@ -22,7 +22,7 @@ export const TicketPayment: React.FC<TicketPaymentProps> = ({
     <div className="ticketPaymentContainer">
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div>
-          <div className="ticketPriceTitle">
+          <div className="ticketPriceTitle font-satoshi">
             {`Price: ${priceText}`}
           </div>
         </div>

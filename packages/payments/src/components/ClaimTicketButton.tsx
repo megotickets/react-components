@@ -59,7 +59,7 @@ export const ClaimTicketButton: React.FC<ClaimTicketButtonProps> = ({
       onClick={() => userAddress ? handleOpenModal() : null}
     >
       <div
-        className="ticketBtn"
+        className="ticketBtn font-satoshi"
         onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#111'}
         onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#000'}
       >

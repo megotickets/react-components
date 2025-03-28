@@ -14,44 +14,6 @@ interface TicketProps {
   overrideButton?: React.ReactNode;
 }
 
-// Styled components
-const TicketContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  width: 100%;
-  margin: 0 auto;
-  color: #fff;
-  border-radius: 16px;
-  overflow: hidden;
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-`;
-
-const LoadingContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 2rem;
-`;
-
-const ErrorContainer = styled.div`
-  background-color: #FEE2E2;
-  border: 1px solid #F87171;
-  color: #B91C1C;
-  padding: 0.75rem 1rem;
-  border-radius: 0.25rem;
-  margin: 1rem;
-`;
-
-const NoDetailsContainer = styled.div`
-  background-color: #FEF3C7;
-  border: 1px solid #F59E0B;
-  color: #92400E;
-  padding: 0.75rem 1rem;
-  border-radius: 0.25rem;
-  margin: 1rem;
-`;
-
 export const Ticket: React.FC<TicketProps> = ({ ticketId, showOnlyButton, overrideButton }) => {
   const [eventDetails, setEventDetails] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(true);
@@ -75,25 +37,25 @@ export const Ticket: React.FC<TicketProps> = ({ ticketId, showOnlyButton, overri
 
   if (loading) {
     return (
-      <LoadingContainer>
-        <p style={{ color: '#808080' }}>Caricamento in corso...</p>
-      </LoadingContainer>
+      <div className="ticket-loading-container">
+        <p className="font-satoshi" style={{ color: '#808080' }}>Caricamento in corso...</p>
+      </div>
     );
   }
 
   if (error) {
     return (
-      <ErrorContainer>
-        <p>{error}</p>
-      </ErrorContainer>
+      <div className="ticket-error-container">
+        <p className="font-satoshi">{error}</p>
+      </div>
     );
   }
 
   if (!eventDetails || !eventDetails.event) {
     return (
-      <NoDetailsContainer>
-        <p>Nessun dettaglio disponibile per questo evento</p>
-      </NoDetailsContainer>
+      <div className="ticket-details-container">
+        <p className="font-satoshi">Nessun dettaglio disponibile per questo evento</p>
+      </div>
     );
   }
 
@@ -123,7 +85,7 @@ export const Ticket: React.FC<TicketProps> = ({ ticketId, showOnlyButton, overri
   }
 
   return (
-    <TicketContainer>
+    <div className="ticket-container">
       <TicketHeader
         event={event}
         startDate={startDate}
@@ -140,6 +102,6 @@ export const Ticket: React.FC<TicketProps> = ({ ticketId, showOnlyButton, overri
         event={event}
       />
       <TicketUserNFT userId={ticketId} eventIdentifier={event.identifier} />
-    </TicketContainer>
+    </div>
   );
 };

@@ -58,28 +58,28 @@ export const PaymentsCollectors = () => {
                                 {key === "stripe" &&
                                     <div className="ticket-collector-icon">
                                         <StripeIcon width={40} height={40} />
-                                        <p>Card</p>
+                                        <p className="font-satoshi">Card</p>
                                     </div>}
                                 {key === "ethereum" &&
                                     <div
                                         className="ticket-collector-icon"
                                         style={{ opacity: userConnectedWithMego ? "0.5" : "1", cursor: userConnectedWithMego ? "not-allowed" : "pointer" }}>
                                         <EtheriumIcon width={40} height={40} />
-                                        <p>Ethereum</p>
+                                        <p className="font-satoshi">Ethereum</p>
                                     </div>}
                                 {key === "arbitrum" &&
                                     <div
                                         className="ticket-collector-icon"
                                         style={{ opacity: userConnectedWithMego ? "0.5" : "1", cursor: userConnectedWithMego ? "not-allowed" : "pointer" }}>
                                         <ArbitrumIcon width={40} height={40} />
-                                        <p>Arbitrum</p>
+                                        <p className="font-satoshi">Arbitrum</p>
                                     </div>}
                                 {key === "polygon" &&
                                     <div
                                         className="ticket-collector-icon"
                                         style={{ opacity: userConnectedWithMego ? "0.5" : "1", cursor: userConnectedWithMego ? "not-allowed" : "pointer" }}>
                                         <PolygonIcon width={40} height={40} />
-                                        <p>Polygon</p>
+                                        <p className="font-satoshi">Polygon</p>
                                     </div>}
                                 {key.includes("erc20:ethereum") && (
                                     <div
@@ -105,7 +105,7 @@ export const PaymentsCollectors = () => {
                                                 className="ticket-collector-icon"
                                                 style={{ opacity: userConnectedWithMego ? "0.5" : "1", cursor: userConnectedWithMego ? "not-allowed" : "pointer" }}>
                                                 <UsdcIcon width={40} height={40} />
-                                                <p>USDC</p>
+                                                <p className="font-satoshi">USDC</p>
                                             </div>
                                         )}
 
@@ -115,7 +115,7 @@ export const PaymentsCollectors = () => {
                                                 className="ticket-collector-icon"
                                                 style={{ opacity: userConnectedWithMego ? "0.5" : "1", cursor: userConnectedWithMego ? "not-allowed" : "pointer" }}>
                                                 <DaiIcons width={40} height={40} />
-                                                <p>DAI</p>
+                                                <p className="font-satoshi">DAI</p>
                                             </div>
                                         )}
 
@@ -125,7 +125,7 @@ export const PaymentsCollectors = () => {
                                                 className="ticket-collector-icon"
                                                 style={{ opacity: userConnectedWithMego ? "0.5" : "1", cursor: userConnectedWithMego ? "not-allowed" : "pointer" }}>
                                                 <USDTIcon width={40} height={40} />
-                                                <p>USDT</p>
+                                                <p className="font-satoshi">USDT</p>
                                             </div>
                                         )}
                                     </div>
@@ -149,7 +149,7 @@ export const PaymentsCollectors = () => {
                                         </div>
 
                                         <UsdcIcon width={40} height={40} />
-                                        <p>USDC</p>
+                                        <p className="font-satoshi">USDC</p>
                                     </div>
                                 )}
                                 {key === "optimism" &&
@@ -157,7 +157,7 @@ export const PaymentsCollectors = () => {
                                         className="ticket-collector-icon"
                                         style={{ opacity: userConnectedWithMego ? "0.5" : "1", cursor: userConnectedWithMego ? "not-allowed" : "pointer" }}>
                                         <OptimismIcon width={40} height={40} />
-                                        <p>Optimism</p>
+                                        <p className="font-satoshi">Optimism</p>
                                     </div>}
                             </div>
                         </div>
