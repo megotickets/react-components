@@ -1,6 +1,6 @@
 import React, { useEffect } from "react"
 import { useWeb3Context } from "./web3-context"
-import "./mego-style.css";
+import "../css/mego-style.css";
 import { useCustomization } from "@megotickets/core";
 import { CustomStyle, providerConfiguration } from "interfaces/CustomStyle";
 
@@ -33,7 +33,7 @@ const WalletIcon: React.FC = () => {
                     }}
                 />
             </svg>
-            {loggedAs && <div>{loggedAs.slice(0, 4)}...{loggedAs.slice(-4)}</div>}
+            {loggedAs && <div className="font-satoshi">{loggedAs.slice(0, 4)}...{loggedAs.slice(-4)}</div>}
         </div>
     )
 }
