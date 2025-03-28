@@ -11,9 +11,10 @@
   },
   "dependencies": {
     "@megotickets/core": "workspace:core",
-    "@stripe/stripe-js": "^5.8.0",
     "@react-google-maps/api": "^2.20.6",
-    "axios": "^1.7.7"
+    "@stripe/stripe-js": "^5.8.0",
+    "axios": "^1.7.7",
+    "styled-components": "^6.1.16"
   },
   "keywords": [],
   "author": "",

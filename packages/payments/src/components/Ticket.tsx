@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import styled from 'styled-components';
 import { getEventDetails } from '../utils/BuyTicketUtils';
 import { formatDate } from '../utils/DateUtils';
 import { TicketHeader } from './TicketHeader';
@@ -12,6 +13,44 @@ interface TicketProps {
   showOnlyButton?: boolean;
   overrideButton?: React.ReactNode;
 }
+
+// Styled components
+const TicketContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin: 0 auto;
+  background-color: #000000; /* Nero pece */
+  color: #fff;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+`;
+
+const LoadingContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+`;
+
+const ErrorContainer = styled.div`
+  background-color: #FEE2E2;
+  border: 1px solid #F87171;
+  color: #B91C1C;
+  padding: 0.75rem 1rem;
+  border-radius: 0.25rem;
+  margin: 1rem;
+`;
+
+const NoDetailsContainer = styled.div`
+  background-color: #FEF3C7;
+  border: 1px solid #F59E0B;
+  color: #92400E;
+  padding: 0.75rem 1rem;
+  border-radius: 0.25rem;
+  margin: 1rem;
+`;
 
 export const Ticket: React.FC<TicketProps> = ({ ticketId, showOnlyButton, overrideButton }) => {
   const [eventDetails, setEventDetails] = useState<any>(null);
@@ -36,39 +75,25 @@ export const Ticket: React.FC<TicketProps> = ({ ticketId, showOnlyButton, overri
 
   if (loading) {
     return (
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '2rem' }}>
+      <LoadingContainer>
         <p style={{ color: '#808080' }}>Caricamento in corso...</p>
-      </div>
+      </LoadingContainer>
     );
   }
 
   if (error) {
     return (
-      <div style={{
-        backgroundColor: '#FEE2E2',
-        border: '1px solid #F87171',
-        color: '#B91C1C',
-        padding: '0.75rem 1rem',
-        borderRadius: '0.25rem',
-        margin: '1rem'
-      }}>
+      <ErrorContainer>
         <p>{error}</p>
-      </div>
+      </ErrorContainer>
     );
   }
 
   if (!eventDetails || !eventDetails.event) {
     return (
-      <div style={{
-        backgroundColor: '#FEF3C7',
-        border: '1px solid #F59E0B',
-        color: '#92400E',
-        padding: '0.75rem 1rem',
-        borderRadius: '0.25rem',
-        margin: '1rem'
-      }}>
+      <NoDetailsContainer>
         <p>Nessun dettaglio disponibile per questo evento</p>
-      </div>
+      </NoDetailsContainer>
     );
   }
 
@@ -98,25 +123,12 @@ export const Ticket: React.FC<TicketProps> = ({ ticketId, showOnlyButton, overri
   }
 
   return (
-    <div style={{
-      display: 'flex',
-      flexDirection: 'column',
-      width: '100%',
-      margin: '0 auto',
-      backgroundColor: '#121212',
-      color: '#fff',
-      borderRadius: '16px',
-      overflow: 'hidden',
-      boxShadow: '0 4px 30px rgba(0, 0, 0, 0.1)',
-    }}>
-      {/* Header Section with Banner and Event Info */}
+    <TicketContainer>
       <TicketHeader
         event={event}
         startDate={startDate}
         endDate={endDate}
       />
-
-      {/* Price and Buy Button Section */}
       <TicketPayment
         eventDetails={eventDetails}
         isPriceZero={isPriceZero}
@@ -124,14 +136,10 @@ export const Ticket: React.FC<TicketProps> = ({ ticketId, showOnlyButton, overri
         supplyText={supplyText}
         overrideButton={overrideButton}
       />
-
-      {/* Event Location and Details Section */}
       <TicketLocation
         event={event}
       />
-
-      {/* User's NFT Tickets Section (at the bottom) */}
       <TicketUserNFT userId={ticketId} eventIdentifier={event.identifier} />
-    </div>
+    </TicketContainer>
   );
 };
