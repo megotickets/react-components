@@ -4,7 +4,7 @@ import { useAccount } from "@megotickets/core";
 import AppleWalletIcon from './icons/AppleWalletIcon';
 import GoogleWalletIcon from './icons/GoogleWalletIcon';
 import QrCodeIcon from './icons/QrCodeIcon';
-
+import "../css/pay.css";
 export const BuyTicketClaim: React.FC = () => {
 
     const { claimData } = useBuyTicketContext()
@@ -18,7 +18,7 @@ export const BuyTicketClaim: React.FC = () => {
     }
 
     return (
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'start', height: '100%' }}>
+        <div className="payment-stepper-container">
             <h1>Buy Ticket Claim</h1>
             <p>Congratulations!</p>
             <p>Your ticket is ready!</p>

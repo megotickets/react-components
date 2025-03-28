@@ -1,5 +1,4 @@
 import React, { useEffect, useState, ReactNode } from "react";
-import "./mego-style.css";
 import CrossIcon from "./icons/CrossIcon";
 import { useBuyTicketContext } from "../context/BuyTicketContext";
 import { Stepper } from "../interfaces/interface-stepper";

@@ -6,7 +6,7 @@ import { Messages } from "../interfaces/messages-enums";
 import { Loader } from '@megotickets/core';
 import { PopupModality } from "../interfaces/popup-enum";
 import { Stepper } from "../interfaces/interface-stepper";
-import "./mego-style.css";
+import "../css/pay.css";
 
 
 export const BuyTicketProcessing = () => {
@@ -103,7 +103,7 @@ export const BuyTicketProcessing = () => {
 
 
     return (
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%', height: '100%' }}>
+        <div className="loader">
             <Loader message={message} />
         </div>
     );

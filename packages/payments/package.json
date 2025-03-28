@@ -6,8 +6,8 @@
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
   "scripts": {
-    "build": "tsup src/index.tsx --format cjs,esm --dts --external react --tsconfig tsconfig.json",
-    "dev": "tsup src/index.tsx --format cjs,esm --dts --external react --watch --tsconfig tsconfig.json"
+    "build": "tsup src/index.tsx --format cjs,esm --dts --external react --inject-style --tsconfig tsconfig.json",
+    "dev": "tsup src/index.tsx --format cjs,esm --dts --external react --inject-style --watch --tsconfig tsconfig.json"
   },
   "dependencies": {
     "@megotickets/core": "workspace:core",
@@ -25,5 +25,6 @@
     "@types/react-dom": "^18.2.0",
     "tsup": "^8.0.1",
     "typescript": "^5.0.0"
-  }
+  },
+  "sideEffects": ["**/*.css"]
 }

@@ -9,7 +9,7 @@ import { signMessage } from "@megotickets/core";
 import { config } from "@megotickets/core";
 import { isConnectedWithMego, getProvider } from "../utils/utils";
 import { signMessageWithGoogle, signMessageWithApple } from "@megotickets/core";
-
+import "../css/pay.css";
 export const BuyTicketClaimGeneration = () => {
     const { eventDetails, openPopup, resetPaymentProcessing, setStepper, emailOfBuyer, setClaimData, claimMetadata, tokenId } = useBuyTicketContext()
     const [message, setMessage] = useState<string>('Processing...')
@@ -131,7 +131,7 @@ export const BuyTicketClaimGeneration = () => {
     }, [])
 
     return (
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%', height: '100%' }}>
+        <div className="loader">
             <Loader message={message} />
         </div>
     )

@@ -1,6 +1,7 @@
 import React from 'react';
 import { ClaimTicketButton } from './ClaimTicketButton';
 
+import '../css/pay.css';
 interface TicketPaymentProps {
   eventDetails: any;
   isPriceZero: boolean;
@@ -9,21 +10,23 @@ interface TicketPaymentProps {
   overrideButton?: React.ReactNode;
 }
 
-export const TicketPayment: React.FC<TicketPaymentProps> = ({ 
-  eventDetails, 
-  isPriceZero, 
-  priceText, 
+
+export const TicketPayment: React.FC<TicketPaymentProps> = ({
+  eventDetails,
+  isPriceZero,
+  priceText,
   supplyText,
   overrideButton
 }) => {
   return (
-    <div style={{ padding: '1.5rem', backgroundColor: '#1E1E1E', borderBottom: '1px solid rgba(255, 255, 255, 0.1)' }}>
+    <div className="ticketPaymentContainer">
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div>
-          <div style={{ color: '#9CA3AF', fontSize: '0.875rem', fontWeight: '500', marginBottom: '0.5rem' }}>Ticket Price</div>
-          <div style={{ color: '#fff', fontSize: '1.5rem', fontWeight: '700' }}>{priceText}</div>
+          <div className="ticketPriceTitle">
+            {`Price: ${priceText}`}
+          </div>
         </div>
-        <ClaimTicketButton 
+        <ClaimTicketButton
           eventDetails={eventDetails}
           buttonText={isPriceZero ? "Claim Free Ticket" : "Buy Ticket"}
           overrideButton={overrideButton}

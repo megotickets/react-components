@@ -6,7 +6,7 @@ import { Loader, switchChain, useAccount, createWalletClient, config, waitForTra
 import { useEffect, useState } from "react";
 import { useSendTransaction, ethers, useWaitForTransactionReceipt, writeContract } from "@megotickets/core";
 import { erc20ABI } from "@/contracts/ABIErc20";
-
+import "../css/pay.css";
 const BuyTicketWithCrypto = () => {
 
     const { eventDetails, paymentsDetails, openPopup, setStepper, processor, resetPaymentProcessing } = useBuyTicketContext();
@@ -189,10 +189,10 @@ const BuyTicketWithCrypto = () => {
 
 
     return (
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%', height: '100%' }}>
+        <div className="payment-stepper-container">
             {
                 isProcessing &&
-                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%', height: '100%' }}>
+                <div className="loader">
                     <Loader message={message} />
                 </div>
             }

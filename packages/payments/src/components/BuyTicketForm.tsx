@@ -2,12 +2,10 @@ import { useState, useEffect, useMemo } from 'react';
 import { useBuyTicketContext } from '../context/BuyTicketContext';
 import { Stepper } from '../interfaces/interface-stepper';
 import { PaymentsCollectors } from './PaymentsCollectors';
-import { checkNFT } from '../utils/BuyTicketUtils';
 import { PopupModality } from '../interfaces/popup-enum';
 import { useAccount } from '@megotickets/core';
 import { Loader } from '@megotickets/core';
-import { isConnectedWithMego } from '../utils/utils';
-import "./mego-style.css";
+import "../css/pay.css";
 
 
 const fastDebug = true
@@ -117,13 +115,13 @@ export const BuyTicketForm: React.FC = () => {
     const title = eventDetails?.event?.price === 0 ? "Claim your free ticket" : "Buy your ticket";
 
     return (
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-start', height: '100%' }}>
+        <div className="payment-stepper-container">
             {
                 !isNFTCheckLoading &&
                 <div style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
-                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', width: '100%' }}>
-                        <h1 style={{ textAlign: 'center', fontSize: '1.5rem', fontWeight: 'bold' }}>{title}</h1>
-                        <p style={{ textAlign: 'center', fontSize: '0.875rem', color: '#6B7280' }}>Enter required information to continue</p>
+                    <div className="title-subtitle-container">
+                        <h1 className="title">{title}</h1>
+                        <p className="subtitle">Enter required information to continue</p>
                     </div>
 
                     {eventDetails?.event?.price > 0 && (
@@ -133,15 +131,7 @@ export const BuyTicketForm: React.FC = () => {
                                 placeholder="Codice sconto (opzionale)"
                                 value={discountCode || ''}
                                 onChange={(e) => setDiscountCode(e.target.value)}
-                                style={{
-                                    marginBottom: '10px',
-                                    width: '100%',
-                                    borderRadius: '20px',
-                                    border: '1px solid white',
-                                    backgroundColor: 'black',
-                                    color: 'white',
-                                    padding: '8px 16px'
-                                }}
+                                className="input-field"
                             />
                         </div>
                     )}
@@ -159,16 +149,7 @@ export const BuyTicketForm: React.FC = () => {
                                             placeholder={metadata}
                                             value={metadataValues[index] || ''}
                                             onChange={(e) => handleMetadataChange(index, e.target.value)}
-                                            style={{
-                                                marginBottom: '10px',
-                                                width: '100%',
-                                                borderRadius: '20px',
-                                                border: `1px solid ${isFieldEmpty ? '#FCA5A5' : 'white'}`,
-                                                backgroundColor: 'black',
-                                                color: 'white',
-                                                padding: '8px 16px',
-                                                resize: 'vertical'
-                                            }}
+                                            className="ticket-form-textarea"
                                             rows={4}
                                         />
                                     ) : (
@@ -177,15 +158,7 @@ export const BuyTicketForm: React.FC = () => {
                                             placeholder={metadata}
                                             value={metadataValues[index] || ''}
                                             onChange={(e) => handleMetadataChange(index, e.target.value)}
-                                            style={{
-                                                marginBottom: '10px',
-                                                width: '100%',
-                                                borderRadius: '20px',
-                                                border: `1px solid ${isFieldEmpty ? '#FCA5A5' : 'white'}`,
-                                                backgroundColor: 'black',
-                                                color: 'white',
-                                                padding: '8px 16px'
-                                            }}
+                                            className="input-field"
                                         />
                                     )}
                                 </div>
@@ -198,19 +171,14 @@ export const BuyTicketForm: React.FC = () => {
                             placeholder="Email"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
+                            className="input-field"
                             style={{
-                                marginBottom: '10px',
-                                width: '100%',
-                                borderRadius: '20px',
                                 border: `1px solid ${!email || !email.includes('@') ? '#FCA5A5' : 'white'}`,
-                                backgroundColor: 'black',
-                                color: 'white',
-                                padding: '8px 16px'
                             }}
                         />
                     </div>
 
-                    <div style={{ display: 'flex', alignItems: 'flex-start', marginBottom: '0.5rem', width: '100%' }}>
+                    <div className="ticket-form-checkbox-container">
                         <input
                             type="checkbox"
                             id="terms"
@@ -218,7 +186,7 @@ export const BuyTicketForm: React.FC = () => {
                             onChange={(e) => setTermsAccepted(e.target.checked)}
                             style={{ marginRight: '0.5rem', marginTop: '0.25rem' }}
                         />
-                        <label htmlFor="terms" style={{ fontSize: '0.875rem', color: 'white' }}>
+                        <label htmlFor="terms" className="checkbox-label">
                             I agree to the <a href="#" style={{ color: '#60A5FA', textDecoration: 'underline' }}>Terms and Conditions</a>.
                         </label>
                     </div>
@@ -231,7 +199,7 @@ export const BuyTicketForm: React.FC = () => {
                             onChange={(e) => setShareEmail(e.target.checked)}
                             style={{ marginRight: '0.5rem', marginTop: '0.25rem' }}
                         />
-                        <label htmlFor="shareEmail" style={{ fontSize: '0.875rem', color: 'white' }}>
+                        <label htmlFor="shareEmail" className="checkbox-label">
                             I accept to share my e-mail with event organizers.
                         </label>
                     </div>
@@ -241,17 +209,10 @@ export const BuyTicketForm: React.FC = () => {
                     <button
                         disabled={!isFormValid}
                         onClick={handleCheckout}
+                        className="checkout-btn"
                         style={{
-                            width: '100%',
-                            background: 'black',
-                            color: 'white',
-                            fontWeight: 'bold',
-                            padding: '0.5rem 1rem',
-                            borderRadius: '9999px',
-                            border: '1px solid white',
                             opacity: !isFormValid ? 0.5 : 1,
                             cursor: !isFormValid ? 'not-allowed' : 'pointer',
-                            transition: 'opacity 0.3s'
                         }}
                     >
                         Checkout
@@ -260,7 +221,7 @@ export const BuyTicketForm: React.FC = () => {
             }
             {
                 isNFTCheckLoading &&
-                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%', height: '100%' }}>
+                <div className="loader">
                     <Loader message={"Checking NFT..."} />
                 </div>
             }

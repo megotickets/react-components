@@ -11,6 +11,8 @@ interface TicketHeaderProps {
 const Container = styled.div`
   display: flex;
   flex-direction: row;
+  background-color: #000000;
+  border-radius: 12px;
   gap: 2rem;
   padding: 1.5rem;
 

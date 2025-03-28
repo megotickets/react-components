@@ -6,7 +6,7 @@ import { Stepper } from "../interfaces/interface-stepper";
 import { checkPayment, getPayment } from "../utils/BuyTicketUtils";
 import { useAccount } from "@megotickets/core";
 import { Loader } from "@megotickets/core";
-
+import "../css/pay.css";
 
 const BuyTicketWithStripe = () => {
     const { eventDetails, paymentsDetails, openPopup, setStepper, savePendingProcess, resetPaymentProcessing } = useBuyTicketContext();
@@ -206,19 +206,14 @@ const BuyTicketWithStripe = () => {
     };
 
     return (
-        <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-            <div id="payment-element"></div>
+        <div className="payment-stepper-stripe">
+            <div id="payment-element" className="ticket-stripe-form-container"></div>
             {
                 !waitForPaymentConfirmation && <button
                     onClick={handlePayment}
                     disabled={isProcessing}
+                    className="checkout-btn"
                     style={{
-                        marginTop: '20px',
-                        padding: '10px 20px',
-                        backgroundColor: isProcessing ? '#a0a0a0' : '#6772e5',
-                        color: 'white',
-                        border: 'none',
-                        borderRadius: '4px',
                         cursor: isProcessing ? 'not-allowed' : 'pointer'
                     }}
                 >
@@ -227,7 +222,7 @@ const BuyTicketWithStripe = () => {
             }
             {
                 waitForPaymentConfirmation &&
-                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%', height: '100%' }}>
+                <div className="loader">
                     <Loader message={message} />
                 </div>
             }
@@ -235,15 +230,7 @@ const BuyTicketWithStripe = () => {
                 isCanceledAllowed &&
                 <button
                     onClick={handleCancel}
-                style={{
-                    marginTop: '20px',
-                    padding: '10px 20px',
-                    backgroundColor: 'transparent',
-                    color: '#6772e5',
-                    border: '1px solid #6772e5',
-                    borderRadius: '4px',
-                    cursor: 'pointer'
-                }}
+                    className="ticket-stripe-cancel-btn"
             >
                     Annulla operazione
                 </button>
