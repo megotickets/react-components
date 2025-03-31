@@ -22,7 +22,7 @@ export const Loader: React.FC<LoaderProps> = ({
         boxShadow: '0 -1px 0 rgba(255, 255, 255, 1)',
         animation: 'spin 1s linear infinite'
       }}></div>
-      <p className="mego-font-medium" style={{ marginTop: '16px' }}>{message}</p>
+      <p className="mego-font-medium" style={{ marginTop: '16px', color: 'white' }}>{message}</p>
       
       <style>{`
         @keyframes spin {
