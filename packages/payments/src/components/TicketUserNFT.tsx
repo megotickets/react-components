@@ -1,6 +1,6 @@
 import { obtainNfts } from '@/utils/BuyTicketUtils';
 import { useAccount } from '@megotickets/core';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { MyTicket } from './MyTicket';
 import "../css/pay.css";
 interface TicketUserNFTProps {
@@ -15,10 +15,18 @@ export const TicketUserNFT: React.FC<TicketUserNFTProps> = ({ userId, eventIdent
   const [owneds, setOwneds] = useState<any[]>([]);
   let count = 0;
 
+  const userAddress = useMemo(() => {
+    //Search loggedAs o signedAs nei params dell'url
+    const urlParams = new URLSearchParams(window.location.search);
+    const loggedAs = urlParams.get('loggedAs');
+    const signedAs = urlParams.get('signedAs');
+    return address || loggedAs || signedAs || ""
+}, [address, window.location.search])
+
   //Check userNfts
   const obtainUserNfts = async () => {
-    if (address) {
-      const nfts = await obtainNfts(eventIdentifier, address);
+    if (userAddress) {
+      const nfts = await obtainNfts(eventIdentifier, userAddress);
       setOwneds(nfts?.owned || []);
     }
   }
