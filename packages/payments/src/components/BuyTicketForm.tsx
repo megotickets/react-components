@@ -51,7 +51,7 @@ export const BuyTicketForm: React.FC = () => {
                 setProcessor('stripe');
             }
         } catch (error) {
-            openPopup({ title: 'Errore', message: 'Errore generale', modality: PopupModality.Error, isOpen: true })
+            openPopup({ title: 'Error', message: 'General error', modality: PopupModality.Error, isOpen: true })
             resetPaymentProcessing()
             return;
         } finally {
@@ -187,7 +187,7 @@ export const BuyTicketForm: React.FC = () => {
                             style={{ marginRight: '0.5rem', marginTop: '0.25rem' }}
                         />
                         <label htmlFor="terms" className="font-satoshi checkbox-label">
-                            Accetto i <a href={termsAndConditionsLink} target="_blank" rel="noopener noreferrer" style={{ color: '#60A5FA', textDecoration: 'underline' }}>Termini e Condizioni</a>.
+                            I accept the <a href={termsAndConditionsLink} target="_blank" rel="noopener noreferrer" style={{ color: '#60A5FA', textDecoration: 'underline' }}>Terms and Conditions</a>.
                         </label>
                     </div>
 

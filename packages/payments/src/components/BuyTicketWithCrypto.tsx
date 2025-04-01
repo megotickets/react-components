@@ -20,14 +20,14 @@ const BuyTicketWithCrypto = () => {
 
     const waitBackendConfirmationOfPayment = async () => {
         try {
-            setMessage("Attendere la conferma del pagamento...")
+            setMessage("Waiting for payment confirmation...")
             const uuid = paymentsDetails?.payment?.paymentId;
             if (uuid) {
-                setMessage("Ottenimento dei dettagli del pagamento...")
+                setMessage("Getting payment details...")
                 const payment = await getPayment(uuid);
                 console.log('payment', payment);
                 if (payment.error == false) {
-                    console.log("Dati del pagamento ritrovati! .. check dello stato del pagamento")
+                    console.log("Payment details found! .. check payment status")
                     //Check if payment is completed
                     const interval = setInterval(async () => {
                         console.log('checkPayment with uuid:', uuid);
@@ -37,13 +37,13 @@ const BuyTicketWithCrypto = () => {
                             clearInterval(interval);
                             setStepper(Stepper.NFT_Mint);
                         } else {
-                            console.log("Ancora error = false")
+                            console.log("Still error = false")
                         }
                     }, 5000);
                 } else {
                     openPopup({
-                        title: 'Errore',
-                        message: `Errore nell'attesa della conferma del pagamento: ${payment.message || 'Errore sconosciuto'}`,
+                        title: 'Error',
+                        message: `Error waiting for payment confirmation: ${payment.message || 'Unknown error'}`,
                         modality: PopupModality.Error,
                         isOpen: true
                     });
@@ -53,8 +53,8 @@ const BuyTicketWithCrypto = () => {
             } else {
                 console.log("uuid non trovato")
                 openPopup({
-                    title: 'Errore',
-                    message: `Errore nell'attesa della conferma del pagamento: uuid non trovato`,
+                    title: 'Error',
+                    message: `Error waiting for payment confirmation: uuid not found`,
                     modality: PopupModality.Error,
                     isOpen: true
                 });
@@ -62,8 +62,8 @@ const BuyTicketWithCrypto = () => {
                 setIsProcessing(false);
             }
         } catch (error: any) {
-            console.error("Errore nell'attesa della conferma del pagamento:", error);
-            openPopup({ title: 'Errore', message: `Errore nell'attesa della conferma del pagamento: ${error.message || 'Errore sconosciuto'}`, modality: PopupModality.Error, isOpen: true });
+            console.error("Error waiting for payment confirmation:", error);
+            openPopup({ title: 'Error', message: `Error waiting for payment confirmation: ${error.message || 'Unknown error'}`, modality: PopupModality.Error, isOpen: true });
             resetPaymentProcessing()
             setIsProcessing(false);
         } finally {
@@ -76,7 +76,7 @@ const BuyTicketWithCrypto = () => {
         try {
             const contract_address = processor?.split(":")[2];
             if (!contract_address) {
-                openPopup({ title: 'Errore', message: 'Impossibile prelevare il contract address del token erc20', modality: PopupModality.Error, isOpen: true });
+                openPopup({ title: 'Error', message: 'Unable to retrieve the erc20 token contract address', modality: PopupModality.Error, isOpen: true });
                 resetPaymentProcessing();
                 setIsProcessing(false);
                 return;
@@ -106,8 +106,8 @@ const BuyTicketWithCrypto = () => {
             setMessage("Transaction confirmed!");
             waitBackendConfirmationOfPayment();
         } catch (error: any) {
-            console.error("Errore nel pagamento con token ERC20:", error);
-            openPopup({ title: 'Errore', message: `Errore nel pagamento con token ERC20`, modality: PopupModality.Error, isOpen: true });
+            console.error("Error in payment with erc20 token:", error);
+            openPopup({ title: 'Error', message: `Error in payment with erc20 token`, modality: PopupModality.Error, isOpen: true });
             resetPaymentProcessing();
             setIsProcessing(false);
         }
@@ -125,7 +125,7 @@ const BuyTicketWithCrypto = () => {
 
     const payWithCrypto = async () => {
         if (!address) {
-            openPopup({ title: 'Errore', message: 'Please connect your wallet', modality: PopupModality.Error, isOpen: true });
+            openPopup({ title: 'Error', message: 'Please connect your wallet', modality: PopupModality.Error, isOpen: true });
             return;
         }
         setIsProcessing(true);
@@ -135,21 +135,21 @@ const BuyTicketWithCrypto = () => {
         //Check user has enough balance
         const { balance, formattedBalance, success, reason } = await checkUserBalance(address, processor);
         if (!success) {
-            openPopup({ title: 'Errore', message: reason || 'Errore sconosciuto', modality: PopupModality.Error, isOpen: true });
+            openPopup({ title: 'Error', message: reason || 'Unknown error', modality: PopupModality.Error, isOpen: true });
             return;
         }
 
         //Switch to the correct network
         const chainId = resolveProcessor(processor || "");
         if (chainId == -1) {
-            openPopup({ title: 'Errore', message: `Impossibile passare alla rete ${processor}`, modality: PopupModality.Error, isOpen: true });
+            openPopup({ title: 'Error', message: `Unable to switch to the network ${processor}`, modality: PopupModality.Error, isOpen: true });
             resetPaymentProcessing();
             setIsProcessing(false);
             return;
         }
         const networkChanged = await switchNetwork(chainId);
         if (!networkChanged) {
-            openPopup({ title: 'Errore', message: `Impossibile passare alla rete ${processor}`, modality: PopupModality.Error, isOpen: true });
+            openPopup({ title: 'Error', message: `Unable to switch to the network ${processor}`, modality: PopupModality.Error, isOpen: true });
             resetPaymentProcessing();
             setIsProcessing(false);
             return;
@@ -174,7 +174,7 @@ const BuyTicketWithCrypto = () => {
         }
         if (error) {
             setMessage("Transaction failed!");
-            openPopup({ title: 'Errore', message: error.message || 'Errore sconosciuto', modality: PopupModality.Error, isOpen: true });
+            openPopup({ title: 'Error', message: error.message || 'Unknown error', modality: PopupModality.Error, isOpen: true });
             resetPaymentProcessing()
             setIsProcessing(false);
         }

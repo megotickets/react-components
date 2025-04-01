@@ -49,7 +49,7 @@ const MegoBuyTicketModal: React.FC<MegoBuyTicketModalProps> = ({ onClose }) => {
       >
         <div className="mego-modal-header">
           <div className="mego-modal-logo">
-            <h3 className="payment-title font-satoshi">Acquista Biglietto</h3>
+            <h3 className="payment-title font-satoshi">Buy Ticket</h3>
           </div>
           <div className="mego-modal-buttons">
             <div onClick={handleClose} style={{ marginRight: '0.5rem', marginTop: '0.5rem', cursor: 'pointer' }}>

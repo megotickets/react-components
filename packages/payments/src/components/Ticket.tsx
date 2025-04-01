@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import styled from 'styled-components';
 import { getEventDetails } from '../utils/BuyTicketUtils';
 import { formatDate } from '../utils/DateUtils';
 import { TicketHeader } from './TicketHeader';
@@ -27,8 +26,8 @@ export const Ticket: React.FC<TicketProps> = ({ ticketId, showOnlyButton, overri
         setEventDetails(details);
         setLoading(false);
       } catch (err) {
-        console.error('Errore nel recupero dei dettagli dell\'evento:', err);
-        setError('Impossibile caricare i dettagli dell\'evento');
+        console.error('Error in retrieving event details:', err);
+        setError('Unable to load event details');
         setLoading(false);
       }
     };
@@ -38,7 +37,7 @@ export const Ticket: React.FC<TicketProps> = ({ ticketId, showOnlyButton, overri
   if (loading) {
     return (
       <div className="ticket-loading-container">
-        <p className="font-satoshi" style={{ color: '#808080' }}>Caricamento in corso...</p>
+        <p className="font-satoshi" style={{ color: '#808080' }}>Loading...</p>
       </div>
     );
   }
@@ -54,7 +53,7 @@ export const Ticket: React.FC<TicketProps> = ({ ticketId, showOnlyButton, overri
   if (!eventDetails || !eventDetails.event) {
     return (
       <div className="ticket-details-container">
-        <p className="font-satoshi">Nessun dettaglio disponibile per questo evento</p>
+        <p className="font-satoshi">No details available for this event</p>
       </div>
     );
   }
@@ -67,10 +66,10 @@ export const Ticket: React.FC<TicketProps> = ({ ticketId, showOnlyButton, overri
   const endDate = formatDate(event.timestamp_end);
 
   const isPriceZero = event.price === 0;
-  const priceText = isPriceZero ? 'Gratuito' : `${event.price} ${event.currency.toUpperCase()}`;
+  const priceText = isPriceZero ? 'Free' : `${event.price} ${event.currency.toUpperCase()}`;
 
   const availableTickets = event.supply - event.minted;
-  const supplyText = event.show_supply ? `${availableTickets} / ${event.supply} ticket disponibili` : '';
+  const supplyText = event.show_supply ? `${availableTickets} / ${event.supply} available tickets` : '';
 
   if (showOnlyButton) {
     return (

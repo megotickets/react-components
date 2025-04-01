@@ -40,7 +40,7 @@ const BuyTicketWithStripe = () => {
         try {
             setWaitForPaymentConfirmation(true);
             setIsCanceledAllowed(false);
-            setMessage("Attendere la conferma del pagamento...")
+            setMessage("Waiting for payment confirmation...")
             //Check params from url
             const urlParams = new URLSearchParams(window.location.search);
             const uuid = urlParams.get("uuid");
@@ -55,11 +55,11 @@ const BuyTicketWithStripe = () => {
             console.log('urlParams', urlParams);
 
             if (uuid && payment_intent && payment_intent_client_secret) {
-                setMessage("Ottenimento dei dettagli del pagamento...")
+                setMessage("Getting payment details...")
                 const payment = await getPayment(uuid);
                 console.log('payment', payment);
                 if (payment.error == false) {
-                    console.log("Dati del pagamento ritrovati! .. check dello stato del pagamento")
+                    console.log("Payment details found! .. check payment status")
                     //Check if payment is completed
                     const interval = setInterval(async () => {
                         console.log('checkPayment with uuid:', uuid);
@@ -70,13 +70,13 @@ const BuyTicketWithStripe = () => {
                             localStorage.removeItem("_func");
                             setStepper(Stepper.NFT_Mint);
                         } else {
-                            console.log("Ancore error = false")
+                            console.log("Still error = false")
                         }
                     }, 5000);
                 } else {
                     openPopup({
-                        title: 'Errore',
-                        message: `Errore nell'attesa della conferma del pagamento: ${payment.message || 'Errore sconosciuto'}`,
+                        title: 'Error',
+                        message: `Error waiting for payment confirmation: ${payment.message || 'Unknown error'}`,
                         modality: PopupModality.Error,
                         isOpen: true
                     });
@@ -84,16 +84,16 @@ const BuyTicketWithStripe = () => {
                 }
             } else {
                 // C'era _func ma non c'erano i parametri di pagamento quindi si cancella il processo e si riparte dall'inizio
-                console.log("C'era _func ma non c'erano i parametri di pagamento quindi si cancella il processo e si riparte dall'inizio")
+                console.log("There was _func but no payment parameters so the process is cancelled and we start over")
                 setIsProcessing(false);
                 localStorage.removeItem("_func");
                 initializeStripe();
             }
         } catch (error: any) {
-            console.error("Errore nell'attesa della conferma del pagamento:", error);
+            console.error("Error waiting for payment confirmation:", error);
             openPopup({
-                title: 'Errore',
-                message: `Errore nell'attesa della conferma del pagamento: ${error.message || 'Errore sconosciuto'}`,
+                title: 'Error',
+                message: `Error waiting for payment confirmation: ${error.message || 'Unknown error'}`,
                 modality: PopupModality.Error,
                 isOpen: true
             });
@@ -117,7 +117,7 @@ const BuyTicketWithStripe = () => {
             const stripe = await stripePromise;
 
             if (!stripe) {
-                console.error('Impossibile caricare Stripe');
+                console.error('Unable to load Stripe');
                 return;
             }
 
@@ -133,13 +133,13 @@ const BuyTicketWithStripe = () => {
                 setStripeElements(elements);
                 setStripeInstance(stripe);
             } else {
-                throw new Error("Elemento di pagamento non trovato nel DOM");
+                throw new Error("Payment element not found in DOM");
             }
         } catch (error: any) {
-            console.error("Errore nell'inizializzazione di Stripe:", error);
+            console.error("Error in Stripe initialization:", error);
             openPopup({
-                title: 'Errore',
-                message: `Errore nell'inizializzazione di Stripe: ${error.message || 'Errore sconosciuto'}`,
+                title: 'Error',
+                message: `Error in Stripe initialization: ${error.message || 'Unknown error'}`,
                 modality: PopupModality.Error,
                 isOpen: true
             });
@@ -155,7 +155,7 @@ const BuyTicketWithStripe = () => {
         }
 
         if (label === "stripe_payment") {
-            console.log("Abbiamo trovato un processo di pagamento in sospeso ..")
+            console.log("We found a pending payment process ..")
             waitBackendConfirmationOfPayment();
         }
 
@@ -164,8 +164,8 @@ const BuyTicketWithStripe = () => {
     const handlePayment = async () => {
         if (!stripeInstance || !stripeElements) {
             openPopup({
-                title: 'Errore',
-                message: 'Stripe non è stato inizializzato correttamente',
+                title: 'Error',
+                message: 'Stripe was not initialized correctly',
                 modality: PopupModality.Error,
                 isOpen: true
             });
@@ -192,10 +192,10 @@ const BuyTicketWithStripe = () => {
                 throw error;
             }
         } catch (error: any) {
-            console.error("Errore durante il pagamento:", error);
+            console.error("Error during payment:", error);
             openPopup({
-                title: 'Errore di pagamento',
-                message: error.message || 'Si è verificato un errore durante il pagamento',
+                title: 'Payment error',
+                message: error.message || 'An error occurred during payment',
                 modality: PopupModality.Error,
                 isOpen: true
             });
@@ -217,7 +217,7 @@ const BuyTicketWithStripe = () => {
                         cursor: isProcessing ? 'not-allowed' : 'pointer'
                     }}
                 >
-                    {isProcessing ? 'Elaborazione in corso...' : 'Paga ora'}
+                    {isProcessing ? 'Processing...' : 'Pay now'}
                 </button>
             }
             {
@@ -232,7 +232,7 @@ const BuyTicketWithStripe = () => {
                     onClick={handleCancel}
                     className="ticket-stripe-cancel-btn font-satoshi"
             >
-                    Annulla operazione
+                    Cancel operation
                 </button>
             }
         </div>
