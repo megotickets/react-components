@@ -11,14 +11,15 @@ const ChooseTypeSection: React.FC<SectionBaseProps> = ({ setSection }) => {
   const { redirectToAppleLogin, redirectToGoogleLogin } = useWeb3Context();
   const { style, providerConfiguration } = useCustomization();
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', gap: '1rem' }}>
-      <div className="chooseType-btn-container" onClick={redirectToAppleLogin}>
+    <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+      <div className="chooseType-btn-container" >
         {
           style?.customButtonOverrideComponent?.appleButton ?
             style?.customButtonOverrideComponent?.appleButton
             :
             (!providerConfiguration || providerConfiguration?.appleProvider || providerConfiguration?.appleProvider === undefined || providerConfiguration?.appleProvider === null) ?
               <MegoButton
+                onClick={redirectToAppleLogin}
                 className="chooseType-btn"
                 style={{ ...style?.modalStyle?.buttonStyle }}
               >
@@ -33,13 +34,14 @@ const ChooseTypeSection: React.FC<SectionBaseProps> = ({ setSection }) => {
         }
       </div>
 
-      <div className="chooseType-btn-container" onClick={redirectToGoogleLogin}>
+      <div className="chooseType-btn-container">
         {
           style?.customButtonOverrideComponent?.googleButton ?
             style?.customButtonOverrideComponent?.googleButton
             :
             providerConfiguration?.googleProvider || providerConfiguration?.googleProvider === undefined || providerConfiguration?.googleProvider === null ?
               <MegoButton
+                onClick={redirectToGoogleLogin}
                 className="chooseType-btn"
                 style={{ ...style?.modalStyle?.buttonStyle }}
               >
@@ -58,13 +60,13 @@ const ChooseTypeSection: React.FC<SectionBaseProps> = ({ setSection }) => {
           : <div></div>
       }
 
-      <div className="chooseType-btn-container" onClick={() => setSection("Email")}>
+      <div className="chooseType-btn-container">
         {
           style?.customButtonOverrideComponent?.emailButton ?
             style?.customButtonOverrideComponent?.emailButton
             :
             providerConfiguration?.emailProvider || providerConfiguration?.emailProvider === undefined || providerConfiguration?.emailProvider === null ?
-              <MegoButton className="chooseType-btn font-satoshi" style={{ ...style?.modalStyle?.buttonStyle }}>
+              <MegoButton onClick={() => setSection("Email")} className="chooseType-btn font-satoshi" style={{ ...style?.modalStyle?.buttonStyle }}>
 
                 <div className="chooseType-btn-content">
                   <EmailIcon width={30} />

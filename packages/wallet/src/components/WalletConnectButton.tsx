@@ -37,7 +37,7 @@ const WalletConnectStatus: React.FC<WalletConnectStatusProps> = ({
   console.log(account);
   console.log(chain);
   return (
-    <div className="chooseType-btn-container" onClick={openConnectModal}>
+    <div className="chooseType-btn-container">
       {
         style?.customButtonOverrideComponent?.walletConnectButton ?
           style?.customButtonOverrideComponent?.walletConnectButton
