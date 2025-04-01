@@ -176,17 +176,6 @@
     margin-top: 0.5rem;
 }
 
-.checkout-btn {
-    width: 100%;
-    background: black;
-    color: white;
-    font-weight: bold;
-    padding: 0.5rem 1rem;
-    border-radius: 9999px;
-    border: 1px solid white;
-    transition: opacity 0.3s;
-    margin-top: 1rem;
-}
 
 .checkbox-label {
     font-size: 0.875rem;
@@ -354,7 +343,11 @@
     color: #fff;
 }
 
-.ticket-event-date-container, .ticket-event-location-container, .ticket-event-blockchain-container, .ticket-event-hosted-by-container, .ticket-event-minted-info-container {
+.ticket-event-date-container,
+.ticket-event-location-container,
+.ticket-event-blockchain-container,
+.ticket-event-hosted-by-container,
+.ticket-event-minted-info-container {
     display: flex;
     align-items: center;
 }
@@ -391,6 +384,45 @@
 
 .ticket-image:hover {
     transform: scale(1.1);
+}
+
+.chooseType-btn-container {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+ù .chooseType-btn {
+    width: 40%;
+}
+
+.chooseType-btn-content {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+@media (max-width: 768px) {
+    .chooseType-btn {
+        width: 50%;
+    }
+}
+
+@media (max-width: 480px) {
+    .chooseType-btn {
+        width: 100%;
+    }
+}
+
+.chooseType-btn-container {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
 }
 
 

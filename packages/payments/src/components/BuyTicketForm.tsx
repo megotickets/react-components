@@ -3,7 +3,7 @@ import { useBuyTicketContext } from '../context/BuyTicketContext';
 import { Stepper } from '../interfaces/interface-stepper';
 import { PaymentsCollectors } from './PaymentsCollectors';
 import { PopupModality } from '../interfaces/popup-enum';
-import { useAccount } from '@megotickets/core';
+import { MegoButton, useAccount } from '@megotickets/core';
 import { Loader } from '@megotickets/core';
 import "../css/pay.css";
 
@@ -128,7 +128,7 @@ export const BuyTicketForm: React.FC = () => {
                         <div style={{ width: '100%', marginBottom: '0.75rem' }}>
                             <input
                                 type="text"
-                                placeholder="Codice sconto (opzionale)"
+                                placeholder="Discount code (optional)"
                                 value={discountCode || ''}
                                 onChange={(e) => setDiscountCode(e.target.value)}
                                 className="input-field"
@@ -206,17 +206,17 @@ export const BuyTicketForm: React.FC = () => {
 
                     <PaymentsCollectors />
 
-                    <button
+                    <MegoButton
                         disabled={!isFormValid}
                         onClick={handleCheckout}
-                        className="checkout-btn font-satoshi"
+                        className="font-satoshi"
                         style={{
                             opacity: !isFormValid ? 0.5 : 1,
                             cursor: !isFormValid ? 'not-allowed' : 'pointer',
                         }}
                     >
                         Checkout
-                    </button>
+                    </MegoButton>
                 </div>
             }
             {

@@ -5,7 +5,7 @@ import { PopupModality } from "../interfaces/popup-enum";
 import { Stepper } from "../interfaces/interface-stepper";
 import { checkPayment, getPayment } from "../utils/BuyTicketUtils";
 import { useAccount } from "@megotickets/core";
-import { Loader } from "@megotickets/core";
+import { Loader, MegoButton } from "@megotickets/core";
 import "../css/pay.css";
 
 const BuyTicketWithStripe = () => {
@@ -208,34 +208,37 @@ const BuyTicketWithStripe = () => {
     return (
         <div className="payment-stepper-stripe">
             <div id="payment-element" className="ticket-stripe-form-container"></div>
-            {
-                !waitForPaymentConfirmation && <button
-                    onClick={handlePayment}
-                    disabled={isProcessing}
-                    className="checkout-btn font-satoshi"
-                    style={{
-                        cursor: isProcessing ? 'not-allowed' : 'pointer'
-                    }}
-                >
-                    {isProcessing ? 'Processing...' : 'Pay now'}
-                </button>
-            }
+
             {
                 waitForPaymentConfirmation &&
                 <div className="loader">
                     <Loader message={message} />
                 </div>
             }
-            {
-                isCanceledAllowed &&
-                <button
-                    onClick={handleCancel}
-                    className="ticket-stripe-cancel-btn font-satoshi"
-            >
-                    Cancel operation
-                </button>
-            }
+            <div style={{ marginBottom: '1rem' }} className="chooseType-btn-container">
+                {
+                    !waitForPaymentConfirmation && <MegoButton
+                        onClick={handlePayment}
+                        disabled={isProcessing}
+                        className={"font-satoshi " + (isProcessing ? 'disabled' : '') + " chooseType-btn"}
+                    >
+                        {isProcessing ? 'Processing...' : 'Pay now'}
+                    </MegoButton>
+                }
+            </div>
+            <div className="chooseType-btn-container">
+                {
+                    isCanceledAllowed &&
+                    <MegoButton
+                        onClick={handleCancel}
+                        className="font-satoshi chooseType-btn"
+                    >
+                        Cancel operation
+                    </MegoButton>
+                }
+            </div>
         </div>
+
     );
 };
 

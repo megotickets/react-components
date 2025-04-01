@@ -16,7 +16,7 @@ interface MegoBuyTicketModalProps {
 
 const MegoBuyTicketModal: React.FC<MegoBuyTicketModalProps> = ({ onClose }) => {
   const [isClosing, setIsClosing] = useState(false);
-  const { isOpen, setIsOpen, stepper, setStepper } = useBuyTicketContext();
+  const { isOpen, setIsOpen, stepper, setStepper, resetPaymentProcessing } = useBuyTicketContext();
 
   useEffect(() => {
     if (isOpen) {
@@ -33,6 +33,10 @@ const MegoBuyTicketModal: React.FC<MegoBuyTicketModalProps> = ({ onClose }) => {
       setIsOpen(false);
       setIsClosing(false);
     }, 300); // Durata dell'animazione
+
+    /* if (stepper === Stepper.Payments_Stripe) {
+      resetPaymentProcessing();
+    } */
   }
 
   if (!isOpen && !isClosing) return null;

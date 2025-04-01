@@ -1,0 +1,168 @@
+.mego-button {
+  padding: 12px 24px;
+  border-radius: 12px;
+  border: 1px solid #fff;
+  font-size: 16px;
+  font-weight: 500;
+  background-color: #000;
+  color: #fff;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  transition: background-color 0.4s ease, box-shadow 0.3s ease;
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  width: 100%;
+}
+
+/* Effetto hover base */
+.mego-button:hover:not(:disabled) {
+  background-color: #333;
+  background-image: linear-gradient(45deg, #000 0%, #444 100%);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Effetto click */
+.mego-button:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Stato disabilitato */
+.mego-button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* Effetto ripple al click (opzionale) */
+.mego-button::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 5px;
+  height: 5px;
+  background: rgba(255, 255, 255, 0.5);
+  opacity: 0;
+  border-radius: 100%;
+  transform: scale(1, 1) translate(-50%);
+  transform-origin: 50% 50%;
+}
+
+.mego-button:focus:not(:active)::after {
+  animation: ripple 1s ease-out;
+}
+
+@keyframes ripple {
+  0% {
+    transform: scale(0, 0);
+    opacity: 0.5;
+  }
+
+  20% {
+    transform: scale(25, 25);
+    opacity: 0.3;
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(40, 40);
+  }
+}
+
+/* Varianti di stile (opzionali) */
+.mego-button.primary {
+  background-color: #007AFF;
+  transition: background-color 0.4s ease;
+}
+
+.mego-button.primary:hover:not(:disabled) {
+  background-color: #0056b3;
+  background-image: linear-gradient(45deg, #007AFF 0%, #0056b3 100%);
+}
+
+.mego-button.secondary {
+  background-color: #6c757d;
+}
+
+.mego-button.secondary:hover:not(:disabled) {
+  background-color: #5a6268;
+  background-image: linear-gradient(45deg, #6c757d 0%, #5a6268 100%);
+}
+
+.mego-button.danger {
+  background-color: #dc3545;
+}
+
+.mego-button.danger:hover:not(:disabled) {
+  background-color: #bd2130;
+  background-image: linear-gradient(45deg, #dc3545 0%, #bd2130 100%);
+}
+
+.font-satoshi {
+  font-family: 'Satoshi', sans-serif;
+}
+
+/* Nuovo stile per bottone disabilitato */
+.mego-button.disabled {
+  background-color: #f0f0f0;
+  border: 1px solid #e0e0e0;
+  color: #a0a0a0;
+  cursor: not-allowed;
+  position: relative;
+  overflow: hidden;
+}
+
+.mego-button.disabled::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 200%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.3) 50%,
+    transparent 100%
+  );
+  animation: shimmer 2s infinite linear;
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* Varianti disabilitate */
+.mego-button.primary.disabled {
+  background-color: #cce0ff;
+  border-color: #b8d4ff;
+  color: #6699cc;
+}
+
+.mego-button.secondary.disabled {
+  background-color: #e2e3e5;
+  border-color: #d6d8db;
+  color: #95999c;
+}
+
+.mego-button.danger.disabled {
+  background-color: #f8d7da;
+  border-color: #f5c6cb;
+  color: #cc8b93;
+}
+
+.chooseType-btn-container {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}

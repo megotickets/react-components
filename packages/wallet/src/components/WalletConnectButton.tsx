@@ -1,5 +1,5 @@
 import React from "react";
-import { ConnectWallet } from "@megotickets/core";
+import { ConnectWallet, MegoButton } from "@megotickets/core";
 import { useWeb3Context } from "./web3-context";
 import "../css/mego-style.css";
 import WalletConnectIcon from "./icons/WalletConnect";
@@ -37,15 +37,17 @@ const WalletConnectStatus: React.FC<WalletConnectStatusProps> = ({
   console.log(account);
   console.log(chain);
   return (
-    <div onClick={openConnectModal}>
+    <div className="chooseType-btn-container" onClick={openConnectModal}>
       {
         style?.customButtonOverrideComponent?.walletConnectButton ?
           style?.customButtonOverrideComponent?.walletConnectButton
           :
-          <button className="mego-modal-button" onClick={openConnectModal} style={{ ...style?.modalStyle?.buttonStyle }}>
-            <WalletConnectIcon width={17} style={{ marginRight: '0.5rem' }} />
-            <p className="mego-font-medium font-satoshi">WALLET CONNECT</p>
-          </button>
+          <MegoButton className="chooseType-btn" onClick={openConnectModal} style={{ ...style?.modalStyle?.buttonStyle }}>
+            <div className="chooseType-btn-content">
+              <WalletConnectIcon width={17} style={{ marginRight: '0.5rem' }} />
+              <p className="mego-font-medium font-satoshi">WALLET CONNECT</p>
+            </div>
+          </MegoButton>
       }
     </div>
   );

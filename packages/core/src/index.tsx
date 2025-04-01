@@ -11,3 +11,4 @@ export { Loader } from '@/components/Loader';
 export { signMessageWithApple, signMessageWithGoogle, signMessageWithPopupApple, signMessageWithPopupGoogle } from './components/SignMessage';
 export { MegoPopup } from './components/MegoPopup';
 export type { MegoPopupData } from './interfaces/MegoPopupData';
+export { MegoButton } from './components/MegoButton';

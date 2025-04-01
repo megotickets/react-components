@@ -6,8 +6,8 @@
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
   "scripts": {
-    "build": "tsup src/index.tsx --format cjs,esm --dts --external react --tsconfig tsconfig.json",
-    "dev": "tsup src/index.tsx --format cjs,esm --dts --external react --watch --tsconfig tsconfig.json"
+    "build": "tsup src/index.tsx --format cjs,esm --dts --external react --inject-style --tsconfig tsconfig.json",
+    "dev": "tsup src/index.tsx --format cjs,esm --dts --external react --inject-style --watch --tsconfig tsconfig.json"
   },
   "keywords": [],
   "author": "",

@@ -31,8 +31,6 @@ export const BuyTicketClaimGeneration = () => {
         return address || loggedAs || signedAs || ""
     }, [address, window.location.search])
 
-
-
     const processing = async () => {
         try {
             let signature = ""

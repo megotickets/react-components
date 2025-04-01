@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useWeb3Context } from "./web3-context";
 import EyeIcon from "./icons/EyeIcon";
+import { MegoButton } from "@megotickets/core";
 
 
 
@@ -80,13 +81,13 @@ const RegisterSection = () => {
             letter, one lowercase letter, and one number
           </p>
   
-          <button
-            className="mego-modal-button mt-3"
+          <MegoButton
+            className="chooseType-btn"
             type="submit"
             style={{ maxWidth: 200 }}
           >
             <p className="mego-font-medium font-satoshi">REGISTER</p>
-          </button>
+          </MegoButton>
         </form>
       </>
     );

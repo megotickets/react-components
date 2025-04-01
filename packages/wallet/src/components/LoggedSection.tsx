@@ -1,3 +1,4 @@
+import { MegoButton } from "@megotickets/core";
 import CopyIcon from "./icons/CopyIcon";
 import DisconnectIcon from "./icons/DisconnectIcon";
 import ExportKeyIcon from "./icons/ExportKeyIcon";
@@ -54,29 +55,35 @@ const LoggedSection: React.FC<{ logout: () => void }> = ({ logout }) => {
   
   
     return (
-      <div>
-        <button className="mego-modal-button outlined" onClick={handleCopyAddress}>
-          <CopyIcon height={16} width={16} style={{ marginRight: '0.5rem', height: '1.5rem', width: '1.5rem' }} />
-          <p className="mego-font-medium font-satoshi">Copy address</p>
-        </button>
+      <div className="logged-section-container">
+        <MegoButton className="chooseType-btn" onClick={handleCopyAddress}>
+          <div className="chooseType-btn-content">
+            <CopyIcon height={16} width={16} style={{ marginRight: '0.5rem', height: '1.5rem', width: '1.5rem' }} />
+            <p className="mego-font-medium font-satoshi">Copy address</p>
+          </div>
+        </MegoButton>
   
         {/* ONLY FOR EMAIL PROVIDER (GOOGLE, APPLE, EMAIL)*/}
         {
           provider !== "walletConnect" &&
-          <button className="mego-modal-button outlined" onClick={requestExportPrivateKey}>
-            <ExportKeyIcon
-              style={{ marginRight: '0.5rem', height: '1.5rem', width: '1.5rem' }}
-            />
-            <p className="mego-font-medium font-satoshi">Export private key</p>
-          </button>
+          <MegoButton className="chooseType-btn" onClick={requestExportPrivateKey}>
+            <div className="chooseType-btn-content">
+              <ExportKeyIcon
+                style={{ marginRight: '0.5rem', height: '1.5rem', width: '1.5rem' }}
+              />
+              <p className="mego-font-medium font-satoshi">Export private key</p>
+            </div>
+          </MegoButton>
         }
   
-        <button className="mego-modal-button outlined" onClick={logout}>
-          <DisconnectIcon
-            style={{ marginRight: '0.5rem', height: '1.5rem', width: '1.5rem' }}
-          />
-          <p className="mego-font-medium font-satoshi">Disconnect</p>
-        </button>
+        <MegoButton className="chooseType-btn" onClick={logout}>
+          <div className="chooseType-btn-content">
+            <DisconnectIcon
+              style={{ marginRight: '0.5rem', height: '1.5rem', width: '1.5rem' }}
+            />
+            <p className="mego-font-medium font-satoshi">Disconnect</p>
+          </div>
+        </MegoButton>
       </div>
     );
   };

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useWeb3Context } from "./web3-context";
 import EyeIcon from "./icons/EyeIcon";
 import EyeOffIcon from "./icons/EyeOffIcon";
-
+import { MegoButton } from "@megotickets/core"; 
 
 
 
@@ -66,13 +66,13 @@ const LoginSection = () => {
                     </span>
                 </div>
 
-                <button
-                    className="mego-modal-button mt-3"
+                <MegoButton
+                    className="chooseType-btn"
                     type="submit"
                     style={{ maxWidth: 200 }}
                 >
                     <p className="mego-font-medium font-satoshi">LOGIN</p>
-                </button>
+                </MegoButton>
             </form>
         </>
     );
