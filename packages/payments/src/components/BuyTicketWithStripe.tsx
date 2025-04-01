@@ -122,7 +122,51 @@ const BuyTicketWithStripe = () => {
             }
 
             // Crea gli elementi Stripe con il client secret
-            const elements = stripe.elements({ clientSecret });
+            const elements = stripe.elements({
+                clientSecret,
+                appearance: {
+                    variables: {
+                        fontFamily: "Sohne, system-ui, sans-serif",
+                        fontWeightNormal: "450",
+                        borderRadius: "8px",
+                        colorBackground: "transparent",
+                        colorPrimary: "#00251d",
+                        colorPrimaryText: "#fff",
+                        colorText: "#ffffff",
+                        colorTextSecondary: "#ffffff",
+                        colorTextPlaceholder: "#e6e6e6",
+                        colorIconTab: "white",
+                        colorIconTabHover: "white",
+                        colorLogo: "dark",
+                    },
+                    rules: {
+                        ".Input, .Block": {
+                            backgroundColor: "transparent",
+                            border: "1px solid white",
+                            padding: "15px 20px",
+                            boxShadow: "0",
+                        },
+                        ".Tab": {
+                            backgroundColor: "transparent",
+                        },
+                        ".Tab--selected": {
+                            backgroundColor: "#ffffff",
+                        },
+                        ".p-Tab .Tab .p-Tab--selected .Tab--selected": {
+                            backgroundColor: "#ffffff",
+                        },
+                        ".Tab:hover": {
+                            color: "white",
+                        },
+                        ".p-TabIcon": {
+                            color: "black",
+                        },
+                        ".RedirectText": {
+                            color: "white",
+                        },
+                    },
+                },
+            });
 
             // Crea l'elemento di pagamento e montalo nel DOM
             const paymentElement = elements.create("payment");
@@ -208,14 +252,13 @@ const BuyTicketWithStripe = () => {
     return (
         <div className="payment-stepper-stripe">
             <div id="payment-element" className="ticket-stripe-form-container"></div>
-
             {
                 waitForPaymentConfirmation &&
                 <div className="loader">
                     <Loader message={message} />
                 </div>
             }
-            <div style={{ marginBottom: '1rem' }} className="chooseType-btn-container">
+            <div className="chooseType-btn-container">
                 {
                     !waitForPaymentConfirmation && <MegoButton
                         onClick={handlePayment}
