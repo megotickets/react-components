@@ -17,7 +17,7 @@ const TokenForPrivateKeySection = () => {
       <div className="w-full flex flex-col gap-3 items-center justify-center mt-10">
         <p className="mego-login-text mego-font-medium">Please insert token received by email</p>
         <input
-          className="mego-input-token"
+          className="mego-input-token font-satoshi"
           id="token"
           placeholder="Insert token..."
           value={token}
