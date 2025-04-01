@@ -71,7 +71,7 @@ export const useWeb3Context = (): Web3ContextType => {
   const context = useContext(Web3Context);
   if (context === undefined) {
     throw new Error(
-      "useWeb3Context deve essere usato all'interno di un Web3Provider"
+      "useWeb3Context must be used within a Web3Provider"
     );
   }
   return context;
@@ -165,7 +165,7 @@ export const Web3Provider: React.FC<Web3ProviderProps> = ({ children }) => {
       localStorage.removeItem("provider");
       localStorage.removeItem("loggedAs");
     } catch (error) {
-      console.error("Errore durante il logout da walletconnect:", error);
+      console.error("Error during logout from walletconnect:", error);
     }
   }
 

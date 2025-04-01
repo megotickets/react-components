@@ -7,7 +7,7 @@ import EyeOffIcon from "./icons/EyeOffIcon";
 
 
 const LoginSection = () => {
-    const { createNewWallet, loginWithEmail } = useWeb3Context();
+    const { loginWithEmail } = useWeb3Context();
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
     const [showPassword, setShowPassword] = useState<boolean>(false);

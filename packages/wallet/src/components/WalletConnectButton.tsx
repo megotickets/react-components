@@ -30,7 +30,7 @@ const WalletConnectStatus: React.FC<WalletConnectStatusProps> = ({
   if (!mounted || authenticationStatus === "loading") {
     return (
       <button className="mego-modal-button">
-        Caricamento...
+        Loading...
       </button>
     );
   }
