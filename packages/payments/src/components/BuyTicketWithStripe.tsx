@@ -124,6 +124,7 @@ const BuyTicketWithStripe = () => {
             // Crea gli elementi Stripe con il client secret
             const elements = stripe.elements({
                 clientSecret,
+                locale: "en",
                 appearance: {
                     variables: {
                         fontFamily: "Sohne, system-ui, sans-serif",
