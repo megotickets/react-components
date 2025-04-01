@@ -34,9 +34,9 @@ const MegoBuyTicketModal: React.FC<MegoBuyTicketModalProps> = ({ onClose }) => {
       setIsClosing(false);
     }, 300); // Durata dell'animazione
 
-    /* if (stepper === Stepper.Payments_Stripe) {
+    if (stepper === Stepper.Payments_Stripe) {
       resetPaymentProcessing();
-    } */
+    }
   }
 
   if (!isOpen && !isClosing) return null;
