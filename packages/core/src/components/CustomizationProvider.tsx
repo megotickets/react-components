@@ -18,7 +18,7 @@ export const useCustomization = (): CustomizationContextType => {
     const context = useContext(CustomizationContext);
     if (context === undefined) {
         throw new Error(
-            "useCustomization deve essere usato all'interno di un CustomizationProvider"
+            "useCustomization must be used within a CustomizationProvider"
         );
     }
     return context;
