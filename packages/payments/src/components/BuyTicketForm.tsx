@@ -11,7 +11,7 @@ import "../css/pay.css";
 const fastDebug = true
 
 export const BuyTicketForm: React.FC = () => {
-    const { eventDetails, setStepper, setClaimMetadata, setEmailOfBuyer, setProcessor, openPopup, resetPaymentProcessing, discountCode, setDiscountCode } = useBuyTicketContext();
+    const { eventDetails, setStepper, setClaimMetadata, setEmailOfBuyer, setProcessor, openPopup, resetPaymentProcessing, discountCode, setDiscountCode, termsAndConditionsLink } = useBuyTicketContext();
     const [email, setEmail] = useState(fastDebug ? "test@test.com" : '');
     const [termsAccepted, setTermsAccepted] = useState(fastDebug ? true : false);
     const [shareEmail, setShareEmail] = useState(fastDebug ? true : false);
@@ -187,7 +187,7 @@ export const BuyTicketForm: React.FC = () => {
                             style={{ marginRight: '0.5rem', marginTop: '0.25rem' }}
                         />
                         <label htmlFor="terms" className="font-satoshi checkbox-label">
-                            I agree to the <a href="#" style={{ color: '#60A5FA', textDecoration: 'underline' }}>Terms and Conditions</a>.
+                            Accetto i <a href={termsAndConditionsLink} target="_blank" rel="noopener noreferrer" style={{ color: '#60A5FA', textDecoration: 'underline' }}>Termini e Condizioni</a>.
                         </label>
                     </div>
 

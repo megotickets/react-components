@@ -56,6 +56,8 @@ interface BuyTicketContextType {
   discountCode: string | null;
   setDiscountCode: (discountCode: string | null) => void;
 
+  //Terms and conditions link
+  termsAndConditionsLink: string;
 }
 
 const BuyTicketContext = createContext<BuyTicketContextType | undefined>(undefined);
@@ -89,6 +91,9 @@ export const BuyTicketProvider: React.FC<BuyTicketProviderProps> = ({ children }
     modality: PopupModality.Info,
     autoCloseTime: 5000
   });
+
+  //Terms and conditions link
+  const termsAndConditionsLink = "https://www.iubenda.com/terms-and-conditions/84994680"
   
   const openPopup = (popupData: MegoPopupData) => {
     setPopup(popupData)
@@ -243,7 +248,10 @@ export const BuyTicketProvider: React.FC<BuyTicketProviderProps> = ({ children }
 
     //Discount code
     discountCode,
-    setDiscountCode
+    setDiscountCode,
+
+    //Terms and conditions link
+    termsAndConditionsLink
   };
 
   return (
