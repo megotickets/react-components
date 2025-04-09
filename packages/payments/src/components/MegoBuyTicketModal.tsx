@@ -9,7 +9,7 @@ import { BuyCheckNFTAndMint } from "./BuyCheckNFTAndMint";
 import { BuyTicketClaimGeneration } from "./BuyTicketClaimGeneration";
 import BuyTicketWithStripe from "./BuyTicketWithStripe";
 import BuyTicketWithCrypto from "./BuyTicketWithCrypto";
-import { useLanguage } from "@megotickets/core";
+import { useLanguage, LanguageSelector } from "@megotickets/core";
 interface MegoBuyTicketModalProps {
   onClose?: () => void;
 }
@@ -52,13 +52,14 @@ const MegoBuyTicketModal: React.FC<MegoBuyTicketModalProps> = ({ onClose }) => {
           maxHeight: "50vh"
         }}
       >
-        <div className="mego-modal-header">
+        <div className="mego-modal-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div className="mego-modal-logo">
             <h3 className="payment-title font-satoshi">{t('buyTicket', 'payments')}</h3>
           </div>
-          <div className="mego-modal-buttons">
-            <div onClick={handleClose} style={{ marginRight: '0.5rem', marginTop: '0.5rem', cursor: 'pointer' }}>
-              <CrossIcon onClick={handleClose} height={16} width={16} />
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', position: 'relative', zIndex: 10 }}>
+             <LanguageSelector />
+             <div onClick={handleClose} style={{ cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
+              <CrossIcon height={16} width={16} />
             </div>
           </div>
         </div>

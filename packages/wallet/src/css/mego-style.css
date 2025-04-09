@@ -282,7 +282,6 @@
 /* Stili specifici per il modal di pagamento */
 .payment-modal .mego-modal-wrapper {
   border-radius: 1.5rem 1.5rem 0 0;
-  overflow: hidden;
   display: flex;
   flex-direction: column;
   font-family: 'Satoshi', sans-serif;
