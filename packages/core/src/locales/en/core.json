@@ -1,4 +1,6 @@
 {
   "loadingMessage": "Loading, please wait...",
-  "processing": "Processing..."
+  "processing": "Processing...",
+  "forcedLanguageTooltip": "Change language from site",
+  "forcedLanguageTitle": "Language Info"
 } 

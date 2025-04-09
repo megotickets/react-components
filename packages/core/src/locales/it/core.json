@@ -1,4 +1,6 @@
 {
     "loadingMessage": "Caricamento in corso, attendere prego...",
-    "processing": "Elaborazione in corso..."
+    "processing": "Elaborazione in corso...",
+    "forcedLanguageTooltip": "Cambia la lingua dal sito",
+    "forcedLanguageTitle": "Info Lingua"
 }

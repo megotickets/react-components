@@ -16,3 +16,4 @@ export { MegoButton } from './components/MegoButton';
 // --- Language System Exports ---
 export { useLanguage } from './hooks/useLanguage';
 export { LanguageSelector } from './components/LanguageSelector';
+export type { SupportedLanguage } from './context/LanguageContext';

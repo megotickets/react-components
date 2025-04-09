@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { PopupModality } from '../interfaces/popup-enum'
+import { PopupModality } from '../interfaces/popup-enum';
+export { PopupModality };
 
 interface MegoPopupProps {
   popupData: MegoPopupData;
@@ -150,7 +151,8 @@ export const MegoPopup: React.FC<MegoPopupProps> = ({
           fontSize: '18px',
           fontWeight: 'bold',
           margin: '16px 0 8px',
-          textAlign: 'center'
+          textAlign: 'center',
+          fontFamily: 'Satoshi, sans-serif'
         }}>
           {popupData.title}
         </h3>
@@ -159,7 +161,8 @@ export const MegoPopup: React.FC<MegoPopupProps> = ({
           color: 'white',
           fontSize: '14px',
           margin: '0 0 24px',
-          textAlign: 'center'
+          textAlign: 'center',
+          fontFamily: 'Satoshi, sans-serif'
         }}>
           {popupData.message}
         </p>
@@ -174,7 +177,8 @@ export const MegoPopup: React.FC<MegoPopupProps> = ({
             color: 'white',
             fontWeight: 'bold',
             cursor: 'pointer',
-            transition: 'opacity 0.2s ease'
+            transition: 'opacity 0.2s ease',
+            fontFamily: 'Satoshi, sans-serif'
           }}
           onMouseOver={(e) => e.currentTarget.style.opacity = '0.9'}
           onMouseOut={(e) => e.currentTarget.style.opacity = '1'}

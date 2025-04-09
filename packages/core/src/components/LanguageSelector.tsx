@@ -4,6 +4,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useLanguage } from '../hooks/useLanguage';
 import '../css/index.css';
 import { SupportedLanguage } from '../context/LanguageContext';
+import { MegoPopup, MegoPopupData, PopupModality } from './MegoPopup';
 
 const languages = [
   { code: 'it', name: 'Italiano' },
@@ -34,15 +35,25 @@ const FallbackIcon = () => (
   </svg>
 );
 
+// Generic globe icon for forced state
+const GlobeIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" width="20" height="20">
+    <path strokeLinecap="round" strokeLinejoin="round" d="M12 21a9.004 9.004 0 0 0 8.716-6.747M12 21a9.004 9.004 0 0 1-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 0 1 7.843 4.582M12 3a8.997 8.997 0 0 0-7.843 4.582m15.686 0A11.953 11.953 0 0 1 12 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0 1 21 12c0 .778-.099 1.533-.284 2.253m0 0A11.978 11.978 0 0 1 12 15c-1.417 0-2.757-.27-3.968-.747m-1.21 3.753A8.973 8.973 0 0 1 12 18c1.17 0 2.273-.218 3.263-.618m-3.263 7.378A11.96 11.96 0 0 1 12 21c-2.11 0-4.073-.566-5.686-1.5M4.582 7.596A8.997 8.997 0 0 1 12 6c1.62 0 3.124.42 4.418 1.154m0 0A11.953 11.953 0 0 0 12 10.5c1.513 0 2.94-.318 4.207-.874m-4.207 5.625A8.962 8.962 0 0 1 12 15c-1.108 0-2.14-.194-3.074-.543M3 12c0-.778.099-1.533.284-2.253m0 0A8.959 8.959 0 0 0 2.999 12c0 .778.099 1.533.284 2.253m0 0A11.978 11.978 0 0 0 12 15c1.417 0 2.757.27 3.968-.747m1.21 3.753A8.973 8.973 0 0 0 12 18c-1.17 0-2.273-.218-3.263-.618m3.263 7.378A11.96 11.96 0 0 0 12 21c-2.11 0-4.073-.566-5.686-1.5" />
+  </svg>
+);
 
 export const LanguageSelector: React.FC = () => {
-  const { language, changeLanguage: changeLangContext } = useLanguage(); 
+  const { language, changeLanguage: changeLangContext, isForced, t } = useLanguage(); 
   const [isOpen, setIsOpen] = useState(false);
+  const [showInfoPopup, setShowInfoPopup] = useState(false); 
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const changeLanguage = (lng: string) => {
-    changeLangContext(lng as SupportedLanguage); 
-    setIsOpen(false);
+    // Change language only if not forced
+    if (!isForced) { 
+      changeLangContext(lng as SupportedLanguage); 
+      setIsOpen(false);
+    }
   };
 
   // Effect to handle clicks outside the dropdown 
@@ -52,14 +63,25 @@ export const LanguageSelector: React.FC = () => {
         setIsOpen(false);
       }
     }
-    document.addEventListener("mousedown", handleClickOutside);
+    // Only add listener if dropdown can be opened (i.e., not forced)
+    if (!isForced) { 
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      // Ensure dropdown is closed if language becomes forced while it's open
+      setIsOpen(false); 
+    }
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [dropdownRef]);
+  // Add isForced to dependencies
+  }, [dropdownRef, isForced]); 
 
-  // Function to get the correct flag/icon based on current language (from i18n instance)
   const renderCurrentLanguageIcon = () => {
+    // If forced, show globe icon
+    if (isForced) { 
+      return <GlobeIcon />;
+    }
+    // Otherwise, show the flag
     const currentLang = language;
     if (currentLang.startsWith('it')) { 
       return <ItFlag />;
@@ -70,46 +92,74 @@ export const LanguageSelector: React.FC = () => {
     }
   };
 
+  const handleButtonClick = () => {
+    if (isForced) {
+      setShowInfoPopup(true);
+    } else {
+      setIsOpen(!isOpen);
+    }
+  };
+
+  const handleClosePopup = () => {
+    setShowInfoPopup(false);
+  };
+
+  const popupData: MegoPopupData = {
+    isOpen: showInfoPopup,
+    message: t('forcedLanguageTooltip', 'core'),
+    title: t('forcedLanguageTitle', 'core'),
+    modality: PopupModality.Info
+  };
+
   return (
-    <div className="language-selector-container" ref={dropdownRef}>
-      <div>
-        {/* Button to toggle dropdown */} 
-        <button
-          type="button"
-          className="language-selector-button"
-          id="options-menu"
-          aria-haspopup="true"
-          aria-expanded={isOpen}
-          onClick={() => setIsOpen(!isOpen)}
-        >
-          {renderCurrentLanguageIcon()}
-        </button>
+    <>
+      <div 
+        className={`language-selector-container ${isForced ? 'forced' : ''}`} 
+        ref={dropdownRef}
+        style={isForced ? { opacity: 0.6, cursor: 'pointer' } : {}}
+      >
+        <div>
+          <button
+            type="button"
+            className="language-selector-button"
+            id="options-menu"
+            aria-haspopup="true"
+            aria-expanded={isOpen}
+            onClick={handleButtonClick}
+          >
+            {renderCurrentLanguageIcon()}
+          </button>
+        </div>
+
+        {isOpen && !isForced && ( 
+          <div
+            className="language-selector-dropdown"
+            role="menu"
+            aria-orientation="vertical"
+            aria-labelledby="options-menu"
+          >
+            <div role="none">
+              {languages.map((lang) => (
+                <button
+                  key={lang.code}
+                  onClick={() => changeLanguage(lang.code)}
+                  className={`language-selector-option ${ 
+                    language.startsWith(lang.code) ? 'selected' : '' 
+                  }`}
+                  role="menuitem"
+                >
+                  {lang.name}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
 
-      {/* Dropdown menu */} 
-      {isOpen && (
-        <div
-          className="language-selector-dropdown"
-          role="menu"
-          aria-orientation="vertical"
-          aria-labelledby="options-menu"
-        >
-          <div role="none">
-            {languages.map((lang) => (
-              <button
-                key={lang.code}
-                onClick={() => changeLanguage(lang.code)}
-                className={`language-selector-option ${ 
-                  language.startsWith(lang.code) ? 'selected' : '' 
-                }`}
-                role="menuitem"
-              >
-                {lang.name}
-              </button>
-            ))}
-          </div>
-        </div>
-      )}
-    </div>
+      <MegoPopup 
+        popupData={popupData}
+        onClose={handleClosePopup} 
+      />
+    </>
   );
 };

@@ -6,6 +6,7 @@ interface UseLanguageReturn {
   language: SupportedLanguage;
   changeLanguage: (lang: SupportedLanguage) => void;
   t: (key: string, namespace?: 'core' | 'wallet' | 'payments') => string;
+  isForced: boolean;
 }
 
 export const useLanguage = (): UseLanguageReturn => {

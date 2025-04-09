@@ -38,6 +38,7 @@ interface LanguageContextProps {
   language: SupportedLanguage;
   changeLanguage: (lang: SupportedLanguage) => void;
   t: (key: string, namespace?: keyof TranslationResources) => string;
+  isForced: boolean;
 }
 
 
@@ -47,6 +48,7 @@ export const LanguageContext = createContext<LanguageContextProps | undefined>(u
 interface LanguageProviderProps {
   children: React.ReactNode;
   defaultLanguage?: SupportedLanguage;
+  forcedLanguage?: SupportedLanguage;
 }
 
 // Key for localStorage (save language preference)
@@ -55,25 +57,36 @@ const LOCAL_STORAGE_KEY = 'mego-language';
 
 export const LanguageProvider: React.FC<LanguageProviderProps> = ({ 
   children,
-  defaultLanguage = 'en' 
+  defaultLanguage = 'en', 
+  forcedLanguage
 }) => {
-  const [language, setLanguage] = useState<SupportedLanguage>(defaultLanguage);
+  const isActuallyForced = !!forcedLanguage && !!resources[forcedLanguage];
+  
+  const initialLang = isActuallyForced ? forcedLanguage : defaultLanguage;
+  const [language, setLanguage] = useState<SupportedLanguage>(initialLang);
 
   useEffect(() => {
-    const storedLanguage = localStorage.getItem(LOCAL_STORAGE_KEY) as SupportedLanguage | null;
-    if (storedLanguage && resources[storedLanguage]) {
-      setLanguage(storedLanguage);
-    } else {
-      setLanguage(defaultLanguage);
-      localStorage.setItem(LOCAL_STORAGE_KEY, defaultLanguage);
+    if (!isActuallyForced) {
+      const storedLanguage = localStorage.getItem(LOCAL_STORAGE_KEY) as SupportedLanguage | null;
+      if (storedLanguage && resources[storedLanguage]) {
+        setLanguage(storedLanguage);
+      } else {
+        setLanguage(defaultLanguage);
+        localStorage.setItem(LOCAL_STORAGE_KEY, defaultLanguage);
+      }
     }
-  }, [defaultLanguage]); 
+    else if (language !== forcedLanguage) {
+      setLanguage(forcedLanguage);
+    }
+  }, [defaultLanguage, forcedLanguage, language]);
 
 
   const changeLanguage = useCallback((lang: SupportedLanguage) => {
-    setLanguage(lang);
-    localStorage.setItem(LOCAL_STORAGE_KEY, lang);
-  }, []);
+    if (!isActuallyForced) {
+      setLanguage(lang);
+      localStorage.setItem(LOCAL_STORAGE_KEY, lang);
+    }
+  }, [isActuallyForced]);
 
   const t = useCallback((key: string, namespace: keyof TranslationResources = 'core'): string => {
     const nsResources = resources[language]?.[namespace];
@@ -90,10 +103,16 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({
   }, [language]); 
 
   
-  const contextValue = useMemo(() => ({ language, changeLanguage, t }), [
+  const contextValue = useMemo(() => ({
     language,
     changeLanguage,
     t,
+    isForced: isActuallyForced
+  }), [
+    language,
+    changeLanguage,
+    t,
+    isActuallyForced
   ]);
 
   return (
