@@ -15,7 +15,7 @@ const BuyTicketWithStripe = () => {
     const [isProcessing, setIsProcessing] = useState<boolean>(false);
     const { address } = useAccount();
     const [message, setMessage] = useState<string>("");
-    const { t } = useLanguage()
+    const { t, language } = useLanguage()
     const [waitForPaymentConfirmation, setWaitForPaymentConfirmation] = useState<boolean>(false);
     const [isCanceledAllowed, setIsCanceledAllowed] = useState<boolean>(true);
 
@@ -124,7 +124,7 @@ const BuyTicketWithStripe = () => {
             // Crea gli elementi Stripe con il client secret
             const elements = stripe.elements({
                 clientSecret,
-                locale: "en",
+                locale: language ?? "en",
                 appearance: {
                     variables: {
                         fontFamily: "Sohne, system-ui, sans-serif",
