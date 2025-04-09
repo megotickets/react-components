@@ -1,13 +1,18 @@
 import React from 'react';
+import { useLanguage } from '../hooks/useLanguage';
 
 interface LoaderProps {
   message?: string;
   fullScreen?: boolean;
 }
 
-export const Loader: React.FC<LoaderProps> = ({ 
-  message = "Loading, please wait...",  
+export const Loader: React.FC<LoaderProps> = ({
+  message,
 }) => {
+  const { t } = useLanguage();
+
+  const displayMessage = message || t('loadingMessage', 'core');
+
   return (
     <div style={{ 
       display: 'flex',
@@ -22,7 +27,7 @@ export const Loader: React.FC<LoaderProps> = ({
         boxShadow: '0 -1px 0 rgba(255, 255, 255, 1)',
         animation: 'spin 1s linear infinite'
       }}></div>
-      <p className="mego-font-medium" style={{ marginTop: '16px', color: 'white' }}>{message}</p>
+      <p className="mego-font-medium" style={{ marginTop: '16px', color: 'white' }}>{displayMessage}</p>
       
       <style>{`
         @keyframes spin {

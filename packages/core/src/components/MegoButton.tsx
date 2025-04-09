@@ -1,5 +1,6 @@
 import React, { ButtonHTMLAttributes } from 'react';
 import '../css/index.css';
+import { useLanguage } from '../hooks/useLanguage';
 
 interface MegoButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   isProcessing?: boolean;
@@ -16,6 +17,10 @@ export const MegoButton: React.FC<MegoButtonProps> = ({
   type = 'button',
   ...restProps
 }) => {
+  const { t } = useLanguage();
+
+  const displayProcessingText = processingText || t('processing', 'core');
+
   return (
     <button
       onClick={onClick}
@@ -24,7 +29,7 @@ export const MegoButton: React.FC<MegoButtonProps> = ({
       type={type}
       {...restProps}
     >
-      {isProcessing ? processingText : children}
+      {isProcessing ? displayProcessingText : children}
     </button>
   );
 };
