@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useWeb3Context } from "./web3-context";
 import EyeIcon from "./icons/EyeIcon";
-import { MegoButton } from "@megotickets/core";
+import { MegoButton, useLanguage } from "@megotickets/core";
 
 
 
@@ -22,12 +22,12 @@ const RegisterSection = () => {
       e.preventDefault();
       createNewWallet(email, password);
     };
-  
+    const { t } = useLanguage();
     return (
   
       <>
         <h5 className="mego-login-text mego-font-medium" style={{ marginTop: '10px' }}>
-          Type your e-mail address and Password to register
+          {t("registerPlaceholder", "wallet")}
         </h5>
   
         <form
@@ -38,20 +38,20 @@ const RegisterSection = () => {
           <input
             className="mego-input"
             id="email"
-            placeholder="E-mail address..."
+            placeholder={t("emailPlaceholder", "wallet")}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             type="email"
             name="email"
             required
-            title="Insert a valid email"
+            title={t("emailError", "wallet")}
           />
   
           <div style={{ position: 'relative', width: '100%' }}>
             <input
               className="mego-input"
               id="password"
-              placeholder="Password..."
+              placeholder={t("passwordPlaceholder", "wallet")}
               type={showPassword ? "text" : "password"}
               name="password"
               value={password}
@@ -77,8 +77,7 @@ const RegisterSection = () => {
             className="mego-login-text font-satoshi"
             style={{ marginTop: 10, marginBottom: 10, fontSize: 11 }}
           >
-            Password must contain at least 8 characters, including one uppercase
-            letter, one lowercase letter, and one number
+            {t("passwordError", "wallet")}
           </p>
   
           <MegoButton
@@ -86,7 +85,7 @@ const RegisterSection = () => {
             type="submit"
             style={{ maxWidth: 200 }}
           >
-            <p className="mego-font-medium font-satoshi">REGISTER</p>
+            <p className="mego-font-medium font-satoshi">{t("register", "wallet")}</p>
           </MegoButton>
         </form>
       </>

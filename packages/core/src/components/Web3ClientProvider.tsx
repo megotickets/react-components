@@ -7,7 +7,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useState } from 'react';
 import { CustomizationProvider } from './CustomizationProvider';
 import { getDefaultConfig, RainbowKitProvider } from '@rainbow-me/rainbowkit'
-
+import { LanguageProvider } from '../context/LanguageContext';
 
 export const config = getDefaultConfig({
   appName: 'Mego Wallet',
@@ -28,7 +28,9 @@ export interface Web3ProviderProps {
   children: React.ReactNode;
 }
 
-export function Web3ClientProvider({ children }: Web3ProviderProps) {
+export function Web3ClientProvider({ 
+  children 
+}: Web3ProviderProps) {
   const [queryClient] = useState(
     () =>
       new QueryClient({
@@ -43,16 +45,18 @@ export function Web3ClientProvider({ children }: Web3ProviderProps) {
   );
 
   return (
-    <CustomizationProvider>
-      <QueryClientProvider client={queryClient}>
-        {/* @ts-ignore */}
-        <WagmiProvider config={config}>
-          <RainbowKitProvider>
-            {/* @ts-ignore */}
-            {children}
-          </RainbowKitProvider>
-        </WagmiProvider>
-      </QueryClientProvider>
-    </CustomizationProvider>
+    <LanguageProvider defaultLanguage="en">
+      <CustomizationProvider>
+        <QueryClientProvider client={queryClient}>
+          {/* @ts-ignore */}
+          <WagmiProvider config={config}>
+            <RainbowKitProvider>
+              {/* @ts-ignore */}
+              {children}
+            </RainbowKitProvider>
+          </WagmiProvider>
+        </QueryClientProvider>
+      </CustomizationProvider>
+    </LanguageProvider>
   );
 } 

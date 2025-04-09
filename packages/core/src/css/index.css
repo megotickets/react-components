@@ -64,3 +64,88 @@
   gap: 16px;
   padding: 8px;
 }
+
+/* --- Language Selector Styles --- */
+
+/* Container principale del LanguageSelector */
+.language-selector-container {
+  position: relative;
+  display: inline-block;
+  text-align: left;
+  font-family: 'Satoshi', -apple-system, BlinkMacSystemFont, sans-serif; /* Usa lo stesso font */
+}
+
+/* Bottone principale che mostra la bandiera */
+.language-selector-button {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: auto; /* Non full width */
+  padding: 8px 12px; /* Padding ridotto */
+  border-radius: 50px; /* Coerente con mego-button */
+  border: 1px solid #ddd; /* Bordo semplice */
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  cursor: pointer;
+  transition: background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.language-selector-button:hover {
+  background-color: #f8f8f8;
+  border-color: #ccc;
+}
+
+.language-selector-button:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(134, 255, 232, 0.3); /* Glow simile a mego-button */
+}
+
+/* Icona (bandiera/fallback) nel bottone */
+.language-selector-button svg {
+  width: 24px; /* Dimensione bandiera */
+  height: 16px;
+}
+
+/* Menu dropdown */
+.language-selector-dropdown {
+  position: absolute;
+  /* Posizionamento (semplificato rispetto a Tailwind) */
+  left: 100%; 
+  top: 0;
+  margin-left: 8px; /* Simile a ml-2 */
+  width: 224px; /* Simile a w-56 */
+  margin-top: 0; 
+  border-radius: 8px; /* Simile a rounded-md */
+  background-color: #fff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Simile a shadow-lg */
+  border: 1px solid rgba(0, 0, 0, 0.05); /* Simile a ring-1 */
+  z-index: 10;
+  padding: 4px 0; /* Simile a py-1 */
+  overflow: hidden;
+}
+
+/* Opzione lingua nel dropdown */
+.language-selector-option {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 8px 16px; /* Simile a px-4 py-2 */
+  font-size: 14px; /* Simile a text-sm */
+  color: #333; /* Simile a text-gray-700 */
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.language-selector-option:hover {
+  background-color: #f3f4f6; /* Simile a hover:bg-gray-100 */
+  color: #111; /* Simile a hover:text-gray-900 */
+}
+
+.language-selector-option.selected {
+  background-color: #f3f4f6; /* Simile a bg-gray-100 */
+  color: #111; /* Simile a text-gray-900 */
+  font-weight: 500;
+}
+/* --- End Language Selector Styles --- */

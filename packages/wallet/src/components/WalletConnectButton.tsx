@@ -3,7 +3,7 @@ import { ConnectWallet, MegoButton } from "@megotickets/core";
 import { useWeb3Context } from "./web3-context";
 import "../css/mego-style.css";
 import WalletConnectIcon from "./icons/WalletConnect";
-import { useCustomization } from "@megotickets/core";
+import { useCustomization, useLanguage } from "@megotickets/core";
 
 interface WalletConnectStatusProps {
   account?: any;
@@ -27,6 +27,8 @@ const WalletConnectStatus: React.FC<WalletConnectStatusProps> = ({
   loggedAs,
 }) => {
   const { style } = useCustomization();
+  const { t } = useLanguage();
+
   if (!mounted || authenticationStatus === "loading") {
     return (
       <button className="mego-modal-button">
@@ -45,7 +47,7 @@ const WalletConnectStatus: React.FC<WalletConnectStatusProps> = ({
           <MegoButton className="chooseType-btn" onClick={openConnectModal} style={{ ...style?.modalStyle?.buttonStyle }}>
             <div className="chooseType-btn-content">
               <WalletConnectIcon width={17} style={{ marginRight: '0.5rem' }} />
-              <p className="mego-font-medium font-satoshi">WALLET CONNECT</p>
+              <p className="mego-font-medium font-satoshi">{t('walletConnect', 'wallet')}</p>
             </div>
           </MegoButton>
       }

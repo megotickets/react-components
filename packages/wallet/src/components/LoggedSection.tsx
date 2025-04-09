@@ -1,4 +1,4 @@
-import { MegoButton } from "@megotickets/core";
+import { MegoButton, useLanguage } from "@megotickets/core";
 import CopyIcon from "./icons/CopyIcon";
 import DisconnectIcon from "./icons/DisconnectIcon";
 import ExportKeyIcon from "./icons/ExportKeyIcon";
@@ -11,6 +11,7 @@ const LoggedSection: React.FC<{ logout: () => void }> = ({ logout }) => {
       requestExportPrivateKeyWithApple,
       openMegoModal }
       = useWeb3Context();
+    const { t } = useLanguage();
   
     const exported = new URLSearchParams(window.location.search).get("exported");
     const privateKeyVisible = new URLSearchParams(window.location.search).get("privateKeyVisible");
@@ -26,7 +27,7 @@ const LoggedSection: React.FC<{ logout: () => void }> = ({ logout }) => {
     const handleCopyAddress = () => {
       if (loggedAs) {
         navigator.clipboard.writeText(loggedAs);
-        alert("Address copied to clipboard");
+        alert(t("addressCopied", "wallet"));
       }
     };
   
@@ -59,7 +60,7 @@ const LoggedSection: React.FC<{ logout: () => void }> = ({ logout }) => {
         <MegoButton className="chooseType-btn" onClick={handleCopyAddress}>
           <div className="chooseType-btn-content">
             <CopyIcon height={16} width={16} style={{ marginRight: '0.5rem', height: '1.5rem', width: '1.5rem' }} />
-            <p className="mego-font-medium font-satoshi">Copy address</p>
+            <p className="mego-font-medium font-satoshi">{t("copyAddress", "wallet")}</p>
           </div>
         </MegoButton>
   
@@ -71,7 +72,7 @@ const LoggedSection: React.FC<{ logout: () => void }> = ({ logout }) => {
               <ExportKeyIcon
                 style={{ marginRight: '0.5rem', height: '1.5rem', width: '1.5rem' }}
               />
-              <p className="mego-font-medium font-satoshi">Export private key</p>
+              <p className="mego-font-medium font-satoshi">{t("exportPrivateKey", "wallet")}</p>
             </div>
           </MegoButton>
         }
@@ -81,7 +82,7 @@ const LoggedSection: React.FC<{ logout: () => void }> = ({ logout }) => {
             <DisconnectIcon
               style={{ marginRight: '0.5rem', height: '1.5rem', width: '1.5rem' }}
             />
-            <p className="mego-font-medium font-satoshi">Disconnect</p>
+            <p className="mego-font-medium font-satoshi">{t("disconnect", "wallet")}</p>
           </div>
         </MegoButton>
       </div>

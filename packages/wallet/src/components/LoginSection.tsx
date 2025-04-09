@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useWeb3Context } from "./web3-context";
 import EyeIcon from "./icons/EyeIcon";
 import EyeOffIcon from "./icons/EyeOffIcon";
-import { MegoButton } from "@megotickets/core"; 
+import { MegoButton, useLanguage } from "@megotickets/core"; 
 
 
 
@@ -17,10 +17,12 @@ const LoginSection = () => {
         loginWithEmail(email, password);
     };
 
+    const { t } = useLanguage();
+
     return (
         <>
             <h5 className="mego-login-text mego-font-medium" style={{ marginTop: '10px' }}>
-                Type your e-mail address and Password to login
+                {t("loginTitle", "wallet")}
             </h5>
             <form
                 onSubmit={handleLogin}
@@ -30,7 +32,7 @@ const LoginSection = () => {
                 <input
                     className="mego-input"
                     id="email"
-                    placeholder="E-mail address..."
+                    placeholder={t("emailPlaceholder", "wallet")}
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     type="email"
@@ -43,14 +45,14 @@ const LoginSection = () => {
                     <input
                         className="mego-input"
                         id="password"
-                        placeholder="Password..."
+                        placeholder={t("passwordPlaceholder", "wallet")}
                         type={showPassword ? "text" : "password"}
                         name="password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         required
                         pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
-                        title="Password must contain at least 8 characters, including one uppercase letter, one lowercase letter, and one number"
+                        title={t("passwordError", "wallet")}
                     />
                     <span
                         onClick={() => setShowPassword(!showPassword)}
@@ -71,7 +73,7 @@ const LoginSection = () => {
                     type="submit"
                     style={{ maxWidth: 200 }}
                 >
-                    <p className="mego-font-medium font-satoshi">LOGIN</p>
+                    <p className="mego-font-medium font-satoshi">{t("login", "wallet")}</p>
                 </MegoButton>
             </form>
         </>

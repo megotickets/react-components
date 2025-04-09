@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { useWeb3Context } from "./web3-context";
-import { MegoButton } from "@megotickets/core";
+import { MegoButton, useLanguage } from "@megotickets/core";
 
 const PrivateKeySection = () => {
   const { privateKey, provider, loggedAs } = useWeb3Context();
   const [timer, setTimer] = useState(5);
-
+  const { t } = useLanguage();
   const handleCopyPrivateKey = () => {
     if (privateKey) {
       navigator.clipboard.writeText(privateKey);
-      alert("Private key copied to clipboard");
+      alert(t("privateKeyCopied", "wallet"));
     }
     comeBackToOrigin();
   }
@@ -41,12 +41,12 @@ const PrivateKeySection = () => {
       <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', gap: '1rem' }}>
         <div className="chooseType-btn-container">
           <MegoButton className="chooseType-btn" onClick={handleCopyPrivateKey}>
-            <p className="mego-font-medium font-satoshi">Copy private key</p>
+            <p className="mego-font-medium font-satoshi">{t("copyPrivateKey", "wallet")}</p>
           </MegoButton>
         </div>
         <div className="chooseType-btn-container">
           <MegoButton className="chooseType-btn" onClick={comeBackToOrigin}>
-              <p className="mego-font-medium font-satoshi">{`Close (auto close in ${Math.max(timer, 0)}s)`}</p>
+              <p className="mego-font-medium font-satoshi">{`${t("close", "wallet")} (${Math.max(timer, 0)}s)`}</p>
           </MegoButton>
         </div>
       </div>

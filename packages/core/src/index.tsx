@@ -12,3 +12,7 @@ export { signMessageWithApple, signMessageWithGoogle, signMessageWithPopupApple,
 export { MegoPopup } from './components/MegoPopup';
 export type { MegoPopupData } from './interfaces/MegoPopupData';
 export { MegoButton } from './components/MegoButton';
+
+// --- Language System Exports ---
+export { useLanguage } from './hooks/useLanguage';
+export { LanguageSelector } from './components/LanguageSelector';

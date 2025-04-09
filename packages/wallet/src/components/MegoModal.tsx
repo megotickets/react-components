@@ -4,7 +4,7 @@ import ArrowBackIcon from "./icons/ArrowBackIcon";
 import CrossIcon from "./icons/CrossIcon";
 import MegoIcon from "./icons/MegoIcon";
 import MegoLetter from "./icons/MegoLetter";
-import { Loader, useCustomization } from "@megotickets/core";
+import { Loader, useCustomization, LanguageSelector, useLanguage } from "@megotickets/core";
 import "../css/mego-style.css";
 import LoggedSection from "./LoggedSection";
 import ExportPrivateKeySection from "./ExportPrivateKeySection";
@@ -15,6 +15,7 @@ import LoginSection from "./LoginSection";
 import RegisterSection from "./RegisterSection";
 import EmailSection from "./EmailSection";
 import ChooseTypeSection from "./ChooseTypeSection";
+
 interface MegoModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -23,8 +24,8 @@ interface MegoModalProps {
 export function MegoModal({ isOpen, onClose }: MegoModalProps) {
   const [isClosing, setIsClosing] = useState(false);
   const {isLoading,loggedAs,logout,section,setSection,prevSection, setPrevSection} = useWeb3Context(); // Aggiungi il contesto per il loading
-
   const { style } = useCustomization();
+  const { t } = useLanguage();
 
   useEffect(() => {
     if (isOpen) {
@@ -110,6 +111,9 @@ export function MegoModal({ isOpen, onClose }: MegoModalProps) {
             <MegoLetter height={13} style={{ marginRight: '0.5rem', marginTop: '0.5rem' }} />
           </div>
           <div className="mego-modal-buttons">
+            <div style={{ marginRight: '0.5rem', marginTop: '0.2rem'}}>
+              <LanguageSelector />
+            </div>
             {
               prevSection && !loggedAs &&
               <div onClick={() => setNewSection(prevSection)} style={{ marginRight: '0.5rem', marginTop: '0.5rem', cursor: 'pointer' }}>
@@ -130,7 +134,7 @@ export function MegoModal({ isOpen, onClose }: MegoModalProps) {
             }}
           >
             <div className="mego-modal-title mego-font-medium font-satoshi" style={{ marginBottom: '0.5rem' }}>
-              {section === "Register" ? "REGISTER" : "LOGIN"}
+              {t(section === "Register" ? 'registerTitle' : 'loginTitle', 'wallet')}
             </div>
 
             {isLoading ? <div style={{ marginTop: '1rem', marginBottom: '1rem' }}><Loader /></div> : (

@@ -1,4 +1,4 @@
-import { MegoButton, useCustomization } from "@megotickets/core";
+import { MegoButton, useCustomization, useLanguage } from "@megotickets/core";
 import AppleIcon from "./icons/AppleIcon";
 import EmailIcon from "./icons/EmailIcon";
 import GoogleIcon from "./icons/GoogleIcon";
@@ -10,6 +10,8 @@ type SectionBaseProps = { setSection: (route: Route) => void };
 const ChooseTypeSection: React.FC<SectionBaseProps> = ({ setSection }) => {
   const { redirectToAppleLogin, redirectToGoogleLogin } = useWeb3Context();
   const { style, providerConfiguration } = useCustomization();
+  const { t } = useLanguage();
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
       <div className="chooseType-btn-container" >
@@ -27,7 +29,7 @@ const ChooseTypeSection: React.FC<SectionBaseProps> = ({ setSection }) => {
                   <div style={{ marginRight: '0.5rem' }}>
                     <AppleIcon height={13} width={11} />
                   </div>
-                  <p className="mego-font-medium font-satoshi">APPLE ACCOUNT</p>
+                  <p className="mego-font-medium font-satoshi">{t('appleAccount', 'wallet')}</p>
                 </div>
               </MegoButton>
               : <div></div>
@@ -47,7 +49,7 @@ const ChooseTypeSection: React.FC<SectionBaseProps> = ({ setSection }) => {
               >
                 <div className="chooseType-btn-content">
                   <GoogleIcon width={17} style={{ marginRight: '0.5rem' }} />
-                  <p className="mego-font-medium font-satoshi">GOOGLE ACCOUNT</p>
+                  <p className="mego-font-medium font-satoshi">{t('googleAccount', 'wallet')}</p>
                 </div>
               </MegoButton>
               : <div></div>
@@ -70,7 +72,7 @@ const ChooseTypeSection: React.FC<SectionBaseProps> = ({ setSection }) => {
 
                 <div className="chooseType-btn-content">
                   <EmailIcon width={30} />
-                  <p className="mego-font-medium font-satoshi">E-MAIL</p>
+                  <p className="mego-font-medium font-satoshi">{t('email', 'wallet')}</p>
                 </div>
 
               </MegoButton>
