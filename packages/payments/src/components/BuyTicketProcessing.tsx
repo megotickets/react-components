@@ -1,18 +1,17 @@
 import { useEffect, useMemo, useState } from "react";
 import { useBuyTicketContext } from "../context/BuyTicketContext";
 import { askPaymentDetails, cleanMegoPendingClaimProcessing } from "../utils/BuyTicketUtils";
-import { useAccount } from '@megotickets/core';
+import { useAccount, useLanguage } from '@megotickets/core';
 import { Messages } from "../interfaces/messages-enums";
 import { Loader } from '@megotickets/core';
 import { PopupModality } from "../interfaces/popup-enum";
 import { Stepper } from "../interfaces/interface-stepper";
 import "../css/pay.css";
-import { useTranslation } from "react-i18next";
 
 export const BuyTicketProcessing = () => {
     const { eventDetails, emailOfBuyer, openPopup, resetPaymentProcessing, setStepper, setPaymentsDetails, processor, discountCode } = useBuyTicketContext()
     const { address } = useAccount()
-    const { t } = useTranslation()
+    const { t } = useLanguage()
 
     const [message, setMessage] = useState<string>(t('processing', 'payments'))
     let count = 0;
