@@ -43,25 +43,38 @@ interface LanguageContextProps {
 
 export const LanguageContext = createContext<LanguageContextProps | undefined>(undefined);
 
-// Define props for the provider
+
 interface LanguageProviderProps {
   children: React.ReactNode;
   defaultLanguage?: SupportedLanguage;
 }
 
-// Create the provider component
+// Key for localStorage (save language preference)
+const LOCAL_STORAGE_KEY = 'mego-language'; 
+
+
 export const LanguageProvider: React.FC<LanguageProviderProps> = ({ 
   children,
   defaultLanguage = 'en' 
 }) => {
   const [language, setLanguage] = useState<SupportedLanguage>(defaultLanguage);
 
-  // Function to change language
+  useEffect(() => {
+    const storedLanguage = localStorage.getItem(LOCAL_STORAGE_KEY) as SupportedLanguage | null;
+    if (storedLanguage && resources[storedLanguage]) {
+      setLanguage(storedLanguage);
+    } else {
+      setLanguage(defaultLanguage);
+      localStorage.setItem(LOCAL_STORAGE_KEY, defaultLanguage);
+    }
+  }, [defaultLanguage]); 
+
+
   const changeLanguage = useCallback((lang: SupportedLanguage) => {
     setLanguage(lang);
+    localStorage.setItem(LOCAL_STORAGE_KEY, lang);
   }, []);
 
-  // Memoized translation function
   const t = useCallback((key: string, namespace: keyof TranslationResources = 'core'): string => {
     const nsResources = resources[language]?.[namespace];
     if (!nsResources) {
