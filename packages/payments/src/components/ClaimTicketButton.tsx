@@ -1,7 +1,7 @@
 import React, { useMemo } from "react";
 import { useBuyTicketContext } from "../context/BuyTicketContext";
 import { Stepper } from "../interfaces/interface-stepper";
-import { useAccount } from "@megotickets/core";
+import { useAccount, useLanguage } from "@megotickets/core";
 import "../css/pay.css";
 
 interface ClaimTicketButtonProps {
@@ -13,14 +13,14 @@ interface ClaimTicketButtonProps {
 
 
 export const ClaimTicketButton: React.FC<ClaimTicketButtonProps> = ({
-  buttonText = "Acquista Biglietto",
+  buttonText,
   eventDetails,
   overrideButton
 }) => {
 
   const { setIsOpen, setEventDetails, resetPaymentProcessing, stepper } = useBuyTicketContext();
   const { address } = useAccount();
-
+  const { t } = useLanguage()
 
   const handleOpenModal = () => {
     if (stepper === Stepper.Claim) {
@@ -63,7 +63,7 @@ export const ClaimTicketButton: React.FC<ClaimTicketButtonProps> = ({
         onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#111'}
         onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#000'}
       >
-        {buttonText}
+        {buttonText || t('buyTicket', 'payments')}
       </div>
     </div>
   );

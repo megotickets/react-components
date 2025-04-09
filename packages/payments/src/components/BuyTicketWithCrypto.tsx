@@ -2,7 +2,7 @@ import { useBuyTicketContext } from "@/context/BuyTicketContext";
 import { Stepper } from "@/interfaces/interface-stepper";
 import { PopupModality } from "@/interfaces/popup-enum";
 import { checkPayment, checkUserBalance, getDecimals, getPayment, resolveProcessor, switchNetwork } from "@/utils/BuyTicketUtils";
-import { Loader, switchChain, useAccount, createWalletClient, config, waitForTransactionReceipt } from "@megotickets/core";
+import { Loader, switchChain, useAccount, useLanguage, config, waitForTransactionReceipt } from "@megotickets/core";
 import { useEffect, useState } from "react";
 import { useSendTransaction, ethers, useWaitForTransactionReceipt, writeContract } from "@megotickets/core";
 import { erc20ABI } from "@/contracts/ABIErc20";
@@ -17,15 +17,15 @@ const BuyTicketWithCrypto = () => {
     const { isLoading: isConfirming, isSuccess: isConfirmed } = useWaitForTransactionReceipt({ hash })
 
     let count = 0;
-
+    const { t } = useLanguage()
     const waitBackendConfirmationOfPayment = async () => {
         try {
-            setMessage("Waiting for payment confirmation...")
+            setMessage(t('waitingForPaymentConfirmation', 'payments'))
             const uuid = paymentsDetails?.payment?.paymentId;
             if (uuid) {
-                setMessage("Getting payment details...")
+                setMessage(t('gettingPaymentDetails', 'payments'))
                 const payment = await getPayment(uuid);
-                console.log('payment', payment);
+                console.log('payment', payment);    
                 if (payment.error == false) {
                     console.log("Payment details found! .. check payment status")
                     //Check if payment is completed
@@ -42,8 +42,8 @@ const BuyTicketWithCrypto = () => {
                     }, 5000);
                 } else {
                     openPopup({
-                        title: 'Error',
-                        message: `Error waiting for payment confirmation: ${payment.message || 'Unknown error'}`,
+                        title: t('error', 'payments'),
+                        message: t('errorWaitingForPaymentConfirmation', 'payments') + payment.message || t('unknownError', 'payments'),
                         modality: PopupModality.Error,
                         isOpen: true
                     });
@@ -53,8 +53,8 @@ const BuyTicketWithCrypto = () => {
             } else {
                 console.log("uuid non trovato")
                 openPopup({
-                    title: 'Error',
-                    message: `Error waiting for payment confirmation: uuid not found`,
+                    title: t('error', 'payments'),
+                    message: t('errorWaitingForPaymentConfirmation', 'payments') + ' uuid not found',
                     modality: PopupModality.Error,
                     isOpen: true
                 });
@@ -63,7 +63,7 @@ const BuyTicketWithCrypto = () => {
             }
         } catch (error: any) {
             console.error("Error waiting for payment confirmation:", error);
-            openPopup({ title: 'Error', message: `Error waiting for payment confirmation: ${error.message || 'Unknown error'}`, modality: PopupModality.Error, isOpen: true });
+            openPopup({ title: t('error', 'payments'), message: t('errorWaitingForPaymentConfirmation', 'payments') + error.message || t('unknownError', 'payments'), modality: PopupModality.Error, isOpen: true });
             resetPaymentProcessing()
             setIsProcessing(false);
         } finally {
@@ -76,7 +76,7 @@ const BuyTicketWithCrypto = () => {
         try {
             const contract_address = processor?.split(":")[2];
             if (!contract_address) {
-                openPopup({ title: 'Error', message: 'Unable to retrieve the erc20 token contract address', modality: PopupModality.Error, isOpen: true });
+                openPopup({ title: t('error', 'payments'), message: t('unableToRetrieveTheErc20TokenContractAddress', 'payments'), modality: PopupModality.Error, isOpen: true });
                 resetPaymentProcessing();
                 setIsProcessing(false);
                 return;
@@ -96,18 +96,18 @@ const BuyTicketWithCrypto = () => {
                 account: address,
             });
             console.log('tx', tx);
-            setMessage("Waiting for transaction confirmation...");
+            setMessage(t('waitingForTransactionConfirmation', 'payments'));
             const transactionReceipt = await waitForTransactionReceipt(config, { 
                 hash: tx, 
                 //@ts-ignore
                 chainId: chainId 
             });
             console.log('transactionReceipt', transactionReceipt);
-            setMessage("Transaction confirmed!");
+            setMessage(t('transactionConfirmed', 'payments'));
             waitBackendConfirmationOfPayment();
         } catch (error: any) {
             console.error("Error in payment with erc20 token:", error);
-            openPopup({ title: 'Error', message: `Error in payment with erc20 token`, modality: PopupModality.Error, isOpen: true });
+            openPopup({ title: t('error', 'payments'), message: t('errorInPaymentWithErc20Token', 'payments'), modality: PopupModality.Error, isOpen: true });
             resetPaymentProcessing();
             setIsProcessing(false);
         }
@@ -116,7 +116,7 @@ const BuyTicketWithCrypto = () => {
     // Funzione per pagare con criptovalute native (ETH, MATIC, ecc.)
     const payWithNativeCrypto = async () => {
         // Opening metamask modal for payment
-        setMessage("Please confirm the operation in your wallet...");
+        setMessage(t('pleaseConfirmTheOperationInYourWallet', 'payments'));
         const to = paymentsDetails?.payment?.payment_intent;
         const value = ethers.parseEther(paymentsDetails?.payment?.amount.toString());
         // Invia la transazione
@@ -125,31 +125,31 @@ const BuyTicketWithCrypto = () => {
 
     const payWithCrypto = async () => {
         if (!address) {
-            openPopup({ title: 'Error', message: 'Please connect your wallet', modality: PopupModality.Error, isOpen: true });
+            openPopup({ title: t('error', 'payments'), message: t('pleaseConnectYourWallet', 'payments'), modality: PopupModality.Error, isOpen: true });
             return;
         }
         setIsProcessing(true);
-        setMessage("Processing payment...");
+        setMessage(t('processingPayment', 'payments'));
         await new Promise(resolve => setTimeout(resolve, 1000));
 
         //Check user has enough balance
         const { balance, formattedBalance, success, reason } = await checkUserBalance(address, processor);
         if (!success) {
-            openPopup({ title: 'Error', message: reason || 'Unknown error', modality: PopupModality.Error, isOpen: true });
+            openPopup({ title: t('error', 'payments'), message: reason || t('unknownError', 'payments'), modality: PopupModality.Error, isOpen: true });
             return;
         }
 
         //Switch to the correct network
         const chainId = resolveProcessor(processor || "");
         if (chainId == -1) {
-            openPopup({ title: 'Error', message: `Unable to switch to the network ${processor}`, modality: PopupModality.Error, isOpen: true });
+            openPopup({ title: t('error', 'payments'), message: t('unableToSwitchToTheNetwork', 'payments') + processor, modality: PopupModality.Error, isOpen: true });
             resetPaymentProcessing();
             setIsProcessing(false);
             return;
         }
         const networkChanged = await switchNetwork(chainId);
         if (!networkChanged) {
-            openPopup({ title: 'Error', message: `Unable to switch to the network ${processor}`, modality: PopupModality.Error, isOpen: true });
+            openPopup({ title: t('error', 'payments'), message: t('unableToSwitchToTheNetwork', 'payments') + processor, modality: PopupModality.Error, isOpen: true });
             resetPaymentProcessing();
             setIsProcessing(false);
             return;
@@ -166,15 +166,15 @@ const BuyTicketWithCrypto = () => {
     //await hash
     useEffect(() => {
         if (isConfirming) {
-            setMessage("Transaction is being confirmed...");
+            setMessage(t('transactionIsBeingConfirmed', 'payments'));
         }
         if (isConfirmed) {
-            setMessage("Transaction confirmed!");
+            setMessage(t('transactionConfirmed', 'payments'));
             waitBackendConfirmationOfPayment();
         }
         if (error) {
-            setMessage("Transaction failed!");
-            openPopup({ title: 'Error', message: error.message || 'Unknown error', modality: PopupModality.Error, isOpen: true });
+            setMessage(t('transactionFailed', 'payments'));
+            openPopup({ title: t('error', 'payments'), message: error.message || t('unknownError', 'payments'), modality: PopupModality.Error, isOpen: true });
             resetPaymentProcessing()
             setIsProcessing(false);
         }

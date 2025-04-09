@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from "react"
 import { useBuyTicketContext } from "../context/BuyTicketContext";
 import { cleanMegoPendingClaimProcessing, createClaim, getMegoPendingClaimProcessingData, saveMegoPendingClaimProcessing } from "../utils/BuyTicketUtils";
-import { useAccount } from "@megotickets/core";
+import { useAccount, useLanguage } from "@megotickets/core";
 import { Loader } from "@megotickets/core";
 import { PopupModality } from "../interfaces/popup-enum";
 import { Stepper } from "../interfaces/interface-stepper";
@@ -10,10 +10,12 @@ import { config } from "@megotickets/core";
 import { isConnectedWithMego, getProvider } from "../utils/utils";
 import { signMessageWithGoogle, signMessageWithApple } from "@megotickets/core";
 import "../css/pay.css";
+
 export const BuyTicketClaimGeneration = () => {
     const { eventDetails, openPopup, resetPaymentProcessing, setStepper, emailOfBuyer, setClaimData, claimMetadata, tokenId } = useBuyTicketContext()
     const [message, setMessage] = useState<string>('Processing...')
     const { address } = useAccount()
+    const { t } = useLanguage()
 
 
     let count = 0;
@@ -44,14 +46,14 @@ export const BuyTicketClaimGeneration = () => {
                 }
                 return;
             } else {
-                setMessage('Please confirm subscription to attend the event.')
+                setMessage(t('pleaseConfirmSubscriptionToAttendTheEvent', 'payments'))
                 signature = await signMessage(config, { message: `Claiming token ${tokenId}` })
             }
 
             await new Promise(resolve => setTimeout(resolve, 1000));
             if (!signature) {
-                setMessage('Error creating claim...')
-                openPopup({ title: 'Alert', message: 'Error creating claim...', modality: PopupModality.Error, isOpen: true, })
+                setMessage(t('errorCreatingClaim', 'payments'))
+                openPopup({ title: 'Alert', message: t('errorCreatingClaim', 'payments'), modality: PopupModality.Error, isOpen: true, })
                 resetPaymentProcessing()
                 return;
             }
@@ -61,10 +63,10 @@ export const BuyTicketClaimGeneration = () => {
             const claim = await createClaim(signature, tokenId || "", emailOfBuyer || "", eventDetails?.event?.identifier, userAddress, `Claiming token ${tokenId}`, true, claimMetadata);
 
             if (claim.error) {
-                setMessage('Error creating claim...')
+                setMessage(t('errorCreatingClaim', 'payments'))
                 openPopup({
                     title: 'Alert',
-                    message: 'Error creating claim...',
+                    message: t('errorCreatingClaim', 'payments'),
                     modality: PopupModality.Error,
                     isOpen: true
                 })
@@ -76,7 +78,7 @@ export const BuyTicketClaimGeneration = () => {
             return; 
         }
         catch (error) {
-            openPopup({ title: 'Alert', message: 'Error creating claim...', modality: PopupModality.Error, isOpen: true })
+            openPopup({ title: 'Alert', message: t('errorCreatingClaim', 'payments'), modality: PopupModality.Error, isOpen: true })
         }
     }
 
@@ -88,8 +90,8 @@ export const BuyTicketClaimGeneration = () => {
         const signature = urlParams.get('signature') || "";
 
         if(!signature){
-            setMessage('Signature error')
-            openPopup({ title: 'Signature error', message: 'Signature not found', modality: PopupModality.Error, isOpen: true })
+            setMessage(t('signatureError', 'payments'))
+            openPopup({ title: t('signatureError', 'payments'), message: t('signatureNotFound', 'payments'), modality: PopupModality.Error, isOpen: true })
             cleanMegoPendingClaimProcessing()
             resetPaymentProcessing()
             return;
@@ -107,8 +109,8 @@ export const BuyTicketClaimGeneration = () => {
         );
 
         if (claim.error) {
-            setMessage('Error creating claim...')
-            openPopup({ title: 'Alert', message: 'Error creating claim...', modality: PopupModality.Error, isOpen: true })
+            setMessage(t('errorCreatingClaim', 'payments'))
+            openPopup({ title: 'Alert', message: t('errorCreatingClaim', 'payments'), modality: PopupModality.Error, isOpen: true })
             cleanMegoPendingClaimProcessing()
             resetPaymentProcessing()
             return;

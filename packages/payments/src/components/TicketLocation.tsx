@@ -1,6 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
 import "../css/pay.css";
+import { useLanguage } from '@megotickets/core';
 interface TicketLocationProps {
   event: any;
 }
@@ -25,7 +26,7 @@ const MapContainer: React.FC<MapContainerProps> = ({ location }) => {
   const [center, setCenter] = useState(defaultCenter);
   const [mapError, setMapError] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  
+  const { t } = useLanguage()
   // In a production environment, you would want to implement proper geocoding
   // This is a simplified version that assumes the location is already known
   // You would typically use a geocoding service to convert the address to coordinates
@@ -49,17 +50,17 @@ const MapContainer: React.FC<MapContainerProps> = ({ location }) => {
   if (!apiKey || mapError) {
     return (
       <div className="ticket-map-container">
-        <p className="font-satoshi" style={{ color: '#9CA3AF', marginBottom: '0.5rem' }}>Unable to load map</p>
+        <p className="font-satoshi" style={{ color: '#9CA3AF', marginBottom: '0.5rem' }}>{t('unableToLoadMap', 'payments')}</p>
         <p className="font-satoshi" style={{ color: '#E5E7EB', fontSize: '0.875rem' }}>{location}</p>
       </div>
     );
-  }
+  } 
   
   return (
     <div>
       {isLoading && (
         <div className="ticket-map-loader-container">
-          <p className="font-satoshi" style={{ color: '#9CA3AF' }}>Loading map...</p>
+          <p className="font-satoshi" style={{ color: '#9CA3AF' }}>{t('loadingMap', 'payments')}</p>
         </div>
       )}
       {/* @ts-ignore */}
@@ -92,18 +93,18 @@ const MapContainer: React.FC<MapContainerProps> = ({ location }) => {
 
 
 export const TicketLocation: React.FC<TicketLocationProps> = ({ event }) => {
+  const { t } = useLanguage()
   return (
     <div className="ticket-block-container">
       {/* Location Section */}
       <div style={{ marginBottom: '2rem' }}>
         <div style={{ marginBottom: '1rem' }}>
-          <p className="ticket-block-title font-satoshi">Event Location</p>
+          <p className="ticket-block-title font-satoshi">{t('eventLocation', 'payments')}</p>
         </div>
         
         <div>
           <div style={{ color: '#fff', fontSize: '1.125rem', fontWeight: '600', marginBottom: '0.75rem' }}>{event.event_location}</div>
           
-          {/* Event Description moved here */}
           <div 
             dangerouslySetInnerHTML={{ __html: event.event_description }} 
             style={{ 

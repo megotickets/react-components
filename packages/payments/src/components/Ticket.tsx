@@ -6,6 +6,7 @@ import { TicketPayment } from './TicketPayment';
 import { TicketLocation } from './TicketLocation';
 import { TicketUserNFT } from './TicketUserNFT';
 import { ClaimTicketButton } from './ClaimTicketButton';
+import { useLanguage } from '@megotickets/core';
 
 interface TicketProps {
   ticketId: string;
@@ -17,7 +18,7 @@ export const Ticket: React.FC<TicketProps> = ({ ticketId, showOnlyButton, overri
   const [eventDetails, setEventDetails] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-
+  const { t } = useLanguage()
   useEffect(() => {
     const fetchEventDetails = async () => {
       try {
@@ -27,7 +28,7 @@ export const Ticket: React.FC<TicketProps> = ({ ticketId, showOnlyButton, overri
         setLoading(false);
       } catch (err) {
         console.error('Error in retrieving event details:', err);
-        setError('Unable to load event details');
+        setError(t('unableToLoadEventDetails', 'payments'));
         setLoading(false);
       }
     };
@@ -37,7 +38,7 @@ export const Ticket: React.FC<TicketProps> = ({ ticketId, showOnlyButton, overri
   if (loading) {
     return (
       <div className="ticket-loading-container">
-        <p className="font-satoshi" style={{ color: '#808080' }}>Loading...</p>
+        <p className="font-satoshi" style={{ color: '#808080' }}>{t('loading', 'payments')}</p>
       </div>
     );
   }
@@ -53,7 +54,7 @@ export const Ticket: React.FC<TicketProps> = ({ ticketId, showOnlyButton, overri
   if (!eventDetails || !eventDetails.event) {
     return (
       <div className="ticket-details-container">
-        <p className="font-satoshi">No details available for this event</p>
+        <p className="font-satoshi">{t('noDetailsAvailableForThisEvent', 'payments')}</p>
       </div>
     );
   }
@@ -69,14 +70,14 @@ export const Ticket: React.FC<TicketProps> = ({ ticketId, showOnlyButton, overri
   const priceText = isPriceZero ? 'Free' : `${event.price} ${event.currency.toUpperCase()}`;
 
   const availableTickets = event.supply - event.minted;
-  const supplyText = event.show_supply ? `${availableTickets} / ${event.supply} available tickets` : '';
+  const supplyText = event.show_supply ? `${availableTickets} / ${event.supply} ${t('availableTickets', 'payments')}` : '';
 
   if (showOnlyButton) {
     return (
       <div>
         <ClaimTicketButton
           eventDetails={eventDetails}
-          buttonText={isPriceZero ? "Claim Free Ticket" : "Buy Ticket"}
+          buttonText={isPriceZero ? t('claimFreeTicket', 'payments') : t('buyTicket', 'payments')}
           overrideButton={overrideButton}
         />
       </div>

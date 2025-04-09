@@ -1,6 +1,6 @@
 import React, {useMemo} from 'react';
 import "../css/pay.css";
-
+import { useLanguage } from '@megotickets/core';
 interface TicketHeaderProps {
   event: any;
   startDate: string;
@@ -13,7 +13,7 @@ export const TicketHeader: React.FC<TicketHeaderProps> = ({
   startDate,
   endDate
 }) => {
-
+  const { t } = useLanguage()
 
   return (
     <div>
@@ -52,7 +52,7 @@ export const TicketHeader: React.FC<TicketHeaderProps> = ({
               <svg xmlns="http://www.w3.org/2000/svg" style={{ height: '1.25rem', width: '1.25rem', marginRight: '0.75rem', color: '#9CA3AF' }} fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
               </svg>
-              <span className="font-satoshi" style={{ color: '#E5E7EB', fontSize: '0.9rem' }}>Network: {event.blockchain || 'Polygon'}</span>
+              <span className="font-satoshi" style={{ color: '#E5E7EB', fontSize: '0.9rem' }}>{t('blockchainNetwork', 'payments')}: {event.blockchain || 'Polygon'}</span>
             </div>
             
             {/* Hosted By */}
@@ -60,7 +60,7 @@ export const TicketHeader: React.FC<TicketHeaderProps> = ({
               <svg xmlns="http://www.w3.org/2000/svg" style={{ height: '1.25rem', width: '1.25rem', marginRight: '0.75rem', color: '#9CA3AF' }} fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
               </svg>
-              <span className="font-satoshi" style={{ color: '#E5E7EB', fontSize: '0.9rem' }}>Hosted by: {event?.event_owner ? `${event.event_owner.slice(0,4)}...${event.event_owner.slice(-4)}` : "Event organizer"}</span>
+              <span className="font-satoshi" style={{ color: '#E5E7EB', fontSize: '0.9rem' }}>{t('hostedBy', 'payments')}: {event?.event_owner ? `${event.event_owner.slice(0,4)}...${event.event_owner.slice(-4)}` : t('eventOrganizer', 'payments')}</span>
             </div>
             
             {/* Minted Info */}
@@ -69,7 +69,7 @@ export const TicketHeader: React.FC<TicketHeaderProps> = ({
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
               </svg>
               <div className="font-satoshi" style={{ color: '#9CA3AF', fontSize: '0.9rem' }}>
-                <span style={{ fontWeight: '500' }}>Minted: </span>
+                <span style={{ fontWeight: '500' }}>{t('minted', 'payments')}: </span>
                 <span>{event.minted || 0} / {event.supply || 0}</span>
               </div>
             </div>

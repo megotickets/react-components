@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import '../css/pay.css';
+import { useLanguage } from '@megotickets/core';
 interface MyTicketProps {
   tokenId: string;
   image?: string;
@@ -7,7 +8,7 @@ interface MyTicketProps {
 
 export const MyTicket: React.FC<MyTicketProps> = ({ tokenId, image }) => {
   const [isHovered, setIsHovered] = useState(false);
-
+  const { t } = useLanguage()
   return (
     <div 
       className="ticket-token-id-root"
@@ -21,7 +22,7 @@ export const MyTicket: React.FC<MyTicketProps> = ({ tokenId, image }) => {
       </div>
       <img 
         src={image} 
-        alt={`Ticket #${tokenId}`} 
+        alt={`${t('ticket', 'payments')} #${tokenId}`} 
         className="ticket-image"
       />
     </div>

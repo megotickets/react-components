@@ -3,6 +3,7 @@ import { useAccount } from '@megotickets/core';
 import React, { useEffect, useMemo, useState } from 'react';
 import { MyTicket } from './MyTicket';
 import "../css/pay.css";
+import { useLanguage } from '@megotickets/core';
 interface TicketUserNFTProps {
   // This component is a placeholder for now, so we'll keep the props minimal
   userId?: string;
@@ -10,7 +11,7 @@ interface TicketUserNFTProps {
 }
 
 export const TicketUserNFT: React.FC<TicketUserNFTProps> = ({ userId, eventIdentifier }) => {
-
+  const { t } = useLanguage()
   const { address } = useAccount();
   const [owneds, setOwneds] = useState<any[]>([]);
   let count = 0;
@@ -41,7 +42,7 @@ export const TicketUserNFT: React.FC<TicketUserNFTProps> = ({ userId, eventIdent
   return (
     <div className="ticket-block-container">
       <div style={{ marginBottom: '1rem' }}>
-        <p className="ticket-block-title font-satoshi">My Tickets</p>
+        <p className="ticket-block-title font-satoshi">{t('myTickets', 'payments')}</p>
       </div>
 
       <div className="ticket-user-nft-container">
@@ -54,7 +55,7 @@ export const TicketUserNFT: React.FC<TicketUserNFTProps> = ({ userId, eventIdent
             />
           ))
         ) : (
-            <p className="font-satoshi" style={{ color: '#9CA3AF', fontSize: '0.875rem' }}>No tickets available yet</p>
+            <p className="font-satoshi" style={{ color: '#9CA3AF', fontSize: '0.875rem' }}>{t('noTicketsAvailableYet', 'payments')}</p>
         )}
       </div>
     </div>

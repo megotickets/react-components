@@ -1,6 +1,6 @@
 import React from 'react';
 import { useBuyTicketContext } from "../context/BuyTicketContext"
-import { useAccount } from "@megotickets/core";
+import { useAccount, useLanguage } from "@megotickets/core";
 import AppleWalletIcon from './icons/AppleWalletIcon';
 import GoogleWalletIcon from './icons/GoogleWalletIcon';
 import QrCodeIcon from './icons/QrCodeIcon';
@@ -9,6 +9,7 @@ export const BuyTicketClaim: React.FC = () => {
 
     const { claimData } = useBuyTicketContext()
     const { address } = useAccount()
+    const { t } = useLanguage()
 
     const downloadQrCode = (base64: string) => {
         const link = document.createElement('a');
@@ -19,10 +20,10 @@ export const BuyTicketClaim: React.FC = () => {
 
     return (
         <div className="payment-stepper-container">
-            <h1 className="font-satoshi">Buy Ticket Claim</h1>
-            <p className="font-satoshi">Congratulations!</p>
-            <p className="font-satoshi">Your ticket is ready!</p>
-            <p className="font-satoshi">sent to: {address?.slice(0, 6)}...{address?.slice(-4)}</p>
+            <h1 className="font-satoshi">{t('buyTicketClaim', 'payments')}</h1>
+            <p className="font-satoshi">{t('congratulations', 'payments')}</p>
+            <p className="font-satoshi">{t('yourTicketIsReady', 'payments')}</p>
+            <p className="font-satoshi">{t('sentTo', 'payments')}: {address?.slice(0, 6)}...{address?.slice(-4)}</p>
             <button
                 className={`mego-modal-button mego-apple font-satoshi`}
                 style={{ marginTop: '1rem', display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}
@@ -30,7 +31,7 @@ export const BuyTicketClaim: React.FC = () => {
                     downloadQrCode(claimData.qr.qr)
                 }}>
                 <QrCodeIcon height={50} width={50} style={{ marginRight: '0.5rem' }} />
-                Download QR Code
+                {t('downloadQRCode', 'payments')}
             </button>
             <button
                 className={`mego-modal-button mego-apple font-satoshi`}
@@ -40,8 +41,8 @@ export const BuyTicketClaim: React.FC = () => {
                 }}>
                 <AppleWalletIcon height={50} width={50} style={{ marginRight: '0.5rem' }} />
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'start', justifyContent: 'center' }}>
-                    <p className="font-satoshi">Add to</p>
-                    <p className="font-satoshi">APPLE WALLET</p>
+                    <p className="font-satoshi">{t('addto', 'payments')}</p>
+                    <p className="font-satoshi">{t('appleWallet', 'payments')}</p>
                 </div>
             </button>
             <button
@@ -52,8 +53,8 @@ export const BuyTicketClaim: React.FC = () => {
                 }}>
                 <GoogleWalletIcon height={50} width={50} style={{ marginRight: '0.5rem' }} />
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'start', justifyContent: 'center' }}>
-                    <p className="font-satoshi">Add to</p>
-                    <p className="font-satoshi">GOOGLE WALLET</p>
+                    <p className="font-satoshi">{t('addto', 'payments')}</p>
+                    <p className="font-satoshi">{t('googleWallet', 'payments')}</p>
                 </div>
             </button>
         </div>

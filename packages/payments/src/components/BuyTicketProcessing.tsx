@@ -7,13 +7,14 @@ import { Loader } from '@megotickets/core';
 import { PopupModality } from "../interfaces/popup-enum";
 import { Stepper } from "../interfaces/interface-stepper";
 import "../css/pay.css";
-
+import { useTranslation } from "react-i18next";
 
 export const BuyTicketProcessing = () => {
     const { eventDetails, emailOfBuyer, openPopup, resetPaymentProcessing, setStepper, setPaymentsDetails, processor, discountCode } = useBuyTicketContext()
     const { address } = useAccount()
+    const { t } = useTranslation()
 
-    const [message, setMessage] = useState<string>('Processing...')
+    const [message, setMessage] = useState<string>(t('processing', 'payments'))
     let count = 0;
 
     const userAddress = useMemo(() => {
@@ -27,18 +28,18 @@ export const BuyTicketProcessing = () => {
     const processing = async () => {
         try {
             if(!processor){
-                openPopup({title: 'Alert', message: 'No processor selected', modality: PopupModality.Error, isOpen: true})
+                openPopup({title: t('alert', 'payments'), message: t('noProcessorSelected', 'payments'), modality: PopupModality.Error, isOpen: true})
                 resetPaymentProcessing()
                 return
             }
-            setMessage('Asking for payment details...')
+            setMessage(t('askingForPaymentDetails', 'payments'))
             if (userAddress) {
                 const paymentDetails = await askPaymentDetails(processor, 1, eventDetails?.event?.identifier, userAddress, discountCode || "", eventDetails?.event?.currency, emailOfBuyer || "", eventDetails?.event?.donation_amount || 0)
                 let { error, message, payment } = paymentDetails
 
                 if (error && message !== Messages.PAYMENT_EXIST) {
-                    setMessage('Error asking for payment details...')
-                    openPopup({ title: 'Alert', message: message, modality: PopupModality.Error, isOpen: true })
+                    setMessage(t('errorAskingForPaymentDetails', 'payments'))
+                    openPopup({ title: t('alert', 'payments'), message: message, modality: PopupModality.Error, isOpen: true })
                     resetPaymentProcessing()
                     return;
                 }
@@ -48,18 +49,18 @@ export const BuyTicketProcessing = () => {
                 //Quit if the user can't buy more tickets
                 if (message === Messages.CANT_BUY_MORE_TICKETS) {
                     setMessage(Messages.CANT_BUY_MORE_TICKETS)
-                    openPopup({ title: 'Alert', message: Messages.CANT_BUY_MORE_TICKETS, modality: PopupModality.Error, isOpen: true })
+                    openPopup({ title: t('alert', 'payments'), message: Messages.CANT_BUY_MORE_TICKETS, modality: PopupModality.Error, isOpen: true })
                     resetPaymentProcessing()
                 }
 
                 //Display free ticket (reason: discount code 100% off or free ticket)
                 if (eventDetails?.event?.price <= 0 || message === "Free ticket claimed correctly.") {
-                    setMessage('Claiming free ticket...')
+                    setMessage(t('claimingFreeTicket', 'payments'))
                     await new Promise(resolve => setTimeout(resolve, 1000));
                     setStepper(Stepper.NFT_Mint)
                     return;
                 } else {
-                    setMessage('Processing payment...')
+                    setMessage(t('processingPayment', 'payments'))
                     await new Promise(resolve => setTimeout(resolve, 1000));
                     if(processor === 'stripe'){
                         console.log('Stripe processor')
@@ -72,8 +73,8 @@ export const BuyTicketProcessing = () => {
                 }
             } else {
                 openPopup({
-                    title: 'Alert',
-                    message: 'Please connect your wallet',
+                    title: t('alert', 'payments'),
+                    message: t('pleaseConnectYourWallet', 'payments'),
                     modality: PopupModality.Error,
                     isOpen: true
                 })
@@ -81,10 +82,10 @@ export const BuyTicketProcessing = () => {
             }
         } catch (error) {
             console.error('Error processing payment:', error);
-            setMessage('Error processing payment...')
+            setMessage(t('errorProcessingPayment', 'payments'))
             openPopup({
-                title: 'Alert',
-                message: 'Error processing payment...',
+                title: t('alert', 'payments'),
+                message: t('errorProcessingPayment', 'payments'),
                 modality: PopupModality.Error,
                 isOpen: true
             })

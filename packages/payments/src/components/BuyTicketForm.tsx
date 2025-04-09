@@ -3,7 +3,7 @@ import { useBuyTicketContext } from '../context/BuyTicketContext';
 import { Stepper } from '../interfaces/interface-stepper';
 import { PaymentsCollectors } from './PaymentsCollectors';
 import { PopupModality } from '../interfaces/popup-enum';
-import { MegoButton, useAccount } from '@megotickets/core';
+import { MegoButton, useAccount, useLanguage } from '@megotickets/core';
 import { Loader } from '@megotickets/core';
 import "../css/pay.css";
 
@@ -19,6 +19,7 @@ export const BuyTicketForm: React.FC = () => {
     const [isFormValid, setIsFormValid] = useState(false);
     const { address } = useAccount();
     const [isNFTCheckLoading, setIsNFTCheckLoading] = useState(false);
+    const { t } = useLanguage()
 
     console.log(eventDetails)
 
@@ -51,7 +52,7 @@ export const BuyTicketForm: React.FC = () => {
                 setProcessor('stripe');
             }
         } catch (error) {
-            openPopup({ title: 'Error', message: 'General error', modality: PopupModality.Error, isOpen: true })
+            openPopup({ title: t('error', 'payments'), message: t('generalError', 'payments'), modality: PopupModality.Error, isOpen: true })
             resetPaymentProcessing()
             return;
         } finally {
@@ -112,7 +113,7 @@ export const BuyTicketForm: React.FC = () => {
         setIsFormValid(isEmailValid && areTermsAccepted && areMetadataFieldsValid);
     }, [email, termsAccepted, shareEmail, metadataValues, eventDetails]);
 
-    const title = eventDetails?.event?.price === 0 ? "Claim your free ticket" : "Buy your ticket";
+    const title = eventDetails?.event?.price === 0 ? t('claimYourFreeTicket', 'payments') : t('buyYourTicket', 'payments');
 
     return (
         <div className="payment-stepper-container">
@@ -121,14 +122,14 @@ export const BuyTicketForm: React.FC = () => {
                 <div style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
                     <div className="title-subtitle-container">
                         <h1 className="font-satoshi title">{title}</h1>
-                        <p className="font-satoshi subtitle">Enter required information to continue</p>
+                        <p className="font-satoshi subtitle">{t('enterRequiredInformationToContinue', 'payments')}</p>
                     </div>
 
                     {eventDetails?.event?.price > 0 && (
                         <div style={{ width: '100%', marginBottom: '0.75rem' }}>
                             <input
                                 type="text"
-                                placeholder="Discount code (optional)"
+                                placeholder={t('discountCode', 'payments')}
                                 value={discountCode || ''}
                                 onChange={(e) => setDiscountCode(e.target.value)}
                                 className="input-field"
@@ -168,7 +169,7 @@ export const BuyTicketForm: React.FC = () => {
                         <input
                             type="email"
                             id="email"
-                            placeholder="Email"
+                            placeholder={t('email', 'payments')}
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             className="input-field"
@@ -187,7 +188,7 @@ export const BuyTicketForm: React.FC = () => {
                             style={{ marginRight: '0.5rem', marginTop: '0.25rem' }}
                         />
                         <label htmlFor="terms" className="font-satoshi checkbox-label">
-                            I accept the <a href={termsAndConditionsLink} target="_blank" rel="noopener noreferrer" style={{ color: '#60A5FA', textDecoration: 'underline' }}>Terms and Conditions</a>.
+                            {t('iAcceptThe', 'payments')} <a href={termsAndConditionsLink} target="_blank" rel="noopener noreferrer" style={{ color: '#60A5FA', textDecoration: 'underline' }}>{t('termsAndConditions', 'payments')}</a>.
                         </label>
                     </div>
 
@@ -200,7 +201,7 @@ export const BuyTicketForm: React.FC = () => {
                             style={{ marginRight: '0.5rem', marginTop: '0.25rem' }}
                         />
                         <label htmlFor="shareEmail" className="font-satoshi checkbox-label">
-                            I accept to share my e-mail with event organizers.
+                            {t('iAcceptToShareMyEmail', 'payments')}
                         </label>
                     </div>
 
@@ -215,14 +216,14 @@ export const BuyTicketForm: React.FC = () => {
                             cursor: !isFormValid ? 'not-allowed' : 'pointer',
                         }}
                     >
-                        Checkout
+                        {t('checkout', 'payments')}
                     </MegoButton>
                 </div>
             }
             {
                 isNFTCheckLoading &&
                 <div className="loader">
-                    <Loader message={"Checking NFT..."} />
+                    <Loader message={t('checkingNFT', 'payments')} />
                 </div>
             }
         </div>

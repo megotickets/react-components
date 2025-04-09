@@ -5,7 +5,7 @@ import { PopupModality } from "../interfaces/popup-enum";
 import { Stepper } from "../interfaces/interface-stepper";
 import { checkPayment, getPayment } from "../utils/BuyTicketUtils";
 import { useAccount } from "@megotickets/core";
-import { Loader, MegoButton } from "@megotickets/core";
+import { Loader, MegoButton, useLanguage } from "@megotickets/core";
 import "../css/pay.css";
 
 const BuyTicketWithStripe = () => {
@@ -15,7 +15,7 @@ const BuyTicketWithStripe = () => {
     const [isProcessing, setIsProcessing] = useState<boolean>(false);
     const { address } = useAccount();
     const [message, setMessage] = useState<string>("");
-
+    const { t } = useLanguage()
     const [waitForPaymentConfirmation, setWaitForPaymentConfirmation] = useState<boolean>(false);
     const [isCanceledAllowed, setIsCanceledAllowed] = useState<boolean>(true);
 
@@ -40,7 +40,7 @@ const BuyTicketWithStripe = () => {
         try {
             setWaitForPaymentConfirmation(true);
             setIsCanceledAllowed(false);
-            setMessage("Waiting for payment confirmation...")
+            setMessage(t('waitingForPaymentConfirmation', 'payments'))
             //Check params from url
             const urlParams = new URLSearchParams(window.location.search);
             const uuid = urlParams.get("uuid");
@@ -55,7 +55,7 @@ const BuyTicketWithStripe = () => {
             console.log('urlParams', urlParams);
 
             if (uuid && payment_intent && payment_intent_client_secret) {
-                setMessage("Getting payment details...")
+                setMessage(t('gettingPaymentDetails', 'payments'))
                 const payment = await getPayment(uuid);
                 console.log('payment', payment);
                 if (payment.error == false) {
@@ -75,8 +75,8 @@ const BuyTicketWithStripe = () => {
                     }, 5000);
                 } else {
                     openPopup({
-                        title: 'Error',
-                        message: `Error waiting for payment confirmation: ${payment.message || 'Unknown error'}`,
+                        title: t('error', 'payments'),
+                        message: t('errorWaitingForPaymentConfirmation', 'payments') + payment.message || t('unknownError', 'payments'),
                         modality: PopupModality.Error,
                         isOpen: true
                     });
@@ -92,8 +92,8 @@ const BuyTicketWithStripe = () => {
         } catch (error: any) {
             console.error("Error waiting for payment confirmation:", error);
             openPopup({
-                title: 'Error',
-                message: `Error waiting for payment confirmation: ${error.message || 'Unknown error'}`,
+                title: t('error', 'payments'),
+                message: t('errorWaitingForPaymentConfirmation', 'payments') + error.message || t('unknownError', 'payments'),
                 modality: PopupModality.Error,
                 isOpen: true
             });
@@ -183,8 +183,8 @@ const BuyTicketWithStripe = () => {
         } catch (error: any) {
             console.error("Error in Stripe initialization:", error);
             openPopup({
-                title: 'Error',
-                message: `Error in Stripe initialization: ${error.message || 'Unknown error'}`,
+                title: t('error', 'payments'),
+                message: t('errorInStripeInitialization', 'payments') + error.message || t('unknownError', 'payments'),
                 modality: PopupModality.Error,
                 isOpen: true
             });
@@ -209,8 +209,8 @@ const BuyTicketWithStripe = () => {
     const handlePayment = async () => {
         if (!stripeInstance || !stripeElements) {
             openPopup({
-                title: 'Error',
-                message: 'Stripe was not initialized correctly',
+                title: t('error', 'payments'),
+                message: t('stripeWasNotInitializedCorrectly', 'payments'),
                 modality: PopupModality.Error,
                 isOpen: true
             });
@@ -239,8 +239,8 @@ const BuyTicketWithStripe = () => {
         } catch (error: any) {
             console.error("Error during payment:", error);
             openPopup({
-                title: 'Payment error',
-                message: error.message || 'An error occurred during payment',
+                title: t('error', 'payments'),
+                message: error.message || t('anErrorOccurredDuringPayment', 'payments'),
                 modality: PopupModality.Error,
                 isOpen: true
             });
@@ -266,7 +266,7 @@ const BuyTicketWithStripe = () => {
                         disabled={isProcessing}
                         className={"font-satoshi " + (isProcessing ? 'disabled' : '') + " chooseType-btn"}
                     >
-                        {isProcessing ? 'Processing...' : 'Pay now'}
+                        {isProcessing ? t('processing', 'payments') : t('payNow', 'payments')}
                     </MegoButton>
                 }
             </div>
@@ -277,7 +277,7 @@ const BuyTicketWithStripe = () => {
                         onClick={handleCancel}
                         className="font-satoshi chooseType-btn"
                     >
-                        Cancel operation
+                        {t('cancelOperation', 'payments')}
                     </MegoButton>
                 }
             </div>

@@ -1,6 +1,6 @@
 import React from 'react';
 import { ClaimTicketButton } from './ClaimTicketButton';
-
+import { useLanguage } from '@megotickets/core';
 import '../css/pay.css';
 interface TicketPaymentProps {
   eventDetails: any;
@@ -18,17 +18,18 @@ export const TicketPayment: React.FC<TicketPaymentProps> = ({
   supplyText,
   overrideButton
 }) => {
+  const { t } = useLanguage()
   return (
     <div className="ticketPaymentContainer">
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div>
           <div className="ticketPriceTitle font-satoshi">
-            {`Price: ${priceText}`}
+            {`${t('price', 'payments')}: ${priceText}`}
           </div>
         </div>
         <ClaimTicketButton
           eventDetails={eventDetails}
-          buttonText={isPriceZero ? "Claim Free Ticket" : "Buy Ticket"}
+          buttonText={isPriceZero ? t('claimFreeTicket', 'payments') : t('buyTicket', 'payments')}
           overrideButton={overrideButton}
         />
       </div>
