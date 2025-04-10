@@ -32,13 +32,27 @@ export const BuyTicketClaim: React.FC = () => {
             <h1 style={{ color: 'white' }} className="font-satoshi">{t('buyTicketClaim', 'payments')}</h1>
             <p style={{ color: 'white' }} className="font-satoshi">{t('congratulations', 'payments')}</p>
             <p style={{ color: 'white' }} className="font-satoshi">{t('yourTicketIsReady', 'payments')}</p>
-            <p style={{ color: 'white' }} className="font-satoshi">{t('sentTo', 'payments')}: {userAddress?.slice(0, 6)}...{address?.slice(-4)}</p>
+            <p style={{ color: 'white' }} className="font-satoshi mb-4">
+                {t('sentTo', 'payments')}: {userAddress?.slice(0, 6)}...{userAddress?.slice(-4)}
+            </p>
+
+            {claimData?.qr && (
+                <div className="mb-6 bg-white p-2 inline-block rounded-lg shadow-md">
+                    <img 
+                        src={claimData.qr} 
+                        alt="QR Code Ticket" 
+                        className="w-40 h-40 object-contain"
+                    />
+                </div>
+            )}
+
             <button
                 className={`mego-modal-button mego-apple font-satoshi`}
-                style={{ marginTop: '1rem', display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}
+                style={{ marginTop: '1rem', display: 'flex', alignItems: 'center', justifyContent: 'flex-start', cursor: claimData?.qr ? 'pointer' : 'not-allowed', opacity: claimData?.qr ? 1 : 0.5 }}
                 onClick={() => {
-                    downloadQrCode(claimData.qr.qr)
-                }}>
+                    downloadQrCode(claimData.qr)
+                }}
+                disabled={!claimData?.qr?.qr}>
                 <QrCodeIcon height={50} width={50} style={{ marginRight: '0.5rem' }} />
                 {t('downloadQRCode', 'payments')}
             </button>
