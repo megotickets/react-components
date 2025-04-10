@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from "react"
 import { useBuyTicketContext } from "../context/BuyTicketContext";
 import { cleanMegoPendingClaimProcessing, createClaim, getMegoPendingClaimProcessingData, saveMegoPendingClaimProcessing } from "../utils/BuyTicketUtils";
-import { useAccount, useLanguage } from "@megotickets/core";
+import { signWithMego, useAccount, useLanguage } from "@megotickets/core";
 import { Loader } from "@megotickets/core";
 import { PopupModality } from "../interfaces/popup-enum";
 import { Stepper } from "../interfaces/interface-stepper";
@@ -37,14 +37,14 @@ export const BuyTicketClaimGeneration = () => {
         try {
             let signature = ""
             if (isConnectedWithMego() && provider) {
-                await saveMegoPendingClaimProcessing(tokenId || "", emailOfBuyer || "", eventDetails?.event?.identifier, userAddress, `Claiming token ${tokenId}`, claimMetadata)
-                const redirectUrl = window.location.origin
-                if (provider.includes("google")) {
-                    signMessageWithGoogle(redirectUrl, `Claiming token ${tokenId}`);
-                } else if (provider.includes("apple")) {
-                    signMessageWithApple(redirectUrl, `Claiming token ${tokenId}`);
+                const signatureResponse = await signWithMego(localStorage.getItem("mego_session") || "", `Claiming token ${tokenId}`)
+                if (signatureResponse.error) {
+                    setMessage(t('error', 'payments'))
+                    openPopup({ title: 'Alert', message: t('errorCreatingClaim', 'payments'), modality: PopupModality.Error, isOpen: true, })
+                    resetPaymentProcessing()
+                    return;
                 }
-                return;
+                signature = signatureResponse.signature
             } else {
                 setMessage(t('pleaseConfirmSubscriptionToAttendTheEvent', 'payments'))
                 signature = await signMessage(config, { message: `Claiming token ${tokenId}` })

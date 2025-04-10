@@ -93,3 +93,29 @@
       return { error: true, signature: "" };
     }
   };
+
+
+  export const signWithMego = async (session: string, message: string): Promise<{ error: boolean, signature: string }> => {
+    try {
+      const body = {
+        message: message,
+        session: session
+      }
+      const response = await fetch('https://wallet.mego.tools/transactions/sign', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(body)
+      });
+
+      if (!response.ok) {
+        throw new Error('Errore nella richiesta di firma');
+      }
+
+      const data = await response.json();
+      return { error: false, signature: data.signature };
+    } catch (error) {
+      return { error: true, signature: "" };
+    }
+  };
