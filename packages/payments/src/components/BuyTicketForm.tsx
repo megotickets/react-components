@@ -8,7 +8,7 @@ import { Loader } from '@megotickets/core';
 import "../css/pay.css";
 import { MegoMetadataInputType } from '../interfaces/metadata';
 import { ShareEmailOptions } from '@/interfaces/interface-share-email';
-
+import { isConnectedWithMego } from "@/utils/utils";
 
 const fastDebug = false
 
@@ -40,6 +40,13 @@ export const BuyTicketForm: React.FC = () => {
         const signedAs = urlParams.get('signedAs');
         return address || loggedAs || signedAs || ""
     }, [address, window.location.search])
+
+    //Auto fill email if connected with MEgo
+    useEffect(() => {
+        if (isConnectedWithMego()) {
+            setEmail(localStorage.getItem("mego_email") || "")
+        }
+    }, [userAddress])
 
 
     const init = async () => {
@@ -95,7 +102,7 @@ export const BuyTicketForm: React.FC = () => {
 
         console.log("shareEmailContext", shareEmailContext)
 
-        if(!shareEmailContext || shareEmailContext === ShareEmailOptions.MANDATORY){
+        if (!shareEmailContext || shareEmailContext === ShareEmailOptions.MANDATORY) {
             isSharedEmailValid = shareEmail;
         }
 
@@ -198,7 +205,7 @@ export const BuyTicketForm: React.FC = () => {
                             );
                         })}
 
-                        <input
+                        {!isConnectedWithMego() && <input
                             type="email"
                             id="email"
                             placeholder={t('email', 'payments')}
@@ -208,7 +215,7 @@ export const BuyTicketForm: React.FC = () => {
                             style={{
                                 border: `1px solid ${!email || !email.includes('@') ? '#FCA5A5' : 'white'}`,
                             }}
-                        />
+                        />}
                     </div>
 
                     <div className="ticket-form-checkbox-container">
