@@ -12,9 +12,10 @@ interface TicketProps {
   ticketId: string;
   showOnlyButton?: boolean;
   overrideButton?: React.ReactNode;
+  onTicketLoad?: (data: any) => void;
 }
 
-export const Ticket: React.FC<TicketProps> = ({ ticketId, showOnlyButton, overrideButton }) => {
+export const Ticket: React.FC<TicketProps> = ({ ticketId, showOnlyButton, overrideButton, onTicketLoad }) => {
   const [eventDetails, setEventDetails] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -25,6 +26,9 @@ export const Ticket: React.FC<TicketProps> = ({ ticketId, showOnlyButton, overri
         setLoading(true);
         const details = await getEventDetails(ticketId);
         setEventDetails(details);
+        if (onTicketLoad) {
+          onTicketLoad(details);
+        }
         setLoading(false);
       } catch (err) {
         console.error('Error in retrieving event details:', err);
@@ -33,7 +37,7 @@ export const Ticket: React.FC<TicketProps> = ({ ticketId, showOnlyButton, overri
       }
     };
     fetchEventDetails();
-  }, [ticketId]);
+  }, [ticketId, t]);
 
   if (loading) {
     return (
