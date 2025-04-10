@@ -116,6 +116,7 @@ export const Web3Provider: React.FC<Web3ProviderProps> = ({ children }) => {
   useEffect(() => {
     if (!isConnected) {
       setLoggedAs(null);
+      localStorage.removeItem("mego_session");
       setProvider(null);
       setSection("ChooseType");
       localStorage.removeItem("loggedAs");
@@ -162,6 +163,7 @@ export const Web3Provider: React.FC<Web3ProviderProps> = ({ children }) => {
       setWalletConnectProvider(null);
       setProvider(null);
       setLoggedAs(null);
+      localStorage.removeItem("mego_session");
       localStorage.removeItem("provider");
       localStorage.removeItem("loggedAs");
     } catch (error) {
@@ -172,6 +174,7 @@ export const Web3Provider: React.FC<Web3ProviderProps> = ({ children }) => {
   function logout() {
     setProvider(null);
     setLoggedAs(null);
+    localStorage.removeItem("mego_session");
     logoutWalletConnect();
     localStorage.removeItem("provider");
     localStorage.removeItem("loggedAs");
@@ -307,6 +310,13 @@ export const Web3Provider: React.FC<Web3ProviderProps> = ({ children }) => {
     const searchParams = new URLSearchParams(window.location.search);
     const urlProvider = searchParams.get("provider");
     let urlLoggedAs = searchParams.get("loggedAs") || searchParams.get("signedAs");
+    let session = searchParams.get("session");
+
+    //Save session in localStorage
+    if (session) {
+      localStorage.setItem("mego_session", session);
+    }
+
     const exported = searchParams.get("exported");
     //# 1
     if (urlProvider) {
