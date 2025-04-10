@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useBuyTicketContext } from "../context/BuyTicketContext"
 import { useAccount, useLanguage } from "@megotickets/core";
 import AppleWalletIcon from './icons/AppleWalletIcon';
@@ -18,12 +18,21 @@ export const BuyTicketClaim: React.FC = () => {
         link.click();
     }
 
+    //UseMemo for resolve address
+    const userAddress = useMemo(() => {
+        //Search loggedAs o signedAs nei params dell'url
+        const urlParams = new URLSearchParams(window.location.search);
+        const loggedAs = urlParams.get('loggedAs');
+        const signedAs = urlParams.get('signedAs');
+        return address || loggedAs || signedAs || ""
+    }, [address, window.location.search])
+
     return (
         <div className="payment-stepper-container">
-            <h1 className="font-satoshi">{t('buyTicketClaim', 'payments')}</h1>
-            <p className="font-satoshi">{t('congratulations', 'payments')}</p>
-            <p className="font-satoshi">{t('yourTicketIsReady', 'payments')}</p>
-            <p className="font-satoshi">{t('sentTo', 'payments')}: {address?.slice(0, 6)}...{address?.slice(-4)}</p>
+            <h1 style={{ color: 'white' }} className="font-satoshi">{t('buyTicketClaim', 'payments')}</h1>
+            <p style={{ color: 'white' }} className="font-satoshi">{t('congratulations', 'payments')}</p>
+            <p style={{ color: 'white' }} className="font-satoshi">{t('yourTicketIsReady', 'payments')}</p>
+            <p style={{ color: 'white' }} className="font-satoshi">{t('sentTo', 'payments')}: {userAddress?.slice(0, 6)}...{address?.slice(-4)}</p>
             <button
                 className={`mego-modal-button mego-apple font-satoshi`}
                 style={{ marginTop: '1rem', display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}
