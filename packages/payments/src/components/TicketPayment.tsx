@@ -2,12 +2,15 @@ import React from 'react';
 import { ClaimTicketButton } from './ClaimTicketButton';
 import { useLanguage } from '@megotickets/core';
 import '../css/pay.css';
+import { MegoMetadataFieldConfig } from "../interfaces/metadata";
+
 interface TicketPaymentProps {
   eventDetails: any;
   isPriceZero: boolean;
   priceText: string;
   supplyText: string;
   overrideButton?: React.ReactNode;
+  metadataConfig?: MegoMetadataFieldConfig[];
 }
 
 
@@ -16,7 +19,8 @@ export const TicketPayment: React.FC<TicketPaymentProps> = ({
   isPriceZero,
   priceText,
   supplyText,
-  overrideButton
+  overrideButton,
+  metadataConfig
 }) => {
   const { t } = useLanguage()
   return (
@@ -31,6 +35,7 @@ export const TicketPayment: React.FC<TicketPaymentProps> = ({
           eventDetails={eventDetails}
           buttonText={isPriceZero ? t('claimFreeTicket', 'payments') : t('buyTicket', 'payments')}
           overrideButton={overrideButton}
+          metadataConfig={metadataConfig}
         />
       </div>
     </div>

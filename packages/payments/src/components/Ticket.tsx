@@ -7,15 +7,17 @@ import { TicketLocation } from './TicketLocation';
 import { TicketUserNFT } from './TicketUserNFT';
 import { ClaimTicketButton } from './ClaimTicketButton';
 import { useLanguage } from '@megotickets/core';
+import { MegoMetadataFieldConfig } from '../interfaces/metadata';
 
 interface TicketProps {
   ticketId: string;
   showOnlyButton?: boolean;
   overrideButton?: React.ReactNode;
   onTicketLoad?: (data: any) => void;
+  metadataConfig?: MegoMetadataFieldConfig[];
 }
 
-export const Ticket: React.FC<TicketProps> = ({ ticketId, showOnlyButton, overrideButton, onTicketLoad }) => {
+export const Ticket: React.FC<TicketProps> = ({ ticketId, showOnlyButton, overrideButton, onTicketLoad, metadataConfig }) => {
   const [eventDetails, setEventDetails] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -83,6 +85,7 @@ export const Ticket: React.FC<TicketProps> = ({ ticketId, showOnlyButton, overri
           eventDetails={eventDetails}
           buttonText={isPriceZero ? t('claimFreeTicket', 'payments') : t('buyTicket', 'payments')}
           overrideButton={overrideButton}
+          metadataConfig={metadataConfig}
         />
       </div>
     )
@@ -101,6 +104,7 @@ export const Ticket: React.FC<TicketProps> = ({ ticketId, showOnlyButton, overri
         priceText={priceText}
         supplyText={supplyText}
         overrideButton={overrideButton}
+        metadataConfig={metadataConfig}
       />
       <TicketLocation
         event={event}

@@ -5,6 +5,8 @@ import { cleanMegoPendingClaimProcessing } from '../utils/BuyTicketUtils';
 import { MegoPopup } from '@megotickets/core';
 import { PopupModality } from '../interfaces/popup-enum';
 import { MegoPopupData } from '@megotickets/core';
+import { MegoMetadataFieldConfig } from '../interfaces/metadata';
+
 interface BuyTicketContextType {
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;
@@ -58,6 +60,10 @@ interface BuyTicketContextType {
 
   //Terms and conditions link
   termsAndConditionsLink: string;
+
+  // Metadata Config (Aggiunto)
+  metadataConfig: MegoMetadataFieldConfig[] | null;
+  setMetadataConfig: (config: MegoMetadataFieldConfig[] | null) => void;
 }
 
 const BuyTicketContext = createContext<BuyTicketContextType | undefined>(undefined);
@@ -83,6 +89,9 @@ export const BuyTicketProvider: React.FC<BuyTicketProviderProps> = ({ children }
 
   //Discount code
   const [discountCode, setDiscountCode] = useState<string | null>(null);
+
+  // Stato per Metadata Config (Aggiunto)
+  const [metadataConfig, setMetadataConfig] = useState<MegoMetadataFieldConfig[] | null>(null);
 
   const [popup, setPopup] = useState<MegoPopupData>({
     isOpen: false,
@@ -111,6 +120,7 @@ export const BuyTicketProvider: React.FC<BuyTicketProviderProps> = ({ children }
     setTokenId(null)
     setProcessor(null)
     setDiscountCode(null)
+    setMetadataConfig(null) // Resetta anche metadataConfig
   }
 
   const restoreClaimProcessing = async () => {
@@ -251,7 +261,11 @@ export const BuyTicketProvider: React.FC<BuyTicketProviderProps> = ({ children }
     setDiscountCode,
 
     //Terms and conditions link
-    termsAndConditionsLink
+    termsAndConditionsLink,
+
+    // Metadata Config (Aggiunto)
+    metadataConfig,
+    setMetadataConfig
   };
 
   return (

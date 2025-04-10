@@ -6,12 +6,13 @@ import { PopupModality } from '../interfaces/popup-enum';
 import { MegoButton, useAccount, useLanguage } from '@megotickets/core';
 import { Loader } from '@megotickets/core';
 import "../css/pay.css";
+import { MegoMetadataInputType } from '../interfaces/metadata';
 
 
 const fastDebug = false
 
 export const BuyTicketForm: React.FC = () => {
-    const { eventDetails, setStepper, setClaimMetadata, setEmailOfBuyer, setProcessor, openPopup, resetPaymentProcessing, discountCode, setDiscountCode, termsAndConditionsLink } = useBuyTicketContext();
+    const { eventDetails, setStepper, setClaimMetadata, setEmailOfBuyer, setProcessor, openPopup, resetPaymentProcessing, discountCode, setDiscountCode, termsAndConditionsLink, metadataConfig } = useBuyTicketContext();
     const [email, setEmail] = useState(fastDebug ? "test@test.com" : '');
     const [termsAccepted, setTermsAccepted] = useState(fastDebug ? true : false);
     const [shareEmail, setShareEmail] = useState(fastDebug ? true : false);
@@ -39,7 +40,7 @@ export const BuyTicketForm: React.FC = () => {
 
             if (eventDetails?.event?.claim_metadata && eventDetails.event.claim_metadata.length > 0) {
                 const initialValues: Record<string, string> = {};
-                eventDetails.event.claim_metadata.forEach((_: any, index: string | number) => {
+                eventDetails.event.claim_metadata.forEach((_: any, index: number) => {
                     initialValues[index] = '';
                 });
                 setMetadataValues(initialValues);
@@ -72,10 +73,10 @@ export const BuyTicketForm: React.FC = () => {
         setStepper(Stepper.Processing);
     };
 
-    const handleMetadataChange = (index: number, value: string) => {
+    const handleMetadataChange = (key: number, value: string) => {
         setMetadataValues(prev => ({
             ...prev,
-            [index]: value
+            [key]: value
         }));
     };
 
@@ -120,30 +121,64 @@ export const BuyTicketForm: React.FC = () => {
                     )}
 
                     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', width: '100%' }}>
-                        {eventDetails?.event?.claim_metadata && eventDetails.event.claim_metadata.map((metadata: string, index: number) => {
-                            // Determina se il campo richiede un input o una textarea in base alla lunghezza
-                            const isLongText = metadata.length > 100;
-                            const isFieldEmpty = !metadataValues[index] || metadataValues[index].trim() === '';
+                        {eventDetails?.event?.claim_metadata && eventDetails.event.claim_metadata.map((metadataString: string, index: number) => {
+                            
+                            const fieldId = `metadata-${index}-${metadataString}`;
+                            let matchingConfig = metadataConfig?.find(config => config.metadata === fieldId);
+
+                            let fieldElement: React.ReactNode = null;
+
+                            if (matchingConfig && matchingConfig.type === MegoMetadataInputType.SELECT && matchingConfig.options) {
+                                fieldElement = (
+                                    <select
+                                        id={fieldId}
+                                        value={metadataValues[index] || ''}
+                                        onChange={(e) => handleMetadataChange(index, e.target.value)}
+                                        className="input-field" 
+                                    >
+                                        <option value="" disabled>{matchingConfig.placeholder || `${t('selectOption', 'payments')} (${metadataString})`}</option>
+                                        {matchingConfig.options.map(option => (
+                                            <option key={option} value={option}>{option}</option>
+                                        ))}
+                                    </select>
+                                );
+                            } else if (matchingConfig && matchingConfig.type === MegoMetadataInputType.TEXTAREA) {
+                                 fieldElement = (
+                                     <textarea
+                                         id={fieldId}
+                                         placeholder={matchingConfig.placeholder || metadataString}
+                                         value={metadataValues[index] || ''}
+                                         onChange={(e) => handleMetadataChange(index, e.target.value)}
+                                         className="ticket-form-textarea"
+                                         rows={4}
+                                     />
+                                 );
+                            } else {
+                                const isLongText = metadataString.length > 100;
+                                fieldElement = isLongText ? (
+                                    <textarea
+                                        id={fieldId}
+                                        placeholder={metadataString}
+                                        value={metadataValues[index] || ''}
+                                        onChange={(e) => handleMetadataChange(index, e.target.value)}
+                                        className="ticket-form-textarea"
+                                        rows={4}
+                                    />
+                                ) : (
+                                    <input
+                                        id={fieldId}
+                                        type="text"
+                                        placeholder={metadataString}
+                                        value={metadataValues[index] || ''}
+                                        onChange={(e) => handleMetadataChange(index, e.target.value)}
+                                        className="input-field"
+                                    />
+                                );
+                            }
 
                             return (
                                 <div key={index} style={{ width: '100%', marginBottom: '0.75rem' }}>
-                                    {isLongText ? (
-                                        <textarea
-                                            placeholder={metadata}
-                                            value={metadataValues[index] || ''}
-                                            onChange={(e) => handleMetadataChange(index, e.target.value)}
-                                            className="ticket-form-textarea"
-                                            rows={4}
-                                        />
-                                    ) : (
-                                        <input
-                                            type="text"
-                                            placeholder={metadata}
-                                            value={metadataValues[index] || ''}
-                                            onChange={(e) => handleMetadataChange(index, e.target.value)}
-                                            className="input-field"
-                                        />
-                                    )}
+                                    {fieldElement}
                                 </div>
                             );
                         })}

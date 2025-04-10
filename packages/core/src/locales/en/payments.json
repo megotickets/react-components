@@ -67,5 +67,6 @@
     "eventLocation": "Event Location",
     "price": "Price",
     "myTickets": "My tickets",
-    "noTicketsAvailableYet": "No tickets available yet"
+    "noTicketsAvailableYet": "No tickets available yet",
+    "selectOption": "Select an option"
 } 

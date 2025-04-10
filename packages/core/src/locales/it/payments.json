@@ -67,5 +67,6 @@
     "eventLocation": "Località evento",
     "price": "Prezzo",
     "myTickets": "I miei biglietti",
-    "noTicketsAvailableYet": "Nessun biglietto disponibile ancora"
+    "noTicketsAvailableYet": "Nessun biglietto disponibile ancora",
+    "selectOption": "Seleziona un'opzione"
 } 

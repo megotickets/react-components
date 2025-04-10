@@ -3,22 +3,23 @@ import { useBuyTicketContext } from "../context/BuyTicketContext";
 import { Stepper } from "../interfaces/interface-stepper";
 import { useAccount, useLanguage } from "@megotickets/core";
 import "../css/pay.css";
+import { MegoMetadataFieldConfig } from "../interfaces/metadata";
 
 interface ClaimTicketButtonProps {
   eventDetails: any;
   buttonText?: string;
   overrideButton?: React.ReactNode;
+  metadataConfig?: MegoMetadataFieldConfig[];
 }
-
-
 
 export const ClaimTicketButton: React.FC<ClaimTicketButtonProps> = ({
   buttonText,
   eventDetails,
-  overrideButton
+  overrideButton,
+  metadataConfig
 }) => {
 
-  const { setIsOpen, setEventDetails, resetPaymentProcessing, stepper } = useBuyTicketContext();
+  const { setIsOpen, setEventDetails, resetPaymentProcessing, stepper, setMetadataConfig } = useBuyTicketContext();
   const { address } = useAccount();
   const { t } = useLanguage()
 
@@ -28,6 +29,7 @@ export const ClaimTicketButton: React.FC<ClaimTicketButtonProps> = ({
       resetPaymentProcessing();
     }
     setEventDetails(eventDetails);
+    setMetadataConfig(metadataConfig || null);
     setIsOpen(true);
   };
 
