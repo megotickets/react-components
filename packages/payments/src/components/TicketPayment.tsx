@@ -20,7 +20,6 @@ export const TicketPayment: React.FC<TicketPaymentProps> = ({
   priceText,
   supplyText,
   overrideButton,
-  metadataConfig
 }) => {
   const { t } = useLanguage()
   return (
@@ -35,7 +34,6 @@ export const TicketPayment: React.FC<TicketPaymentProps> = ({
           eventDetails={eventDetails}
           buttonText={isPriceZero ? t('claimFreeTicket', 'payments') : t('buyTicket', 'payments')}
           overrideButton={overrideButton}
-          metadataConfig={metadataConfig}
         />
       </div>
     </div>

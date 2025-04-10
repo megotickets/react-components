@@ -7,12 +7,13 @@ import { MegoButton, useAccount, useLanguage } from '@megotickets/core';
 import { Loader } from '@megotickets/core';
 import "../css/pay.css";
 import { MegoMetadataInputType } from '../interfaces/metadata';
+import { ShareEmailOptions } from '@/interfaces/interface-share-email';
 
 
 const fastDebug = false
 
 export const BuyTicketForm: React.FC = () => {
-    const { eventDetails, setStepper, setClaimMetadata, setEmailOfBuyer, setProcessor, openPopup, resetPaymentProcessing, discountCode, setDiscountCode, termsAndConditionsLink, metadataConfig } = useBuyTicketContext();
+    const { eventDetails, setStepper, setClaimMetadata, setEmailOfBuyer, setProcessor, openPopup, resetPaymentProcessing, discountCode, setDiscountCode, termsAndConditionsLink, metadataConfig, shareEmail: shareEmailContext } = useBuyTicketContext();
     const [email, setEmail] = useState(fastDebug ? "test@test.com" : '');
     const [termsAccepted, setTermsAccepted] = useState(fastDebug ? true : false);
     const [shareEmail, setShareEmail] = useState(fastDebug ? true : false);
@@ -25,6 +26,12 @@ export const BuyTicketForm: React.FC = () => {
     console.log(eventDetails)
 
     let count = 0;
+
+    useEffect(() => {
+        if (shareEmailContext === ShareEmailOptions.DISABLED) {
+            setShareEmail(true) //Into disable mode, the field is invisible but checked
+        }
+    }, [shareEmailContext]);
 
     const userAddress = useMemo(() => {
         //Search loggedAs o signedAs nei params dell'url
@@ -83,18 +90,26 @@ export const BuyTicketForm: React.FC = () => {
     // Verifica se tutti i campi sono stati compilati
     useEffect(() => {
         const isEmailValid = email.trim() !== '' && email.includes('@');
-        const areTermsAccepted = termsAccepted && shareEmail;
+        const areTermsValid = termsAccepted;
+        let isSharedEmailValid = true;
+
+        console.log("shareEmailContext", shareEmailContext)
+
+        if(!shareEmailContext || shareEmailContext === ShareEmailOptions.MANDATORY){
+            isSharedEmailValid = shareEmail;
+        }
 
         console.log({
             isEmailValid,
-            areTermsAccepted,
+            areTermsValid,
+            isSharedEmailValid,
             metadataValues,
             metadataLength: eventDetails?.event?.claim_metadata?.length || 0,
             filledMetadataCount: Object.keys(metadataValues).length
         });
 
-        setIsFormValid(isEmailValid && areTermsAccepted);
-    }, [email, termsAccepted, shareEmail, metadataValues, eventDetails]);
+        setIsFormValid(isEmailValid && areTermsValid && isSharedEmailValid);
+    }, [email, termsAccepted, shareEmail, metadataValues, eventDetails, shareEmailContext]);
 
     const title = eventDetails?.event?.price === 0 ? t('claimYourFreeTicket', 'payments') : t('buyYourTicket', 'payments');
 
@@ -122,7 +137,7 @@ export const BuyTicketForm: React.FC = () => {
 
                     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', width: '100%' }}>
                         {eventDetails?.event?.claim_metadata && eventDetails.event.claim_metadata.map((metadataString: string, index: number) => {
-                            
+
                             const fieldId = `metadata-${index}-${metadataString}`;
                             let matchingConfig = metadataConfig?.find(config => config.metadata === fieldId);
 
@@ -134,7 +149,7 @@ export const BuyTicketForm: React.FC = () => {
                                         id={fieldId}
                                         value={metadataValues[index] || ''}
                                         onChange={(e) => handleMetadataChange(index, e.target.value)}
-                                        className="input-field" 
+                                        className="input-field"
                                     >
                                         <option value="" disabled>{matchingConfig.placeholder || `${t('selectOption', 'payments')} (${metadataString})`}</option>
                                         {matchingConfig.options.map(option => (
@@ -143,16 +158,16 @@ export const BuyTicketForm: React.FC = () => {
                                     </select>
                                 );
                             } else if (matchingConfig && matchingConfig.type === MegoMetadataInputType.TEXTAREA) {
-                                 fieldElement = (
-                                     <textarea
-                                         id={fieldId}
-                                         placeholder={matchingConfig.placeholder || metadataString}
-                                         value={metadataValues[index] || ''}
-                                         onChange={(e) => handleMetadataChange(index, e.target.value)}
-                                         className="ticket-form-textarea"
-                                         rows={4}
-                                     />
-                                 );
+                                fieldElement = (
+                                    <textarea
+                                        id={fieldId}
+                                        placeholder={matchingConfig.placeholder || metadataString}
+                                        value={metadataValues[index] || ''}
+                                        onChange={(e) => handleMetadataChange(index, e.target.value)}
+                                        className="ticket-form-textarea"
+                                        rows={4}
+                                    />
+                                );
                             } else {
                                 const isLongText = metadataString.length > 100;
                                 fieldElement = isLongText ? (
@@ -209,18 +224,20 @@ export const BuyTicketForm: React.FC = () => {
                         </label>
                     </div>
 
-                    <div style={{ display: 'flex', alignItems: 'flex-start', marginBottom: '1rem', width: '100%' }}>
-                        <input
-                            type="checkbox"
-                            id="shareEmail"
-                            checked={shareEmail}
-                            onChange={(e) => setShareEmail(e.target.checked)}
-                            style={{ marginRight: '0.5rem', marginTop: '0.25rem' }}
-                        />
-                        <label htmlFor="shareEmail" className="font-satoshi checkbox-label">
-                            {t('iAcceptToShareMyEmail', 'payments')}
-                        </label>
-                    </div>
+                    {shareEmailContext !== ShareEmailOptions.DISABLED &&
+                        <div style={{ display: 'flex', alignItems: 'flex-start', marginBottom: '1rem', width: '100%' }}>
+                            <input
+                                type="checkbox"
+                                id="shareEmail"
+                                checked={shareEmail}
+                                onChange={(e) => setShareEmail(e.target.checked)}
+                                style={{ marginRight: '0.5rem', marginTop: '0.25rem' }}
+                            />
+                            <label htmlFor="shareEmail" className="font-satoshi checkbox-label">
+                                {t('iAcceptToShareMyEmail', 'payments')}
+                            </label>
+                        </div>
+                    }
 
                     <PaymentsCollectors />
 

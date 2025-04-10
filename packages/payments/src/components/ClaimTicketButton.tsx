@@ -16,7 +16,6 @@ export const ClaimTicketButton: React.FC<ClaimTicketButtonProps> = ({
   buttonText,
   eventDetails,
   overrideButton,
-  metadataConfig
 }) => {
 
   const { setIsOpen, setEventDetails, resetPaymentProcessing, stepper, setMetadataConfig } = useBuyTicketContext();
@@ -29,7 +28,6 @@ export const ClaimTicketButton: React.FC<ClaimTicketButtonProps> = ({
       resetPaymentProcessing();
     }
     setEventDetails(eventDetails);
-    setMetadataConfig(metadataConfig || null);
     setIsOpen(true);
   };
 

@@ -8,20 +8,31 @@ import { TicketUserNFT } from './TicketUserNFT';
 import { ClaimTicketButton } from './ClaimTicketButton';
 import { useLanguage } from '@megotickets/core';
 import { MegoMetadataFieldConfig } from '../interfaces/metadata';
-
+import { ShareEmailOptions } from '../interfaces/interface-share-email';
+import { useBuyTicketContext } from '@/context/BuyTicketContext';
 interface TicketProps {
   ticketId: string;
   showOnlyButton?: boolean;
   overrideButton?: React.ReactNode;
   onTicketLoad?: (data: any) => void;
   metadataConfig?: MegoMetadataFieldConfig[];
+  shareEmail?: ShareEmailOptions;
 }
 
-export const Ticket: React.FC<TicketProps> = ({ ticketId, showOnlyButton, overrideButton, onTicketLoad, metadataConfig }) => {
+export const Ticket: React.FC<TicketProps> = ({ ticketId, showOnlyButton, overrideButton, onTicketLoad, metadataConfig, shareEmail }) => {
   const [eventDetails, setEventDetails] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const { t } = useLanguage()
+
+  const { setShareEmail, setMetadataConfig } = useBuyTicketContext();
+
+  //Sync context with props
+  useEffect(() => {
+    setShareEmail(shareEmail || null);
+    setMetadataConfig(metadataConfig || null);
+  }, [metadataConfig, shareEmail]);
+
   useEffect(() => {
     const fetchEventDetails = async () => {
       try {
@@ -85,7 +96,6 @@ export const Ticket: React.FC<TicketProps> = ({ ticketId, showOnlyButton, overri
           eventDetails={eventDetails}
           buttonText={isPriceZero ? t('claimFreeTicket', 'payments') : t('buyTicket', 'payments')}
           overrideButton={overrideButton}
-          metadataConfig={metadataConfig}
         />
       </div>
     )
@@ -104,7 +114,6 @@ export const Ticket: React.FC<TicketProps> = ({ ticketId, showOnlyButton, overri
         priceText={priceText}
         supplyText={supplyText}
         overrideButton={overrideButton}
-        metadataConfig={metadataConfig}
       />
       <TicketLocation
         event={event}

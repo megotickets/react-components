@@ -6,6 +6,7 @@ import { MegoPopup } from '@megotickets/core';
 import { PopupModality } from '../interfaces/popup-enum';
 import { MegoPopupData } from '@megotickets/core';
 import { MegoMetadataFieldConfig } from '../interfaces/metadata';
+import { ShareEmailOptions } from '@/interfaces/interface-share-email';
 
 interface BuyTicketContextType {
   isOpen: boolean;
@@ -64,6 +65,10 @@ interface BuyTicketContextType {
   // Metadata Config (Aggiunto)
   metadataConfig: MegoMetadataFieldConfig[] | null;
   setMetadataConfig: (config: MegoMetadataFieldConfig[] | null) => void;
+
+  //Share email
+  shareEmail: ShareEmailOptions | null;
+  setShareEmail: (shareEmail: ShareEmailOptions | null) => void;
 }
 
 const BuyTicketContext = createContext<BuyTicketContextType | undefined>(undefined);
@@ -93,6 +98,9 @@ export const BuyTicketProvider: React.FC<BuyTicketProviderProps> = ({ children }
   // Stato per Metadata Config (Aggiunto)
   const [metadataConfig, setMetadataConfig] = useState<MegoMetadataFieldConfig[] | null>(null);
 
+  //Share email
+  const [shareEmail, setShareEmail] = useState<ShareEmailOptions | null>(null);
+
   const [popup, setPopup] = useState<MegoPopupData>({
     isOpen: false,
     message: '',
@@ -120,7 +128,8 @@ export const BuyTicketProvider: React.FC<BuyTicketProviderProps> = ({ children }
     setTokenId(null)
     setProcessor(null)
     setDiscountCode(null)
-    setMetadataConfig(null) // Resetta anche metadataConfig
+    setMetadataConfig(null)
+    setShareEmail(null)
   }
 
   const restoreClaimProcessing = async () => {
@@ -265,7 +274,11 @@ export const BuyTicketProvider: React.FC<BuyTicketProviderProps> = ({ children }
 
     // Metadata Config (Aggiunto)
     metadataConfig,
-    setMetadataConfig
+    setMetadataConfig,
+
+    //Share email
+    shareEmail,
+    setShareEmail
   };
 
   return (
