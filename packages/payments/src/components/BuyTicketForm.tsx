@@ -8,7 +8,7 @@ import { Loader } from '@megotickets/core';
 import "../css/pay.css";
 
 
-const fastDebug = true
+const fastDebug = false
 
 export const BuyTicketForm: React.FC = () => {
     const { eventDetails, setStepper, setClaimMetadata, setEmailOfBuyer, setProcessor, openPopup, resetPaymentProcessing, discountCode, setDiscountCode, termsAndConditionsLink } = useBuyTicketContext();
@@ -44,8 +44,6 @@ export const BuyTicketForm: React.FC = () => {
                 });
                 setMetadataValues(initialValues);
             }
-
-
 
             // Ogni ticket gratuito deve essere pagato con Stripe (0)
             if (eventDetails?.event?.price === 0) {
@@ -86,31 +84,15 @@ export const BuyTicketForm: React.FC = () => {
         const isEmailValid = email.trim() !== '' && email.includes('@');
         const areTermsAccepted = termsAccepted && shareEmail;
 
-        // Verifica se tutti i campi di metadata sono stati compilati
-        let areMetadataFieldsValid = true;
-
-        if (eventDetails?.event?.claim_metadata && eventDetails.event.claim_metadata.length > 0) {
-            const metadataLength = eventDetails.event.claim_metadata.length;
-
-            for (let i = 0; i < metadataLength; i++) {
-                const value = metadataValues[i];
-                if (value === undefined || value.trim() === '') {
-                    areMetadataFieldsValid = false;
-                    break;
-                }
-            }
-        }
-
         console.log({
             isEmailValid,
             areTermsAccepted,
-            areMetadataFieldsValid,
             metadataValues,
             metadataLength: eventDetails?.event?.claim_metadata?.length || 0,
             filledMetadataCount: Object.keys(metadataValues).length
         });
 
-        setIsFormValid(isEmailValid && areTermsAccepted && areMetadataFieldsValid);
+        setIsFormValid(isEmailValid && areTermsAccepted);
     }, [email, termsAccepted, shareEmail, metadataValues, eventDetails]);
 
     const title = eventDetails?.event?.price === 0 ? t('claimYourFreeTicket', 'payments') : t('buyYourTicket', 'payments');
