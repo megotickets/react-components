@@ -334,8 +334,8 @@ export const Web3Provider: React.FC<Web3ProviderProps> = ({ children }) => {
 
       // Inizializza il provider JSON-RPC per Google
       if (urlProvider === 'google' || urlProvider === 'apple') {
-        const jsonRpcProvider = new ethers.JsonRpcProvider(process.env.REACT_APP_JSON_RPC_PROVIDER);
-        setNoWalletConnectProvider(jsonRpcProvider);
+        //const jsonRpcProvider = new ethers.JsonRpcProvider(process?.env?.REACT_APP_JSON_RPC_PROVIDER || "");
+        setNoWalletConnectProvider(null);
       }
 
       if (exported) {
@@ -361,8 +361,8 @@ export const Web3Provider: React.FC<Web3ProviderProps> = ({ children }) => {
         setProvider(storedProvider);
         // Inizializza il provider anche per sessioni ripristinate
         if (storedProvider === 'google' || storedProvider === 'apple') {
-          const jsonRpcProvider = new ethers.JsonRpcProvider(process.env.REACT_APP_JSON_RPC_PROVIDER);
-          setNoWalletConnectProvider(jsonRpcProvider);
+          //const jsonRpcProvider = new ethers.JsonRpcProvider(process?.env?.REACT_APP_JSON_RPC_PROVIDER || "");
+          setNoWalletConnectProvider(null);
         } else if (storedProvider === 'walletConnect') {
           loginWithWalletConnect();
         }
@@ -374,8 +374,8 @@ export const Web3Provider: React.FC<Web3ProviderProps> = ({ children }) => {
     if ((urlProvider === 'google' || urlProvider === 'apple') && urlLoggedAs) {
       //console.log("[DEBUG] #4 - urlProvider === 'google' && urlLoggedAs");
       try {
-        const jsonRpcProvider = new ethers.JsonRpcProvider("");
-        setNoWalletConnectProvider(jsonRpcProvider);
+        //const jsonRpcProvider = new ethers.JsonRpcProvider(process?.env?.REACT_APP_JSON_RPC_PROVIDER || "");
+        setNoWalletConnectProvider(null);
         if (urlProvider === 'google') {
           setProvider('google');
         } else if (urlProvider === 'apple') {
