@@ -48,8 +48,8 @@ const MegoBuyTicketModal: React.FC<MegoBuyTicketModalProps> = ({ onClose }) => {
       <div
         className="mego-modal-wrapper payment-wrapper"
         style={{
-          height: "50vh",
-          maxHeight: "50vh"
+          height: "75vh",
+          maxHeight: "75vh"
         }}
       >
         <div className="mego-modal-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
