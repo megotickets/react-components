@@ -12,10 +12,10 @@ import { signMessageWithGoogle, signMessageWithApple } from "@megotickets/core";
 import "../css/pay.css";
 
 export const BuyTicketClaimGeneration = () => {
-    const { eventDetails, openPopup, resetPaymentProcessing, setStepper, emailOfBuyer, setClaimData, claimMetadata, tokenId } = useBuyTicketContext()
-    const [message, setMessage] = useState<string>('Processing...')
-    const { address } = useAccount()
     const { t } = useLanguage()
+    const { eventDetails, openPopup, resetPaymentProcessing, setStepper, emailOfBuyer, setClaimData, claimMetadata, tokenId } = useBuyTicketContext()
+    const [message, setMessage] = useState<string>(t('processing', 'payments'))
+    const { address } = useAccount()
 
 
     let count = 0;
@@ -59,7 +59,7 @@ export const BuyTicketClaimGeneration = () => {
             }
 
             //Create claim
-            setMessage('Creating claim...')
+            setMessage(t('creatingClaim', 'payments'))
             const claim = await createClaim(signature, tokenId || "", emailOfBuyer || "", eventDetails?.event?.identifier, userAddress, `Claiming token ${tokenId}`, true, claimMetadata);
 
             if (claim.error) {
@@ -83,7 +83,7 @@ export const BuyTicketClaimGeneration = () => {
     }
 
     const claimProcessingWithMego = async () => {
-        setMessage('Creating claim...')
+        setMessage(t('creatingClaim', 'payments'))
         const data = await getMegoPendingClaimProcessingData()
         //Take query params signature from url
         const urlParams = new URLSearchParams(window.location.search);

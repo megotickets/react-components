@@ -29,15 +29,10 @@ export const BuyTicketClaim: React.FC = () => {
 
     return (
         <div className="payment-stepper-container">
-            <h1 style={{ color: 'white' }} className="font-satoshi">{t('buyTicketClaim', 'payments')}</h1>
-            <p style={{ color: 'white' }} className="font-satoshi">{t('congratulations', 'payments')}</p>
-            <p style={{ color: 'white' }} className="font-satoshi">{t('yourTicketIsReady', 'payments')}</p>
-            <p style={{ color: 'white' }} className="font-satoshi mb-4">
-                {t('sentTo', 'payments')}: {userAddress?.slice(0, 6)}...{userAddress?.slice(-4)}
-            </p>
+            <p style={{ color: 'white', marginBottom: '1rem' }} className="font-satoshi">{t('yourTicketIsReady', 'payments')}</p>
 
             {claimData?.qr && (
-                <div className="mb-6 bg-white p-2 inline-block rounded-lg shadow-md">
+                <div className="mb-6 mt-6 bg-white p-2 inline-block rounded-lg shadow-md">
                     <img 
                         src={claimData.qr} 
                         alt="QR Code Ticket" 

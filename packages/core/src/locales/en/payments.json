@@ -1,7 +1,7 @@
 {
     "mintingNFT": "Minting NFT...",
     "errorMintingNFT": "Error minting NFT...",
-    "waitingForMintingConfirmation": "Waiting for minting confirmation...",
+    "waitingForMintingConfirmation": "Creating ticket...",
     "buyTicketClaim": "Buy Ticket Claim",
     "congratulations": "Congratulations!",
     "yourTicketIsReady": "Your ticket is ready!",
@@ -26,7 +26,7 @@
     "iAcceptToShareMyEmail": "I accept to share my e-mail with event organizers.",
     "checkout": "Checkout",
     "checkingNFT": "Checking NFT...",
-    "processing": "Processing...",
+    "processing": "Please wait...",
     "noProcessorSelected": "No processor selected",
     "alert": "Alert",
     "askingForPaymentDetails": "Asking for payment details...",
@@ -68,5 +68,7 @@
     "price": "Price",
     "myTickets": "My tickets",
     "noTicketsAvailableYet": "No tickets available yet",
-    "selectOption": "Select an option"
+    "selectOption": "Select an option",
+    "congratulationsTitle": "Congratulations!",
+    "creatingClaim": "Creating claim..."
 } 

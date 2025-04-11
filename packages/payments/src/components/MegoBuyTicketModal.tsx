@@ -1,4 +1,4 @@
-import React, { useEffect, useState, ReactNode } from "react";
+import React, { useEffect, useState, ReactNode, useMemo } from "react";
 import CrossIcon from "./icons/CrossIcon";
 import { useBuyTicketContext } from "../context/BuyTicketContext";
 import { Stepper } from "../interfaces/interface-stepper";
@@ -17,13 +17,21 @@ interface MegoBuyTicketModalProps {
 const MegoBuyTicketModal: React.FC<MegoBuyTicketModalProps> = ({ onClose }) => {
   const [isClosing, setIsClosing] = useState(false);
   const { isOpen, setIsOpen, stepper, setStepper, resetPaymentProcessing } = useBuyTicketContext();
-  const { t } = useLanguage()
+  const { t, language } = useLanguage()
 
   useEffect(() => {
     if (isOpen) {
       setIsClosing(false);
     }
   }, [isOpen]);
+
+  // Change title dinamically based on the language and the stepper
+  const modalTitle = useMemo(() => {
+    if (stepper === Stepper.Claim) {
+      return <h2 className="payment-title font-satoshi">{t('congratulationsTitle', 'payments')}</h2>;
+    }
+    return <h3 className="payment-title font-satoshi">{t('buyTicket', 'payments')}</h3>;
+  }, [stepper, language]);
 
   function handleClose() {
     setIsClosing(true);
@@ -54,7 +62,7 @@ const MegoBuyTicketModal: React.FC<MegoBuyTicketModalProps> = ({ onClose }) => {
       >
         <div className="mego-modal-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div className="mego-modal-logo">
-            <h3 className="payment-title font-satoshi">{t('buyTicket', 'payments')}</h3>
+            {modalTitle}
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', position: 'relative', zIndex: 10 }}>
              <LanguageSelector />

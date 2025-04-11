@@ -121,132 +121,135 @@ export const BuyTicketForm: React.FC = () => {
     const title = eventDetails?.event?.price === 0 ? t('claimYourFreeTicket', 'payments') : t('buyYourTicket', 'payments');
 
     return (
-        <div className="payment-stepper-container">
+        <div className="payment-form-container">
             {
                 !isNFTCheckLoading &&
-                <div style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
-                    <div className="title-subtitle-container">
-                        <h1 className="font-satoshi title">{title}</h1>
-                        <p className="font-satoshi subtitle">{t('enterRequiredInformationToContinue', 'payments')}</p>
-                    </div>
+                <div className="form-container">
 
-                    {eventDetails?.event?.price > 0 && (
-                        <div style={{ width: '100%', marginBottom: '0.75rem' }}>
-                            <input
-                                type="text"
-                                placeholder={t('discountCode', 'payments')}
-                                value={discountCode || ''}
-                                onChange={(e) => setDiscountCode(e.target.value)}
-                                className="input-field"
-                            />
+                    <div>
+                        <div className="title-subtitle-container">
+                            <h1 className="font-satoshi title">{title}</h1>
+                            <p className="font-satoshi subtitle">{t('enterRequiredInformationToContinue', 'payments')}</p>
                         </div>
-                    )}
 
-                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', width: '100%' }}>
-                        {eventDetails?.event?.claim_metadata && eventDetails.event.claim_metadata.map((metadataString: string, index: number) => {
+                        {eventDetails?.event?.price > 0 && (
+                            <div style={{ width: '100%', marginBottom: '0.75rem' }}>
+                                <input
+                                    type="text"
+                                    placeholder={t('discountCode', 'payments')}
+                                    value={discountCode || ''}
+                                    onChange={(e) => setDiscountCode(e.target.value)}
+                                    className="input-field"
+                                />
+                            </div>
+                        )}
 
-                            const fieldId = `metadata-${index}-${metadataString}`;
-                            let matchingConfig = metadataConfig?.find(config => config.metadata === fieldId);
+                        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', width: '100%' }}>
+                            {eventDetails?.event?.claim_metadata && eventDetails.event.claim_metadata.map((metadataString: string, index: number) => {
 
-                            let fieldElement: React.ReactNode = null;
+                                const fieldId = `metadata-${index}-${metadataString}`;
+                                let matchingConfig = metadataConfig?.find(config => config.metadata === fieldId);
 
-                            if (matchingConfig && matchingConfig.type === MegoMetadataInputType.SELECT && matchingConfig.options) {
-                                fieldElement = (
-                                    <select
-                                        id={fieldId}
-                                        value={metadataValues[index] || ''}
-                                        onChange={(e) => handleMetadataChange(index, e.target.value)}
-                                        className="input-field"
-                                    >
-                                        <option value="" disabled>{matchingConfig.placeholder || `${t('selectOption', 'payments')} (${metadataString})`}</option>
-                                        {matchingConfig.options.map(option => (
-                                            <option key={option} value={option}>{option}</option>
-                                        ))}
-                                    </select>
+                                let fieldElement: React.ReactNode = null;
+
+                                if (matchingConfig && matchingConfig.type === MegoMetadataInputType.SELECT && matchingConfig.options) {
+                                    fieldElement = (
+                                        <select
+                                            id={fieldId}
+                                            value={metadataValues[index] || ''}
+                                            onChange={(e) => handleMetadataChange(index, e.target.value)}
+                                            className="input-field"
+                                        >
+                                            <option value="" disabled>{matchingConfig.placeholder || `${t('selectOption', 'payments')} (${metadataString})`}</option>
+                                            {matchingConfig.options.map(option => (
+                                                <option key={option} value={option}>{option}</option>
+                                            ))}
+                                        </select>
+                                    );
+                                } else if (matchingConfig && matchingConfig.type === MegoMetadataInputType.TEXTAREA) {
+                                    fieldElement = (
+                                        <textarea
+                                            id={fieldId}
+                                            placeholder={matchingConfig.placeholder || metadataString}
+                                            value={metadataValues[index] || ''}
+                                            onChange={(e) => handleMetadataChange(index, e.target.value)}
+                                            className="ticket-form-textarea"
+                                            rows={4}
+                                        />
+                                    );
+                                } else {
+                                    const isLongText = metadataString.length > 100;
+                                    fieldElement = isLongText ? (
+                                        <textarea
+                                            id={fieldId}
+                                            placeholder={metadataString}
+                                            value={metadataValues[index] || ''}
+                                            onChange={(e) => handleMetadataChange(index, e.target.value)}
+                                            className="ticket-form-textarea"
+                                            rows={4}
+                                        />
+                                    ) : (
+                                        <input
+                                            id={fieldId}
+                                            type="text"
+                                            placeholder={metadataString}
+                                            value={metadataValues[index] || ''}
+                                            onChange={(e) => handleMetadataChange(index, e.target.value)}
+                                            className="input-field"
+                                        />
+                                    );
+                                }
+
+                                return (
+                                    <div key={index} style={{ width: '100%', marginBottom: '0.75rem' }}>
+                                        {fieldElement}
+                                    </div>
                                 );
-                            } else if (matchingConfig && matchingConfig.type === MegoMetadataInputType.TEXTAREA) {
-                                fieldElement = (
-                                    <textarea
-                                        id={fieldId}
-                                        placeholder={matchingConfig.placeholder || metadataString}
-                                        value={metadataValues[index] || ''}
-                                        onChange={(e) => handleMetadataChange(index, e.target.value)}
-                                        className="ticket-form-textarea"
-                                        rows={4}
-                                    />
-                                );
-                            } else {
-                                const isLongText = metadataString.length > 100;
-                                fieldElement = isLongText ? (
-                                    <textarea
-                                        id={fieldId}
-                                        placeholder={metadataString}
-                                        value={metadataValues[index] || ''}
-                                        onChange={(e) => handleMetadataChange(index, e.target.value)}
-                                        className="ticket-form-textarea"
-                                        rows={4}
-                                    />
-                                ) : (
-                                    <input
-                                        id={fieldId}
-                                        type="text"
-                                        placeholder={metadataString}
-                                        value={metadataValues[index] || ''}
-                                        onChange={(e) => handleMetadataChange(index, e.target.value)}
-                                        className="input-field"
-                                    />
-                                );
-                            }
+                            })}
 
-                            return (
-                                <div key={index} style={{ width: '100%', marginBottom: '0.75rem' }}>
-                                    {fieldElement}
-                                </div>
-                            );
-                        })}
+                            {!isConnectedWithMego() && <input
+                                type="email"
+                                id="email"
+                                placeholder={t('email', 'payments')}
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                className="input-field"
+                                style={{
+                                    border: `1px solid ${!email || !email.includes('@') ? '#FCA5A5' : 'white'}`,
+                                }}
+                            />}
+                        </div>
 
-                        {!isConnectedWithMego() && <input
-                            type="email"
-                            id="email"
-                            placeholder={t('email', 'payments')}
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            className="input-field"
-                            style={{
-                                border: `1px solid ${!email || !email.includes('@') ? '#FCA5A5' : 'white'}`,
-                            }}
-                        />}
-                    </div>
-
-                    <div className="ticket-form-checkbox-container">
-                        <input
-                            type="checkbox"
-                            id="terms"
-                            checked={termsAccepted}
-                            onChange={(e) => setTermsAccepted(e.target.checked)}
-                            style={{ marginRight: '0.5rem', marginTop: '0.25rem' }}
-                        />
-                        <label htmlFor="terms" className="font-satoshi checkbox-label">
-                            {t('iAcceptThe', 'payments')} <a href={termsAndConditionsLink} target="_blank" rel="noopener noreferrer" style={{ color: '#60A5FA', textDecoration: 'underline' }}>{t('termsAndConditions', 'payments')}</a>.
-                        </label>
-                    </div>
-
-                    {shareEmailContext !== ShareEmailOptions.DISABLED &&
-                        <div style={{ display: 'flex', alignItems: 'flex-start', marginBottom: '1rem', width: '100%' }}>
+                        <div className="ticket-form-checkbox-container">
                             <input
                                 type="checkbox"
-                                id="shareEmail"
-                                checked={shareEmail}
-                                onChange={(e) => setShareEmail(e.target.checked)}
+                                id="terms"
+                                checked={termsAccepted}
+                                onChange={(e) => setTermsAccepted(e.target.checked)}
                                 style={{ marginRight: '0.5rem', marginTop: '0.25rem' }}
                             />
-                            <label htmlFor="shareEmail" className="font-satoshi checkbox-label">
-                                {t('iAcceptToShareMyEmail', 'payments')}
+                            <label htmlFor="terms" className="font-satoshi checkbox-label">
+                                {t('iAcceptThe', 'payments')} <a href={termsAndConditionsLink} target="_blank" rel="noopener noreferrer" style={{ color: '#60A5FA', textDecoration: 'underline' }}>{t('termsAndConditions', 'payments')}</a>.
                             </label>
                         </div>
-                    }
 
-                    <PaymentsCollectors />
+                        {shareEmailContext !== ShareEmailOptions.DISABLED &&
+                            <div style={{ display: 'flex', alignItems: 'flex-start', marginBottom: '1rem', width: '100%' }}>
+                                <input
+                                    type="checkbox"
+                                    id="shareEmail"
+                                    checked={shareEmail}
+                                    onChange={(e) => setShareEmail(e.target.checked)}
+                                    style={{ marginRight: '0.5rem', marginTop: '0.25rem' }}
+                                />
+                                <label htmlFor="shareEmail" className="font-satoshi checkbox-label">
+                                    {t('iAcceptToShareMyEmail', 'payments')}
+                                </label>
+                            </div>
+                        }
+
+                        <PaymentsCollectors />
+                    </div>
 
                     <MegoButton
                         disabled={!isFormValid}
@@ -261,6 +264,7 @@ export const BuyTicketForm: React.FC = () => {
                     </MegoButton>
                 </div>
             }
+
             {
                 isNFTCheckLoading &&
                 <div className="loader">
