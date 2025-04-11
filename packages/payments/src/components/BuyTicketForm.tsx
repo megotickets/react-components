@@ -124,14 +124,14 @@ export const BuyTicketForm: React.FC = () => {
         <div className="payment-form-container">
             {
                 !isNFTCheckLoading &&
-                <div className="form-container">
+                <div style={{ width: '100%', display: 'flex', flexDirection: 'column', flexGrow: 1, justifyContent: 'space-between' }}>
+
 
                     <div>
                         <div className="title-subtitle-container">
                             <h1 className="font-satoshi title">{title}</h1>
                             <p className="font-satoshi subtitle">{t('enterRequiredInformationToContinue', 'payments')}</p>
                         </div>
-
                         {eventDetails?.event?.price > 0 && (
                             <div style={{ width: '100%', marginBottom: '0.75rem' }}>
                                 <input
@@ -143,7 +143,6 @@ export const BuyTicketForm: React.FC = () => {
                                 />
                             </div>
                         )}
-
                         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', width: '100%' }}>
                             {eventDetails?.event?.claim_metadata && eventDetails.event.claim_metadata.map((metadataString: string, index: number) => {
 

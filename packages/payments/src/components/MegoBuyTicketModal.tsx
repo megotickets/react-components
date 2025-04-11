@@ -69,8 +69,10 @@ const MegoBuyTicketModal: React.FC<MegoBuyTicketModalProps> = ({ onClose }) => {
       <div
         className="mego-modal-wrapper payment-wrapper"
         style={{
-          height: "75vh",
-          maxHeight: "75vh"
+          minHeight: "75vh",
+          maxHeight: "75vh",
+          display: 'flex',
+          
         }}
       >
         <div className="mego-modal-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -84,7 +86,7 @@ const MegoBuyTicketModal: React.FC<MegoBuyTicketModalProps> = ({ onClose }) => {
             </div>
           </div>
         </div>
-        <div className="mego-modal-content payment-content">
+        <div className="mego-modal-content payment-content" style={{ display: 'flex', flexDirection: 'column', flexGrow: 1, height: '100%' }}>
           {stepper === Stepper.Form_data && <BuyTicketForm />}
           {stepper === Stepper.Processing && <BuyTicketProcessing />}
           {stepper === Stepper.Payments_crypto && <BuyTicketWithCrypto />}
