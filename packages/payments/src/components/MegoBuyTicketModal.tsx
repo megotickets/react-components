@@ -19,6 +19,19 @@ const MegoBuyTicketModal: React.FC<MegoBuyTicketModalProps> = ({ onClose }) => {
   const { isOpen, setIsOpen, stepper, setStepper, resetPaymentProcessing } = useBuyTicketContext();
   const { t, language } = useLanguage()
 
+  //Prevent background scrolling when the modal is open
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'auto';
+    }
+
+    return () => {
+      document.body.style.overflow = 'auto';
+    };
+  }, [isOpen]);
+
   useEffect(() => {
     if (isOpen) {
       setIsClosing(false);
