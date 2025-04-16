@@ -81,7 +81,6 @@ export function WalletButton({ customStyle, providerConfiguration, forceChainId 
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: `${customStyle?.megoWalletPosition || 'right'}`,
-                paddingRight: '1rem',
                 gap: '0.5rem',
             }}>
             <WalletIcon />
