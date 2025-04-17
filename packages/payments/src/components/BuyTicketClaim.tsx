@@ -7,7 +7,7 @@ import QrCodeIcon from './icons/QrCodeIcon';
 import "../css/pay.css";
 export const BuyTicketClaim: React.FC = () => {
 
-    const { claimData } = useBuyTicketContext()
+    const { claimData, redirectUrl } = useBuyTicketContext()
     const { t } = useLanguage()
 
     const downloadQrCode = (base64: string) => {
@@ -15,6 +15,11 @@ export const BuyTicketClaim: React.FC = () => {
         link.href = base64;
         link.download = 'qr-code.png';
         link.click();
+    }
+
+    if(redirectUrl) {
+        window.location.href = redirectUrl;
+        return null;
     }
 
     return (
