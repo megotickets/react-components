@@ -26,15 +26,23 @@ const BuyTicketWithStripe = () => {
     const handleCancel = () => {
         localStorage.removeItem("_func");
         setIsProcessing(false);
+        setWaitForPaymentConfirmation(false);
         resetPaymentProcessing();
     }
 
-    const waitBackendConfirmationOfPayment = async () => {
+    const waitBackendConfirmationOfPayment = async (): Promise<(() => void) | undefined> => {
+        let intervalIdInternal: NodeJS.Timeout | null = null;
+        const cleanup = () => {
+            if (intervalIdInternal) {
+                clearInterval(intervalIdInternal);
+                console.log("Cleaned up payment check interval.");
+            }
+        };
+
         try {
             setWaitForPaymentConfirmation(true);
             setIsCanceledAllowed(false);
             setMessage(t('waitingForPaymentConfirmation', 'payments'))
-            //Check params from url
             const urlParams = new URLSearchParams(window.location.search);
             const uuid = urlParams.get("uuid");
             const account = urlParams.get("account");
@@ -53,19 +61,19 @@ const BuyTicketWithStripe = () => {
                 console.log('payment', payment);
                 if (payment.error == false) {
                     console.log("Payment details found! .. check payment status")
-                    //Check if payment is completed
-                    const interval = setInterval(async () => {
+                    intervalIdInternal = setInterval(async () => {
                         console.log('checkPayment with uuid:', uuid);
                         const result = await checkPayment(uuid);
                         console.log('checkPayment:', result);
                         if (result.error == false) {
-                            clearInterval(interval);
+                            cleanup();
                             localStorage.removeItem("_func");
                             setStepper(Stepper.NFT_Mint);
                         } else {
-                            console.log("Still error = false")
+                            console.log("Payment not confirmed yet...");
                         }
                     }, 5000);
+                    return cleanup;
                 } else {
                     openPopup({
                         title: t('error', 'payments'),
@@ -73,14 +81,17 @@ const BuyTicketWithStripe = () => {
                         modality: PopupModality.Error,
                         isOpen: true
                     });
+                    localStorage.removeItem("_func");
                     setIsProcessing(false);
+                    setWaitForPaymentConfirmation(false);
+                    return undefined;
                 }
             } else {
-                // C'era _func ma non c'erano i parametri di pagamento quindi si cancella il processo e si riparte dall'inizio
                 console.log("There was _func but no payment parameters so the process is cancelled and we start over")
-                setIsProcessing(false);
                 localStorage.removeItem("_func");
-                initializeStripe();
+                setIsProcessing(false);
+                setWaitForPaymentConfirmation(false);
+                return undefined;
             }
         } catch (error: any) {
             console.error("Error waiting for payment confirmation:", error);
@@ -90,9 +101,10 @@ const BuyTicketWithStripe = () => {
                 modality: PopupModality.Error,
                 isOpen: true
             });
-            setIsProcessing(false);
-        } finally {
             localStorage.removeItem("_func");
+            setIsProcessing(false);
+            setWaitForPaymentConfirmation(false);
+            return undefined;
         }
     };
 
@@ -105,16 +117,25 @@ const BuyTicketWithStripe = () => {
                 console.error('No stripe client secret');
                 return;
             }
-            // Carica Stripe con la chiave pubblica (dovrebbe essere configurata nell'ambiente)
-            const stripePromise = loadStripe(stripePublishableKey || "");
+            if (!stripePublishableKey) {
+                console.error('No stripe publishable key');
+                return;
+            }
+
+            const stripePromise = loadStripe(stripePublishableKey);
             const stripe = await stripePromise;
 
             if (!stripe) {
                 console.error('Unable to load Stripe');
+                openPopup({
+                    title: t('error', 'payments'),
+                    message: t('errorInStripeInitialization', 'payments') + " (Unable to load Stripe)",
+                    modality: PopupModality.Error,
+                    isOpen: true
+                });
                 return;
             }
 
-            // Crea gli elementi Stripe con il client secret
             const elements = stripe.elements({
                 clientSecret,
                 locale: language ?? "en",
@@ -162,7 +183,6 @@ const BuyTicketWithStripe = () => {
                 },
             });
 
-            // Crea l'elemento di pagamento e montalo nel DOM
             const paymentElement = elements.create("payment");
             const paymentElementContainer = document.getElementById('payment-element');
 
@@ -170,8 +190,9 @@ const BuyTicketWithStripe = () => {
                 paymentElement.mount("#payment-element");
                 setStripeElements(elements);
                 setStripeInstance(stripe);
+                console.log("Stripe initialized and mounted.");
             } else {
-                throw new Error("Payment element not found in DOM");
+                console.warn("Payment element container not found when trying to initialize Stripe. This might be expected if waiting for payment confirmation.");
             }
         } catch (error: any) {
             console.error("Error in Stripe initialization:", error);
@@ -181,23 +202,41 @@ const BuyTicketWithStripe = () => {
                 modality: PopupModality.Error,
                 isOpen: true
             });
+            setIsProcessing(false);
         }
     };
 
-    //Al mount si verifica se c'è un processo di pagamento in sospeso oppure no
     useEffect(() => {
+        let cleanupFunction: (() => void) | undefined;
 
-        const label = localStorage.getItem("_func");
-        if (!label) {
-            initializeStripe();
-        }
+        const initOrWait = async () => {
+            const label = localStorage.getItem("_func");
+            if (!label) {
+                if (!waitForPaymentConfirmation) {
+                    if(paymentsDetails?.payment?.stripePayment?.client_secret && eventDetails?.event?.collectors?.stripe?.pub) {
+                         initializeStripe();
+                    } else {
+                        console.log("Waiting for payment/event details before initializing Stripe...");
+                    }
+                } else {
+                     console.log("Waiting for payment confirmation, skipping Stripe initialization.");
+                }
+            } else if (label === "stripe_payment") {
+                console.log("Found pending payment process, starting wait...");
+                cleanupFunction = await waitBackendConfirmationOfPayment();
+            }
+        };
 
-        if (label === "stripe_payment") {
-            console.log("We found a pending payment process ..")
-            waitBackendConfirmationOfPayment();
-        }
+        initOrWait();
 
-    }, [paymentsDetails, openPopup, eventDetails]);
+        return () => {
+            if (cleanupFunction) {
+                console.log("Running cleanup from useEffect...");
+                cleanupFunction();
+            }
+        };
+
+    }, [paymentsDetails, eventDetails, waitForPaymentConfirmation, language]);
 
     const handlePayment = async () => {
         if (!stripeInstance || !stripeElements) {
@@ -212,9 +251,12 @@ const BuyTicketWithStripe = () => {
 
         try {
             setIsProcessing(true);
-            savePendingProcess("stripe_payment"); //For redirect
-            // Conferma il pagamento con redirect personalizzato
-            const userAddress = getLoginDataInfo()?.loggedAs || ""
+            savePendingProcess("stripe_payment");
+            const userAddress = getLoginDataInfo()?.loggedAs || address || ""
+            if (!userAddress) {
+                 console.error("User address not found for redirect.");
+                 throw new Error("User address not available.");
+            }
             const { error } = await stripeInstance.confirmPayment({
                 elements: stripeElements,
                 confirmParams: {
@@ -228,10 +270,11 @@ const BuyTicketWithStripe = () => {
             });
 
             if (error) {
+                console.error("Stripe confirmPayment error:", error);
                 throw error;
             }
         } catch (error: any) {
-            console.error("Error during payment:", error);
+            console.error("Error during payment confirmation:", error);
             openPopup({
                 title: t('error', 'payments'),
                 message: error.message || t('anErrorOccurredDuringPayment', 'payments'),
@@ -239,14 +282,24 @@ const BuyTicketWithStripe = () => {
                 isOpen: true
             });
             localStorage.removeItem("_func");
-        } finally {
             setIsProcessing(false);
         }
     };
 
     return (
         <div className="payment-stepper-stripe" style={{ flexGrow: 1 }}>
-            <div id="payment-element" className="ticket-stripe-form-container"></div>
+            {
+                !waitForPaymentConfirmation &&
+                (paymentsDetails?.payment?.stripePayment?.client_secret && eventDetails?.event?.collectors?.stripe?.pub) &&
+                <div id="payment-element" className="ticket-stripe-form-container"></div>
+            }
+            {
+                 !waitForPaymentConfirmation &&
+                 !(paymentsDetails?.payment?.stripePayment?.client_secret && eventDetails?.event?.collectors?.stripe?.pub) &&
+                 <div className="ticket-stripe-form-container">
+                    <p>{t('loadingStripeConfiguration', 'payments')}</p>
+                 </div>
+            }
             {
                 waitForPaymentConfirmation &&
                 <div className="loader">
@@ -255,21 +308,30 @@ const BuyTicketWithStripe = () => {
             }
             <div className="chooseType-btn-container">
                 {
-                    !waitForPaymentConfirmation && <MegoButton
+                    !waitForPaymentConfirmation && stripeInstance && stripeElements && !isProcessing &&
+                    <MegoButton
                         onClick={handlePayment}
-                        disabled={isProcessing}
-                        className={"font-satoshi " + (isProcessing ? 'disabled' : '') + " chooseType-btn"}
+                        className={"font-satoshi chooseType-btn"}
                     >
-                        {isProcessing ? t('processing', 'payments') : t('payNow', 'payments')}
+                       {t('payNow', 'payments')}
                     </MegoButton>
+                }
+                {
+                     !waitForPaymentConfirmation && isProcessing &&
+                     <MegoButton
+                         disabled={true}
+                         className={"font-satoshi disabled chooseType-btn"}
+                     >
+                        {t('processing', 'payments')}
+                     </MegoButton>
                 }
             </div>
             <div className="chooseType-btn-container">
                 {
-                    isCanceledAllowed &&
+                    isCanceledAllowed && !waitForPaymentConfirmation &&
                     <MegoButton
                         onClick={handleCancel}
-                        className="font-satoshi chooseType-btn"
+                        className="font-satoshi chooseType-btn cancel-btn"
                     >
                         {t('cancelOperation', 'payments')}
                     </MegoButton>
