@@ -8,7 +8,6 @@ import "../css/pay.css";
 export const BuyTicketClaim: React.FC = () => {
 
     const { claimData } = useBuyTicketContext()
-    const { address } = useAccount()
     const { t } = useLanguage()
 
     const downloadQrCode = (base64: string) => {
@@ -17,15 +16,6 @@ export const BuyTicketClaim: React.FC = () => {
         link.download = 'qr-code.png';
         link.click();
     }
-
-    //UseMemo for resolve address
-    const userAddress = useMemo(() => {
-        //Search loggedAs o signedAs nei params dell'url
-        const urlParams = new URLSearchParams(window.location.search);
-        const loggedAs = urlParams.get('loggedAs');
-        const signedAs = urlParams.get('signedAs');
-        return address || loggedAs || signedAs || ""
-    }, [address, window.location.search])
 
     return (
         <div className="payment-stepper-container">

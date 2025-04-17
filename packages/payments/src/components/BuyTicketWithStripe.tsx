@@ -7,6 +7,7 @@ import { checkPayment, getPayment } from "../utils/BuyTicketUtils";
 import { useAccount } from "@megotickets/core";
 import { Loader, MegoButton, useLanguage } from "@megotickets/core";
 import "../css/pay.css";
+import { getLoginDataInfo } from "@/utils/LoginUtils";
 
 const BuyTicketWithStripe = () => {
     const { eventDetails, paymentsDetails, openPopup, setStepper, savePendingProcess, resetPaymentProcessing } = useBuyTicketContext();
@@ -21,14 +22,6 @@ const BuyTicketWithStripe = () => {
 
     console.log('paymentsDetails', paymentsDetails);
     console.log('eventDetails', eventDetails);
-
-    const userAddress = useMemo(() => {
-        //Search loggedAs o signedAs nei params dell'url
-        const urlParams = new URLSearchParams(window.location.search);
-        const loggedAs = urlParams.get('loggedAs');
-        const signedAs = urlParams.get('signedAs');
-        return address || loggedAs || signedAs || ""
-    }, [address, window.location.search])
 
     const handleCancel = () => {
         localStorage.removeItem("_func");
@@ -221,6 +214,7 @@ const BuyTicketWithStripe = () => {
             setIsProcessing(true);
             savePendingProcess("stripe_payment"); //For redirect
             // Conferma il pagamento con redirect personalizzato
+            const userAddress = getLoginDataInfo()?.loggedAs || ""
             const { error } = await stripeInstance.confirmPayment({
                 elements: stripeElements,
                 confirmParams: {
@@ -251,7 +245,7 @@ const BuyTicketWithStripe = () => {
     };
 
     return (
-        <div className="payment-stepper-stripe">
+        <div className="payment-stepper-stripe" style={{ flexGrow: 1 }}>
             <div id="payment-element" className="ticket-stripe-form-container"></div>
             {
                 waitForPaymentConfirmation &&

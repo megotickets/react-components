@@ -17,3 +17,7 @@ export { MegoButton } from './components/MegoButton';
 export { useLanguage } from './hooks/useLanguage';
 export { LanguageSelector } from './components/LanguageSelector';
 export type { SupportedLanguage } from './context/LanguageContext';
+
+// --- Login Data System Exports ---
+export * from './utils/MegoLocalStorageBox';
+export type { LoginData } from './interfaces/LoginData';

@@ -11,7 +11,7 @@ import '@rainbow-me/rainbowkit/styles.css';
 import { BrowserProvider, ethers } from "ethers";
 import axios from "axios";
 import { useConnectModal } from '@rainbow-me/rainbowkit';
-import { useAccount, useSwitchChain } from '@megotickets/core';
+import { getLoginData, LoginData, removeLoginData, saveLoginData, useAccount, useSwitchChain } from '@megotickets/core';
 import { disconnect } from '@megotickets/core'
 import { config } from "@megotickets/core";
 type Route =
@@ -109,6 +109,14 @@ export const Web3Provider: React.FC<Web3ProviderProps> = ({ children }) => {
       setSection("Logged");
       localStorage.setItem("loggedAs", address);
       setProvider("walletConnect");
+
+      saveLoginData({ //<--- Save login data (if user login with walletconnect)
+        loggedAs: address,
+        isConnectWithMego: false,
+        provider: "walletConnect",
+        email: "-"
+      });
+
       closeMegoModal();
     }
   }, [address]);
@@ -168,6 +176,7 @@ export const Web3Provider: React.FC<Web3ProviderProps> = ({ children }) => {
       localStorage.removeItem("mego_email");
       localStorage.removeItem("provider");
       localStorage.removeItem("loggedAs");
+      removeLoginData(); //<--- Remove login data (if user logout)
     } catch (error) {
       console.error("Error during logout from walletconnect:", error);
     }
@@ -183,14 +192,8 @@ export const Web3Provider: React.FC<Web3ProviderProps> = ({ children }) => {
     localStorage.removeItem("loggedAs");
     //console.log("[DEBUG]Effettuando il logout, loggedAs in localStorage:", localStorage.getItem("loggedAs"));
     window.history.replaceState(null, "", window.location.pathname);
+    removeLoginData(); //<--- Remove login data (if user logout)
   }
-
-
-  //DEBUG
-  useEffect(() => {
-    //console.log("[DEBUG]loggedAs ripristinato:", loggedAs);
-    //console.log("[DEBUG]provider ripristinato:", provider);
-  }, [loggedAs, provider]);
 
 
   const getProvider = () => {
@@ -245,6 +248,13 @@ export const Web3Provider: React.FC<Web3ProviderProps> = ({ children }) => {
       localStorage.setItem("loggedAs", address);
       localStorage.setItem("provider", "walletConnect");
 
+      saveLoginData({ //<--- Save login data (if user login with walletconnect)
+        loggedAs: address,
+        isConnectWithMego: false,
+        provider: "walletConnect",
+        email: "-"
+      });
+
       // Cambiamo la sezione a "Logged"
       setSection("Logged");
 
@@ -256,6 +266,7 @@ export const Web3Provider: React.FC<Web3ProviderProps> = ({ children }) => {
     } catch (error) {
       console.error("Error initializing provider:", error);
       console.log(error);
+      removeLoginData(); //<--- Remove login data (if user logout)
     } finally {
       setIsLoading(false);
       setLoadingText("");
@@ -280,6 +291,14 @@ export const Web3Provider: React.FC<Web3ProviderProps> = ({ children }) => {
       localStorage.setItem("provider", "email");
       localStorage.setItem("email", email);
       setProvider("email");
+
+      saveLoginData({ //<--- Save login data (if user login with email)
+        loggedAs: check.data.addresses.eth,
+        isConnectWithMego: true,
+        provider: "email",
+        email: email
+      });
+
     } else {
       setLoadingText("");
       alert(check.data.message);
@@ -309,23 +328,44 @@ export const Web3Provider: React.FC<Web3ProviderProps> = ({ children }) => {
   }
 
   useEffect(() => {
-    //console.log("[DEBUG] Executing useEffect");
+
+    //Local storage session first!
+    const loginData: LoginData | null = getLoginData();
+    let urlProvider = null;
+    let urlLoggedAs = null;
+    let session = null;
+    let email = null;
     const searchParams = new URLSearchParams(window.location.search);
-    const urlProvider = searchParams.get("provider");
-    let urlLoggedAs = searchParams.get("loggedAs") || searchParams.get("signedAs");
-    let session = searchParams.get("session");
-    let email = searchParams.get("email");
 
-    //Save session in localStorage
-    if (session) {
-      localStorage.setItem("mego_session", session);
-    }
+    //If no login data, try to get it from url params
+    if (!loginData) {
+     
+      urlProvider = searchParams.get("provider");
+      urlLoggedAs = searchParams.get("loggedAs") || searchParams.get("signedAs");
+      session = searchParams.get("session");
+      email = searchParams.get("email");
 
-    if (email) {
-      localStorage.setItem("mego_email", email);
+      if (!urlLoggedAs || !urlProvider || !email) {
+        return;
+      }
+
+      saveLoginData({
+        loggedAs: urlLoggedAs,
+        isConnectWithMego: urlProvider != "walletConnect",
+        provider: urlProvider,
+        email: email,
+        session: session,
+      });
+
+    } else {
+      urlProvider = loginData.provider;
+      urlLoggedAs = loginData.loggedAs;
+      session = loginData.session;
+      email = loginData.email;
     }
 
     const exported = searchParams.get("exported");
+
     //# 1
     if (urlProvider) {
       //console.log("[DEBUG] #1 - urlProvider:", urlProvider);
@@ -349,7 +389,7 @@ export const Web3Provider: React.FC<Web3ProviderProps> = ({ children }) => {
       setLoggedAs(urlLoggedAs);
       localStorage.setItem("loggedAs", urlLoggedAs);
     }
-  
+
     //# 3
     if (!urlProvider && !urlLoggedAs) {
       //console.log("[DEBUG] #3 - !urlProvider && !urlLoggedAs");
@@ -506,11 +546,8 @@ export const Web3Provider: React.FC<Web3ProviderProps> = ({ children }) => {
   }
 
   const isConnectedWithMego = () => {
-    const isConnectedWithMego = provider !== 'walletConnect'
-    if (isConnectedWithMego && provider) {
-      return true;
-    }
-    return false;
+    const loginData: LoginData | null = getLoginData();
+    return loginData?.isConnectWithMego || false;
   }
 
 
@@ -524,8 +561,8 @@ export const Web3Provider: React.FC<Web3ProviderProps> = ({ children }) => {
   };
   return (
     <Web3Context.Provider value={value}>
-        {children}
-        {isMegoModalOpen && <MegoModal isOpen={isMegoModalOpen} onClose={closeMegoModal} />}
+      {children}
+      {isMegoModalOpen && <MegoModal isOpen={isMegoModalOpen} onClose={closeMegoModal} />}
     </Web3Context.Provider>
   );
 };

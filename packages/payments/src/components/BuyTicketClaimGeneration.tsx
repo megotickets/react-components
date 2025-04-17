@@ -10,34 +10,23 @@ import { config } from "@megotickets/core";
 import { isConnectedWithMego, getProvider } from "../utils/utils";
 import { signMessageWithGoogle, signMessageWithApple } from "@megotickets/core";
 import "../css/pay.css";
+import { getLoginDataInfo } from "@/utils/LoginUtils";
 
 export const BuyTicketClaimGeneration = () => {
     const { t } = useLanguage()
     const { eventDetails, openPopup, resetPaymentProcessing, setStepper, emailOfBuyer, setClaimData, claimMetadata, tokenId } = useBuyTicketContext()
     const [message, setMessage] = useState<string>(t('processing', 'payments'))
-    const { address } = useAccount()
-
 
     let count = 0;
 
-    const provider = useMemo(() => {
-        return getProvider()
-    }, [window.location.search])
-
-    //UseMemo for resolve address
-    const userAddress = useMemo(() => {
-        //Search loggedAs o signedAs nei params dell'url
-        const urlParams = new URLSearchParams(window.location.search);
-        const loggedAs = urlParams.get('loggedAs');
-        const signedAs = urlParams.get('signedAs');
-        return address || loggedAs || signedAs || ""
-    }, [address, window.location.search])
-
     const processing = async () => {
         try {
+            const userAddress = getLoginDataInfo()?.loggedAs || ""
+            const provider = getLoginDataInfo()?.provider || ""
+            const session = getLoginDataInfo()?.session || ""
             let signature = ""
             if (isConnectedWithMego() && provider) {
-                const signatureResponse = await signWithMego(localStorage.getItem("mego_session") || "", `Claiming token ${tokenId}`)
+                const signatureResponse = await signWithMego(session, `Claiming token ${tokenId}`)
                 if (signatureResponse.error) {
                     setMessage(t('error', 'payments'))
                     openPopup({ title: 'Alert', message: t('errorCreatingClaim', 'payments'), modality: PopupModality.Error, isOpen: true, })

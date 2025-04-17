@@ -7,22 +7,18 @@ import { PopupModality } from "../interfaces/popup-enum";
 import { Stepper } from "../interfaces/interface-stepper";
 import "../css/pay.css";
 import { useLanguage } from "@megotickets/core";
+import { getLoginDataInfo } from "@/utils/LoginUtils";
 
 
 export const BuyCheckNFTAndMint = () => {
     const { eventDetails, paymentsDetails, openPopup, resetPaymentProcessing, setStepper, setTokenId } = useBuyTicketContext()
     const [message, setMessage] = useState<string>('Processing...')
-    const { address } = useAccount()
     const { t } = useLanguage();
     let count = 0;
 
     const processing = async () => {
         try {
-            //Search loggedAs o signedAs nei params dell'url
-            const urlParams = new URLSearchParams(window.location.search);
-            const loggedAs = urlParams.get('loggedAs');
-            const signedAs = urlParams.get('signedAs');
-            const userAddress = address || loggedAs || signedAs || ""
+            const userAddress = getLoginDataInfo()?.loggedAs || ""
 
             setMessage(t('mintingNFT', 'payments'))
             //Mint NFT

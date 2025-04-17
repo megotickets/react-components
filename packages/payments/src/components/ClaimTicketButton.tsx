@@ -4,6 +4,8 @@ import { Stepper } from "../interfaces/interface-stepper";
 import { useAccount, useLanguage } from "@megotickets/core";
 import "../css/pay.css";
 import { MegoMetadataFieldConfig } from "../interfaces/metadata";
+import { getLoginData, LoginData } from "@megotickets/core";
+import { getLoginDataInfo } from "@/utils/LoginUtils";
 
 interface ClaimTicketButtonProps {
   eventDetails: any;
@@ -31,22 +33,16 @@ export const ClaimTicketButton: React.FC<ClaimTicketButtonProps> = ({
     setIsOpen(true);
   };
 
-  const userAddress = useMemo(() => {
-    //Search loggedAs o signedAs nei params dell'url
-    const urlParams = new URLSearchParams(window.location.search);
-    const loggedAs = urlParams.get('loggedAs');
-    const signedAs = urlParams.get('signedAs');
-    return address || loggedAs || signedAs || ""
-  }, [address, window.location.search])
-
 
   if (overrideButton) {
     return <div
-      onClick={() => userAddress ? handleOpenModal() : null}
+      onClick={() => {
+        getLoginDataInfo()?.loggedAs ? handleOpenModal() : null
+      }}
       style={{
-        opacity: userAddress ? 1 : 0.5,
-        cursor: userAddress ? 'pointer' : 'not-allowed',
-        pointerEvents: userAddress ? 'auto' : 'none'
+        opacity: getLoginDataInfo()?.loggedAs ? 1 : 0.5,
+        cursor: getLoginDataInfo()?.loggedAs ? 'pointer' : 'not-allowed',
+        pointerEvents: getLoginDataInfo()?.loggedAs ? 'auto' : 'none'
       }}
     >
       {overrideButton}
@@ -55,8 +51,8 @@ export const ClaimTicketButton: React.FC<ClaimTicketButtonProps> = ({
 
   return (
     <div
-      className={`ticketButton ${!userAddress ? 'ticketButtonDisabled' : ''}`}
-      onClick={() => userAddress ? handleOpenModal() : null}
+      className={`ticketButton ${!getLoginDataInfo()?.loggedAs ? 'ticketButtonDisabled' : ''}`}
+      onClick={() => getLoginDataInfo()?.loggedAs ? handleOpenModal() : null}
     >
       <div
         className="ticketBtn font-satoshi"

@@ -1,14 +1,10 @@
+import { getLoginDataInfo } from "./LoginUtils";
+
 export const isConnectedWithMego = () => {
-    //Search provider in url params (loggedAs or signedAs)
-    const urlParams = new URLSearchParams(window.location.search);
-    const loggedAs = urlParams.get('loggedAs');
-    const signedAs = urlParams.get('signedAs');
-    return loggedAs || signedAs
+    return getLoginDataInfo()?.isConnectWithMego || false
 }
 
 export const getProvider = () => {
-    //Search provider in url params (loggedAs or signedAs)
-    const urlParams = new URLSearchParams(window.location.search);
-    const provider = urlParams.get('provider');
+    const provider = getLoginDataInfo()?.provider || ""
     return provider
 }

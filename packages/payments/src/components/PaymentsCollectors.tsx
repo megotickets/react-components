@@ -10,6 +10,7 @@ import USDTIcon from "./icons/USDTIcon";
 import DaiIcons from "./icons/cryptos/DaiIcons";
 import { isConnectedWithMego } from "@/utils/utils";
 import "../css/pay.css";
+import { getLoginDataInfo } from "@/utils/LoginUtils";
 
 export const PaymentsCollectors = () => {
     const { eventDetails, processor, setProcessor } = useBuyTicketContext();
@@ -23,6 +24,8 @@ export const PaymentsCollectors = () => {
     if (eventDetails?.event?.price === 0) {
         return;
     }
+
+    console.log("userConnectedWithMego -> ", getLoginDataInfo()?.isConnectWithMego)
 
     // Sposta la logica MEgo in un useEffect
     useEffect(() => {

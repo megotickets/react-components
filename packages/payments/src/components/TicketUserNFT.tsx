@@ -4,6 +4,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { MyTicket } from './MyTicket';
 import "../css/pay.css";
 import { useLanguage } from '@megotickets/core';
+import { getLoginDataInfo } from '@/utils/LoginUtils';
 interface TicketUserNFTProps {
   // This component is a placeholder for now, so we'll keep the props minimal
   userId?: string;
@@ -16,13 +17,7 @@ export const TicketUserNFT: React.FC<TicketUserNFTProps> = ({ userId, eventIdent
   const [owneds, setOwneds] = useState<any[]>([]);
   let count = 0;
 
-  const userAddress = useMemo(() => {
-    //Search loggedAs o signedAs nei params dell'url
-    const urlParams = new URLSearchParams(window.location.search);
-    const loggedAs = urlParams.get('loggedAs');
-    const signedAs = urlParams.get('signedAs');
-    return address || loggedAs || signedAs || ""
-}, [address, window.location.search])
+  const userAddress = getLoginDataInfo()?.loggedAs || ""
 
   //Check userNfts
   const obtainUserNfts = async () => {
@@ -37,7 +32,7 @@ export const TicketUserNFT: React.FC<TicketUserNFTProps> = ({ userId, eventIdent
       obtainUserNfts();
       count++;
     }
-  }, [address]);
+  }, [address, userAddress]);
 
   return (
     <div className="ticket-block-container">

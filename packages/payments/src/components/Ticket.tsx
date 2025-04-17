@@ -17,21 +17,24 @@ interface TicketProps {
   onTicketLoad?: (data: any) => void;
   metadataConfig?: MegoMetadataFieldConfig[];
   shareEmail?: ShareEmailOptions;
+  redirectUrl?: string;
 }
 
-export const Ticket: React.FC<TicketProps> = ({ ticketId, showOnlyButton, overrideButton, onTicketLoad, metadataConfig, shareEmail }) => {
+export const Ticket: React.FC<TicketProps> = ({ ticketId, showOnlyButton, overrideButton, onTicketLoad, metadataConfig, shareEmail, redirectUrl }) => {
   const [eventDetails, setEventDetails] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const { t } = useLanguage()
 
-  const { setShareEmail, setMetadataConfig } = useBuyTicketContext();
+  const { setShareEmail, setMetadataConfig, setRedirectUrl } = useBuyTicketContext();
 
   //Sync context with props
   useEffect(() => {
     setShareEmail(shareEmail || null);
     setMetadataConfig(metadataConfig || null);
-  }, [metadataConfig, shareEmail]);
+    setRedirectUrl(redirectUrl || null);
+  }, [metadataConfig, shareEmail, redirectUrl]);
+
 
   useEffect(() => {
     const fetchEventDetails = async () => {
@@ -78,7 +81,7 @@ export const Ticket: React.FC<TicketProps> = ({ ticketId, showOnlyButton, overri
 
   const event = eventDetails.event;
 
-  console.log('Event Details:', event);
+  /* console.log('Event Details:', event); */
 
   const startDate = formatDate(event.timestamp_start);
   const endDate = formatDate(event.timestamp_end);

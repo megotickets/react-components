@@ -9,6 +9,7 @@ import "../css/pay.css";
 import { MegoMetadataInputType } from '../interfaces/metadata';
 import { ShareEmailOptions } from '@/interfaces/interface-share-email';
 import { isConnectedWithMego } from "@/utils/utils";
+import { getLoginDataInfo } from '@/utils/LoginUtils';
 
 const fastDebug = false
 
@@ -19,7 +20,6 @@ export const BuyTicketForm: React.FC = () => {
     const [shareEmail, setShareEmail] = useState(fastDebug ? true : false);
     const [metadataValues, setMetadataValues] = useState<Record<string, string>>({});
     const [isFormValid, setIsFormValid] = useState(false);
-    const { address } = useAccount();
     const [isNFTCheckLoading, setIsNFTCheckLoading] = useState(false);
     const { t } = useLanguage()
 
@@ -33,20 +33,13 @@ export const BuyTicketForm: React.FC = () => {
         }
     }, [shareEmailContext]);
 
-    const userAddress = useMemo(() => {
-        //Search loggedAs o signedAs nei params dell'url
-        const urlParams = new URLSearchParams(window.location.search);
-        const loggedAs = urlParams.get('loggedAs');
-        const signedAs = urlParams.get('signedAs');
-        return address || loggedAs || signedAs || ""
-    }, [address, window.location.search])
-
     //Auto fill email if connected with MEgo
     useEffect(() => {
         if (isConnectedWithMego()) {
-            setEmail(localStorage.getItem("mego_email") || "")
+            const _email = getLoginDataInfo()?.email || ""
+            setEmail(_email)
         }
-    }, [userAddress])
+    }, [])
 
 
     const init = async () => {

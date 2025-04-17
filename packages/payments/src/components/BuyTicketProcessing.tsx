@@ -7,6 +7,7 @@ import { Loader } from '@megotickets/core';
 import { PopupModality } from "../interfaces/popup-enum";
 import { Stepper } from "../interfaces/interface-stepper";
 import "../css/pay.css";
+import { getLoginDataInfo } from "@/utils/LoginUtils";
 
 export const BuyTicketProcessing = () => {
     const { eventDetails, emailOfBuyer, openPopup, resetPaymentProcessing, setStepper, setPaymentsDetails, processor, discountCode } = useBuyTicketContext()
@@ -16,14 +17,6 @@ export const BuyTicketProcessing = () => {
     const [message, setMessage] = useState<string>(t('processing', 'payments'))
     let count = 0;
 
-    const userAddress = useMemo(() => {
-        //Search loggedAs o signedAs nei params dell'url
-        const urlParams = new URLSearchParams(window.location.search);
-        const loggedAs = urlParams.get('loggedAs');
-        const signedAs = urlParams.get('signedAs');
-        return address || loggedAs || signedAs || ""
-    }, [address, window.location.search])
-
     const processing = async () => {
         try {
             if(!processor){
@@ -32,6 +25,7 @@ export const BuyTicketProcessing = () => {
                 return
             }
             setMessage(t('askingForPaymentDetails', 'payments'))
+            const userAddress = getLoginDataInfo()?.loggedAs || ""
             if (userAddress) {
                 const paymentDetails = await askPaymentDetails(processor, 1, eventDetails?.event?.identifier, userAddress, discountCode || "", eventDetails?.event?.currency, emailOfBuyer || "", eventDetails?.event?.donation_amount || 0)
                 let { error, message, payment } = paymentDetails

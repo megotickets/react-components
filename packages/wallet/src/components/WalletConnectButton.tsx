@@ -36,8 +36,7 @@ const WalletConnectStatus: React.FC<WalletConnectStatusProps> = ({
       </button>
     );
   }
-  console.log(account);
-  console.log(chain);
+  
   return (
     <div className="chooseType-btn-container">
       {

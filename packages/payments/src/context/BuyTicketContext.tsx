@@ -69,6 +69,10 @@ interface BuyTicketContextType {
   //Share email
   shareEmail: ShareEmailOptions | null;
   setShareEmail: (shareEmail: ShareEmailOptions | null) => void;
+
+  //Redirect url
+  redirectUrl: string | null;
+  setRedirectUrl: (redirectUrl: string | null) => void;
 }
 
 const BuyTicketContext = createContext<BuyTicketContextType | undefined>(undefined);
@@ -101,6 +105,9 @@ export const BuyTicketProvider: React.FC<BuyTicketProviderProps> = ({ children }
   //Share email
   const [shareEmail, setShareEmail] = useState<ShareEmailOptions | null>(null);
 
+  //Redirect url
+  const [redirectUrl, setRedirectUrl] = useState<string | null>(null);
+
   const [popup, setPopup] = useState<MegoPopupData>({
     isOpen: false,
     message: '',
@@ -128,8 +135,6 @@ export const BuyTicketProvider: React.FC<BuyTicketProviderProps> = ({ children }
     setTokenId(null)
     setProcessor(null)
     setDiscountCode(null)
-    setMetadataConfig(null)
-    setShareEmail(null)
   }
 
   const restoreClaimProcessing = async () => {
@@ -278,7 +283,11 @@ export const BuyTicketProvider: React.FC<BuyTicketProviderProps> = ({ children }
 
     //Share email
     shareEmail,
-    setShareEmail
+    setShareEmail,
+
+    //Redirect url
+    redirectUrl,
+    setRedirectUrl
   };
 
   return (
