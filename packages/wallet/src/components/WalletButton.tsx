@@ -1,7 +1,7 @@
 import React, { useEffect } from "react"
 import { useWeb3Context } from "./web3-context"
 import "../css/mego-style.css";
-import { useCustomization } from "@megotickets/core";
+import { useCustomization, getLoginData } from "@megotickets/core";
 import { CustomStyle, providerConfiguration } from "interfaces/CustomStyle";
 
 const GlobalStyle = `
@@ -21,6 +21,9 @@ const GlobalStyle = `
 const WalletIcon: React.FC = () => {
     const { loggedAs } = useWeb3Context();
     const { style } = useCustomization();
+    const loginData = getLoginData();
+    const isConnectWithMego = loginData?.isConnectWithMego || false;
+    const email = loginData?.email || "Email";
     return (
         <div className="mego-wallet-icon-container" style={{ ...style?.megoWalletContainerStyle }}>
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28 26" style={{ ...style?.megoWalletIconStyle, height: '1.5rem', width: '1.5rem', stroke: 'none', fill: `${style?.megoWalletIconStyle?.stroke || 'white'}` }}>
@@ -33,7 +36,8 @@ const WalletIcon: React.FC = () => {
                     }}
                 />
             </svg>
-            {loggedAs && <div className="font-satoshi">{loggedAs.slice(0, 4)}...{loggedAs.slice(-4)}</div>}
+            {loggedAs && !isConnectWithMego && <div className="font-satoshi">{loggedAs.slice(0, 4)}...{loggedAs.slice(-4)}</div>}
+            {loggedAs && isConnectWithMego && <div className="font-satoshi">{email}</div>}
         </div>
     )
 }
