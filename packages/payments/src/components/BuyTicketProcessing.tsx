@@ -10,7 +10,7 @@ import "../css/pay.css";
 import { getLoginDataInfo } from "@/utils/LoginUtils";
 
 export const BuyTicketProcessing = () => {
-    const { eventDetails, emailOfBuyer, openPopup, resetPaymentProcessing, setStepper, setPaymentsDetails, processor, discountCode } = useBuyTicketContext()
+    const { eventDetails, amountOfTicket, emailOfBuyer, openPopup, resetPaymentProcessing, setStepper, setPaymentsDetails, processor, discountCode } = useBuyTicketContext()
     const { address } = useAccount()
     const { t } = useLanguage()
 
@@ -27,7 +27,7 @@ export const BuyTicketProcessing = () => {
             setMessage(t('askingForPaymentDetails', 'payments'))
             const userAddress = getLoginDataInfo()?.loggedAs || ""
             if (userAddress) {
-                const paymentDetails = await askPaymentDetails(processor, 1, eventDetails?.event?.identifier, userAddress, discountCode || "", eventDetails?.event?.currency, emailOfBuyer || "", eventDetails?.event?.donation_amount || 0)
+                const paymentDetails = await askPaymentDetails(processor, amountOfTicket, eventDetails?.event?.identifier, userAddress, discountCode || "", eventDetails?.event?.currency, emailOfBuyer || "", eventDetails?.event?.donation_amount || 0)
                 let { error, message, payment } = paymentDetails
 
                 if (error && message !== Messages.PAYMENT_EXIST) {
@@ -48,7 +48,7 @@ export const BuyTicketProcessing = () => {
 
                 //Display free ticket (reason: discount code 100% off or free ticket)
                 if (eventDetails?.event?.price <= 0 || message === "Free ticket claimed correctly.") {
-                    setMessage(t('claimingFreeTicket', 'payments'))
+                    setMessage( amountOfTicket > 1 ? t('claimingFreeTickets', 'payments') : t('claimingFreeTicket', 'payments'))
                     await new Promise(resolve => setTimeout(resolve, 1000));
                     setStepper(Stepper.NFT_Mint)
                     return;

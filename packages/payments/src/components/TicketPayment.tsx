@@ -3,6 +3,7 @@ import { ClaimTicketButton } from './ClaimTicketButton';
 import { useLanguage } from '@megotickets/core';
 import '../css/pay.css';
 import { MegoMetadataFieldConfig } from "../interfaces/metadata";
+import { useBuyTicketContext } from '@/context/BuyTicketContext';
 
 interface TicketPaymentProps {
   eventDetails: any;
@@ -22,6 +23,7 @@ export const TicketPayment: React.FC<TicketPaymentProps> = ({
   overrideButton,
 }) => {
   const { t } = useLanguage()
+  const { amountOfTicket } = useBuyTicketContext()
   return (
     <div className="ticketPaymentContainer">
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -32,7 +34,7 @@ export const TicketPayment: React.FC<TicketPaymentProps> = ({
         </div>
         <ClaimTicketButton
           eventDetails={eventDetails}
-          buttonText={isPriceZero ? t('claimFreeTicket', 'payments') : t('buyTicket', 'payments')}
+          buttonText={isPriceZero ? t('claimFreeTicket', 'payments') : amountOfTicket > 1 ? t('buyTickets', 'payments') : t('buyTicket', 'payments')}
           overrideButton={overrideButton}
         />
       </div>

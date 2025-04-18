@@ -142,6 +142,7 @@ export const BuyTicketProvider: React.FC<BuyTicketProviderProps> = ({ children }
     setTokenId(null)
     setProcessor(null)
     setDiscountCode(null)
+    setAmountOfTicket(1)
   }
 
   const restoreClaimProcessing = async () => {

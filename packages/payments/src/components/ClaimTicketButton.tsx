@@ -20,7 +20,7 @@ export const ClaimTicketButton: React.FC<ClaimTicketButtonProps> = ({
   overrideButton,
 }) => {
 
-  const { setIsOpen, setEventDetails, resetPaymentProcessing, stepper, setMetadataConfig } = useBuyTicketContext();
+  const { setIsOpen, setEventDetails, resetPaymentProcessing, stepper, setMetadataConfig, amountOfTicket } = useBuyTicketContext();
   const { address } = useAccount();
   const { t } = useLanguage()
 
@@ -59,7 +59,7 @@ export const ClaimTicketButton: React.FC<ClaimTicketButtonProps> = ({
         onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#111'}
         onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#000'}
       >
-        {buttonText || t('buyTicket', 'payments')}
+        {buttonText || (amountOfTicket > 1 ? t('buyTickets', 'payments') : t('buyTicket', 'payments'))}
       </div>
     </div>
   );

@@ -111,7 +111,8 @@ export const BuyTicketForm: React.FC = () => {
         setIsFormValid(isEmailValid && areTermsValid && isSharedEmailValid);
     }, [email, termsAccepted, shareEmail, metadataValues, eventDetails, shareEmailContext]);
 
-    const title = eventDetails?.event?.price === 0 ? t('claimYourFreeTicket', 'payments') : t('buyYourTicket', 'payments');
+    const title = eventDetails?.event?.price === 0 ? t('claimYourFreeTicket', 'payments') 
+    : amountOfTicket > 1 ? t('buyYourTickets', 'payments') : t('buyYourTicket', 'payments');
 
     return (
         <div className="payment-form-container">
@@ -242,7 +243,11 @@ export const BuyTicketForm: React.FC = () => {
 
                         {/* Amount of ticket using select 1 - 10 */}
                         <div style={{ width: '100%', marginBottom: '0.75rem' }}>
+                            <label className="font-satoshi" style={{ display: 'block', marginBottom: '0.5rem' }}>
+                                {t('selectTicketQuantity', 'payments')}
+                            </label>
                             <select
+                                id="ticketQuantity"
                                 value={amountOfTicket || 1}
                                 onChange={(e) => setAmountOfTicket(parseInt(e.target.value))}
                                 className="input-field"
@@ -273,7 +278,7 @@ export const BuyTicketForm: React.FC = () => {
             {
                 isNFTCheckLoading &&
                 <div className="loader">
-                    <Loader message={t('checkingNFT', 'payments')} />
+                    <Loader message={amountOfTicket > 1 ? t('checkingNFTs', 'payments') : t('checkingNFT', 'payments')} />
                 </div>
             }
         </div>

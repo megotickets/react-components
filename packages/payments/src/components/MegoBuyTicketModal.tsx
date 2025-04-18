@@ -16,7 +16,7 @@ interface MegoBuyTicketModalProps {
 
 const MegoBuyTicketModal: React.FC<MegoBuyTicketModalProps> = ({ onClose }) => {
   const [isClosing, setIsClosing] = useState(false);
-  const { isOpen, setIsOpen, stepper, setStepper, resetPaymentProcessing } = useBuyTicketContext();
+  const { isOpen, setIsOpen, stepper, setStepper, resetPaymentProcessing, amountOfTicket } = useBuyTicketContext();
   const { t, language } = useLanguage()
 
   //Prevent background scrolling when the modal is open
@@ -43,7 +43,7 @@ const MegoBuyTicketModal: React.FC<MegoBuyTicketModalProps> = ({ onClose }) => {
     if (stepper === Stepper.Claim) {
       return <h2 className="payment-title font-satoshi">{t('congratulationsTitle', 'payments')}</h2>;
     }
-    return <h3 className="payment-title font-satoshi">{t('buyTicket', 'payments')}</h3>;
+    return <h3 className="payment-title font-satoshi">{amountOfTicket > 1 ? t('buyTickets', 'payments') : t('buyTicket', 'payments')}</h3>;
   }, [stepper, language]);
 
   function handleClose() {

@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react"
 import { useBuyTicketContext } from "../context/BuyTicketContext";
 import { checkNFT, mintNFT, cleanMegoPendingClaimProcessing } from "../utils/BuyTicketUtils";
-import { useAccount } from "@megotickets/core";
 import { Loader } from "@megotickets/core";
 import { PopupModality } from "../interfaces/popup-enum";
 import { Stepper } from "../interfaces/interface-stepper";
@@ -11,7 +10,7 @@ import { getLoginDataInfo } from "@/utils/LoginUtils";
 
 
 export const BuyCheckNFTAndMint = () => {
-    const { eventDetails, paymentsDetails, openPopup, resetPaymentProcessing, setStepper, setTokenId } = useBuyTicketContext()
+    const { eventDetails, paymentsDetails, openPopup, resetPaymentProcessing, setStepper, setTokenId, amountOfTicket } = useBuyTicketContext()
     const [message, setMessage] = useState<string>('Processing...')
     const { t } = useLanguage();
     let count = 0;
@@ -20,7 +19,7 @@ export const BuyCheckNFTAndMint = () => {
         try {
             const userAddress = getLoginDataInfo()?.loggedAs || ""
 
-            setMessage(t('mintingNFT', 'payments'))
+            setMessage(amountOfTicket > 1 ? t('mintingNFTs', 'payments') : t('mintingNFT', 'payments'))
             //Mint NFT
             const res = await mintNFT(paymentsDetails?.payment?.paymentId);
             const { error } = res;
@@ -30,7 +29,7 @@ export const BuyCheckNFTAndMint = () => {
                 resetPaymentProcessing()
                 return;
             }
-            setMessage(t('waitingForMintingConfirmation', 'payments'))
+            setMessage(amountOfTicket > 1 ? t('waitingForMintingConfirmations', 'payments') : t('waitingForMintingConfirmation', 'payments'))
             //Re-check NFT while minting is completed
             let isMinted = false;
             let retry = 0;

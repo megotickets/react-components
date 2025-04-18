@@ -26,7 +26,7 @@ export const Ticket: React.FC<TicketProps> = ({ ticketId, showOnlyButton, overri
   const [error, setError] = useState<string | null>(null);
   const { t } = useLanguage()
 
-  const { setShareEmail, setMetadataConfig, setRedirectUrl } = useBuyTicketContext();
+  const { setShareEmail, setMetadataConfig, setRedirectUrl, amountOfTicket } = useBuyTicketContext();
 
   //Sync context with props
   useEffect(() => {
@@ -97,7 +97,7 @@ export const Ticket: React.FC<TicketProps> = ({ ticketId, showOnlyButton, overri
       <div>
         <ClaimTicketButton
           eventDetails={eventDetails}
-          buttonText={isPriceZero ? t('claimFreeTicket', 'payments') : t('buyTicket', 'payments')}
+          buttonText={isPriceZero ? t('claimFreeTicket', 'payments') : amountOfTicket > 1 ? t('buyTickets', 'payments') : t('buyTicket', 'payments')}
           overrideButton={overrideButton}
         />
       </div>

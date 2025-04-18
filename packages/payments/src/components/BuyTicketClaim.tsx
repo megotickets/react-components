@@ -7,7 +7,7 @@ import QrCodeIcon from './icons/QrCodeIcon';
 import "../css/pay.css";
 export const BuyTicketClaim: React.FC = () => {
 
-    const { claimData, redirectUrl } = useBuyTicketContext()
+    const { claimData, redirectUrl, amountOfTicket } = useBuyTicketContext()
     const { t } = useLanguage()
 
     const downloadQrCode = (base64: string) => {
@@ -24,7 +24,10 @@ export const BuyTicketClaim: React.FC = () => {
 
     return (
         <div className="payment-stepper-container">
-            <p style={{ color: 'white', marginBottom: '1rem' }} className="font-satoshi">{t('yourTicketIsReady', 'payments')}</p>
+            <p style={{ color: 'white', marginBottom: '1rem' }} className="font-satoshi">{
+                amountOfTicket > 1 ? t('yourTicketsAreReady', 'payments') : t('yourTicketIsReady', 'payments')
+            }
+            </p>
 
             {claimData?.qr && (
                 <div className="mb-6 mt-6 bg-white p-2 inline-block rounded-lg shadow-md">
