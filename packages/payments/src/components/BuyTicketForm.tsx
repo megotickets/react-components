@@ -128,9 +128,9 @@ export const BuyTicketForm: React.FC = () => {
                         </div>
                         {/* Amount of ticket using select 1 - 10 */}
                         <div style={{ width: '100%', marginBottom: '0.75rem' }}>
-                            <label className="font-satoshi" style={{ color: 'white', marginBottom: '0.5rem' }}>
+                            <p className="font-satoshi" style={{ color: 'white', marginBottom: '0.5rem' }}>
                                 {t('selectTicketQuantity', 'payments')}
-                            </label>
+                            </p>
                             <select
                                 id="ticketQuantity"
                                 value={amountOfTicket || 1}
@@ -144,9 +144,9 @@ export const BuyTicketForm: React.FC = () => {
                         </div>
                         {eventDetails?.event?.price > 0 && (
                             <div style={{ width: '100%', marginBottom: '0.75rem' }}>
+                                <p className="font-satoshi" style={{ color: 'white', marginBottom: '0.5rem' }}>{t('discountCode', 'payments')}</p>
                                 <input
                                     type="text"
-                                    placeholder={t('discountCode', 'payments')}
                                     value={discountCode || ''}
                                     onChange={(e) => setDiscountCode(e.target.value)}
                                     className="input-field"
@@ -164,7 +164,7 @@ export const BuyTicketForm: React.FC = () => {
                                 if (matchingConfig && matchingConfig.type === MegoMetadataInputType.SELECT && matchingConfig.options) {
                                     fieldElement = (
                                         <div>
-                                            <label className="font-satoshi" style={{ color: 'white', marginBottom: '0.5rem' }}>{matchingConfig.placeholder || `${t('selectOption', 'payments')} ( ${metadataString.charAt(0).toUpperCase() + metadataString.slice(1).toLowerCase()} )`}</label>
+                                            <p className="font-satoshi" style={{ color: 'white', marginBottom: '0.5rem' }}>{matchingConfig.placeholder || `${t('selectOption', 'payments')} ( ${metadataString.charAt(0).toUpperCase() + metadataString.slice(1).toLowerCase()} )`}</p>
                                             <select
                                                 id={fieldId}
                                                 value={metadataValues[index] || ''}
@@ -179,35 +179,41 @@ export const BuyTicketForm: React.FC = () => {
                                     );
                                 } else if (matchingConfig && matchingConfig.type === MegoMetadataInputType.TEXTAREA) {
                                     fieldElement = (
-                                        <textarea
-                                            id={fieldId}
-                                            placeholder={matchingConfig.placeholder || metadataString}
-                                            value={metadataValues[index] || ''}
-                                            onChange={(e) => handleMetadataChange(index, e.target.value)}
-                                            className="ticket-form-textarea"
-                                            rows={4}
-                                        />
+                                        <div>
+                                            <textarea
+                                                id={fieldId}
+                                                placeholder={matchingConfig.placeholder || metadataString}
+                                                value={metadataValues[index] || ''}
+                                                onChange={(e) => handleMetadataChange(index, e.target.value)}
+                                                className="ticket-form-textarea"
+                                                rows={4}
+                                            />
+                                        </div>
                                     );
                                 } else {
                                     const isLongText = metadataString.length > 100;
                                     fieldElement = isLongText ? (
-                                        <textarea
-                                            id={fieldId}
-                                            placeholder={metadataString}
-                                            value={metadataValues[index] || ''}
-                                            onChange={(e) => handleMetadataChange(index, e.target.value)}
-                                            className="ticket-form-textarea"
-                                            rows={4}
-                                        />
+                                        <div>
+                                            <textarea
+                                                id={fieldId}
+                                                placeholder={metadataString}
+                                                value={metadataValues[index] || ''}
+                                                onChange={(e) => handleMetadataChange(index, e.target.value)}
+                                                className="ticket-form-textarea"
+                                                rows={4}
+                                            />
+                                        </div>
                                     ) : (
-                                        <input
-                                            id={fieldId}
-                                            type="text"
-                                            placeholder={metadataString}
-                                            value={metadataValues[index] || ''}
-                                            onChange={(e) => handleMetadataChange(index, e.target.value)}
-                                            className="input-field"
-                                        />
+                                        <div>
+                                            <p className="font-satoshi" style={{ color: 'white', marginBottom: '0.5rem' }}>{metadataString}</p>
+                                            <input
+                                                id={fieldId}
+                                                type="text"
+                                                value={metadataValues[index] || ''}
+                                                onChange={(e) => handleMetadataChange(index, e.target.value)}
+                                                className="input-field"
+                                            />
+                                        </div>
                                     );
                                 }
 
