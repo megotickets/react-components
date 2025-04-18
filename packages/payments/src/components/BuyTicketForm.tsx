@@ -111,8 +111,8 @@ export const BuyTicketForm: React.FC = () => {
         setIsFormValid(isEmailValid && areTermsValid && isSharedEmailValid);
     }, [email, termsAccepted, shareEmail, metadataValues, eventDetails, shareEmailContext]);
 
-    const title = eventDetails?.event?.price === 0 ? t('claimYourFreeTicket', 'payments') 
-    : amountOfTicket > 1 ? t('buyYourTickets', 'payments') : t('buyYourTicket', 'payments');
+    const title = eventDetails?.event?.price === 0 ? t('claimYourFreeTicket', 'payments')
+        : amountOfTicket > 1 ? t('buyYourTickets', 'payments') : t('buyYourTicket', 'payments');
 
     return (
         <div className="payment-form-container">
@@ -125,6 +125,22 @@ export const BuyTicketForm: React.FC = () => {
                         <div className="title-subtitle-container">
                             <h1 className="font-satoshi title">{title}</h1>
                             <p className="font-satoshi subtitle">{t('enterRequiredInformationToContinue', 'payments')}</p>
+                        </div>
+                        {/* Amount of ticket using select 1 - 10 */}
+                        <div style={{ width: '100%', marginBottom: '0.75rem' }}>
+                            <label className="font-satoshi" style={{ color: 'white', marginBottom: '0.5rem' }}>
+                                {t('selectTicketQuantity', 'payments')}
+                            </label>
+                            <select
+                                id="ticketQuantity"
+                                value={amountOfTicket || 1}
+                                onChange={(e) => setAmountOfTicket(parseInt(e.target.value))}
+                                className="input-field"
+                            >
+                                {Array.from({ length: 10 }, (_, i) => (
+                                    <option key={i + 1} value={i + 1}>{i + 1}</option>
+                                ))}
+                            </select>
                         </div>
                         {eventDetails?.event?.price > 0 && (
                             <div style={{ width: '100%', marginBottom: '0.75rem' }}>
@@ -241,22 +257,6 @@ export const BuyTicketForm: React.FC = () => {
                             </div>
                         }
 
-                        {/* Amount of ticket using select 1 - 10 */}
-                        <div style={{ width: '100%', marginBottom: '0.75rem' }}>
-                            <label className="font-satoshi" style={{ display: 'block', marginBottom: '0.5rem' }}>
-                                {t('selectTicketQuantity', 'payments')}
-                            </label>
-                            <select
-                                id="ticketQuantity"
-                                value={amountOfTicket || 1}
-                                onChange={(e) => setAmountOfTicket(parseInt(e.target.value))}
-                                className="input-field"
-                            >
-                                {Array.from({ length: 10 }, (_, i) => (
-                                    <option key={i + 1} value={i + 1}>{i + 1}</option>
-                                ))}
-                            </select>
-                        </div>
 
                         <PaymentsCollectors />
                     </div>
