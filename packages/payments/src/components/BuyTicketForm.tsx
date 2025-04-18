@@ -163,17 +163,19 @@ export const BuyTicketForm: React.FC = () => {
 
                                 if (matchingConfig && matchingConfig.type === MegoMetadataInputType.SELECT && matchingConfig.options) {
                                     fieldElement = (
-                                        <select
-                                            id={fieldId}
-                                            value={metadataValues[index] || ''}
-                                            onChange={(e) => handleMetadataChange(index, e.target.value)}
-                                            className="input-field"
-                                        >
-                                            <option value="" disabled>{matchingConfig.placeholder || `${t('selectOption', 'payments')} (${metadataString})`}</option>
-                                            {matchingConfig.options.map(option => (
-                                                <option key={option} value={option}>{option}</option>
-                                            ))}
-                                        </select>
+                                        <div>
+                                            <label className="font-satoshi" style={{ color: 'white', marginBottom: '0.5rem' }}>{matchingConfig.placeholder || `${t('selectOption', 'payments')} ( ${metadataString.charAt(0).toUpperCase() + metadataString.slice(1).toLowerCase()} )`}</label>
+                                            <select
+                                                id={fieldId}
+                                                value={metadataValues[index] || ''}
+                                                onChange={(e) => handleMetadataChange(index, e.target.value)}
+                                                className="input-field"
+                                            >
+                                                {matchingConfig.options.map(option => (
+                                                    <option key={option} value={option}>{option}</option>
+                                                ))}
+                                            </select>
+                                        </div>
                                     );
                                 } else if (matchingConfig && matchingConfig.type === MegoMetadataInputType.TEXTAREA) {
                                     fieldElement = (
