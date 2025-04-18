@@ -14,7 +14,7 @@ import { getLoginDataInfo } from '@/utils/LoginUtils';
 const fastDebug = false
 
 export const BuyTicketForm: React.FC = () => {
-    const { eventDetails, setStepper, setClaimMetadata, setEmailOfBuyer, setProcessor, openPopup, resetPaymentProcessing, discountCode, setDiscountCode, termsAndConditionsLink, metadataConfig, shareEmail: shareEmailContext } = useBuyTicketContext();
+    const { eventDetails, setStepper, setClaimMetadata, setEmailOfBuyer, setProcessor, openPopup, resetPaymentProcessing, discountCode, setDiscountCode, termsAndConditionsLink, metadataConfig, shareEmail: shareEmailContext, amountOfTicket, setAmountOfTicket } = useBuyTicketContext();
     const [email, setEmail] = useState(fastDebug ? "test@test.com" : '');
     const [termsAccepted, setTermsAccepted] = useState(fastDebug ? true : false);
     const [shareEmail, setShareEmail] = useState(fastDebug ? true : false);
@@ -239,6 +239,19 @@ export const BuyTicketForm: React.FC = () => {
                                 </label>
                             </div>
                         }
+
+                        {/* Amount of ticket using select 1 - 10 */}
+                        <div style={{ width: '100%', marginBottom: '0.75rem' }}>
+                            <select
+                                value={amountOfTicket || 1}
+                                onChange={(e) => setAmountOfTicket(parseInt(e.target.value))}
+                                className="input-field"
+                            >
+                                {Array.from({ length: 10 }, (_, i) => (
+                                    <option key={i + 1} value={i + 1}>{i + 1}</option>
+                                ))}
+                            </select>
+                        </div>
 
                         <PaymentsCollectors />
                     </div>

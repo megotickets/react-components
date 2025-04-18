@@ -73,6 +73,10 @@ interface BuyTicketContextType {
   //Redirect url
   redirectUrl: string | null;
   setRedirectUrl: (redirectUrl: string | null) => void;
+
+  //Amount of ticket
+  amountOfTicket: number;
+  setAmountOfTicket: (amountOfTicket: number) => void;
 }
 
 const BuyTicketContext = createContext<BuyTicketContextType | undefined>(undefined);
@@ -107,6 +111,9 @@ export const BuyTicketProvider: React.FC<BuyTicketProviderProps> = ({ children }
 
   //Redirect url
   const [redirectUrl, setRedirectUrl] = useState<string | null>(null);
+
+  //Amount of ticket
+  const [amountOfTicket, setAmountOfTicket] = useState<number>(1);
 
   const [popup, setPopup] = useState<MegoPopupData>({
     isOpen: false,
@@ -287,7 +294,11 @@ export const BuyTicketProvider: React.FC<BuyTicketProviderProps> = ({ children }
 
     //Redirect url
     redirectUrl,
-    setRedirectUrl
+    setRedirectUrl,
+
+    //Amount of ticket
+    amountOfTicket,
+    setAmountOfTicket
   };
 
   return (
