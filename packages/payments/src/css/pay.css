@@ -90,6 +90,7 @@
     background-color: black;
     color: white;
     padding: 8px 16px;
+    padding-right: 2rem;
 }
 
 .payment-stepper-container {
