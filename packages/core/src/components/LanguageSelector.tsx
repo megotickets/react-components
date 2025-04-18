@@ -94,7 +94,7 @@ export const LanguageSelector: React.FC = () => {
 
   const handleButtonClick = () => {
     if (isForced) {
-      setShowInfoPopup(true);
+      //setShowInfoPopup(true);
     } else {
       setIsOpen(!isOpen);
     }
