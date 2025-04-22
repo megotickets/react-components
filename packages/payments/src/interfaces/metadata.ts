@@ -9,6 +9,7 @@ export enum MegoMetadataInputType {
 export interface MegoMetadataFieldConfig {
   metadata: string; 
   type: MegoMetadataInputType;
-  placeholder?: string;
+  placeholder?: { [lang: string]: string };
   options?: string[];
+  labelTranslations?: { [lang: string]: string };
 } 

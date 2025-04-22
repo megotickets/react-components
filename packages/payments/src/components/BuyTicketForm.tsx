@@ -21,7 +21,7 @@ export const BuyTicketForm: React.FC = () => {
     const [metadataValues, setMetadataValues] = useState<Record<string, string>>({});
     const [isFormValid, setIsFormValid] = useState(false);
     const [isNFTCheckLoading, setIsNFTCheckLoading] = useState(false);
-    const { t } = useLanguage()
+    const { t, language } = useLanguage()
 
     console.log(eventDetails)
 
@@ -164,7 +164,9 @@ export const BuyTicketForm: React.FC = () => {
                                 if (matchingConfig && matchingConfig.type === MegoMetadataInputType.SELECT && matchingConfig.options) {
                                     fieldElement = (
                                         <div>
-                                            <p className="font-satoshi" style={{ color: 'white', marginBottom: '0.5rem' }}>{matchingConfig.placeholder || `${t('selectOption', 'payments')} ( ${metadataString.charAt(0).toUpperCase() + metadataString.slice(1).toLowerCase()} )`}</p>
+                                            <p className="font-satoshi" style={{ color: 'white', marginBottom: '0.5rem' }}>
+                                                { `${t('selectOption', 'payments')} ( ${matchingConfig.labelTranslations && matchingConfig.labelTranslations[language] || (metadataString.charAt(0).toUpperCase() + metadataString.slice(1).toLowerCase())} )`}
+                                            </p>
                                             <select
                                                 id={fieldId}
                                                 value={metadataValues[index] || ''}
@@ -182,7 +184,7 @@ export const BuyTicketForm: React.FC = () => {
                                         <div>
                                             <textarea
                                                 id={fieldId}
-                                                placeholder={matchingConfig.placeholder || metadataString}
+                                                placeholder={matchingConfig.placeholder && matchingConfig.placeholder[language] || metadataString}
                                                 value={metadataValues[index] || ''}
                                                 onChange={(e) => handleMetadataChange(index, e.target.value)}
                                                 className="ticket-form-textarea"
