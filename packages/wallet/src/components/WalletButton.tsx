@@ -18,7 +18,11 @@ const GlobalStyle = `
   }
 `;
 
-const WalletIcon: React.FC = () => {
+interface WalletConnectButtonProps {
+    connectionString?: string;
+}
+
+const WalletIcon: React.FC<WalletConnectButtonProps> = ({ connectionString }) => {
     const { loggedAs } = useWeb3Context();
     const { style } = useCustomization();
     const loginData = getLoginData();
@@ -38,6 +42,7 @@ const WalletIcon: React.FC = () => {
             </svg>
             {loggedAs && !isConnectWithMego && <div className="font-satoshi">{loggedAs.slice(0, 4)}...{loggedAs.slice(-4)}</div>}
             {loggedAs && isConnectWithMego && <div className="font-satoshi">{email}</div>}
+            {!loggedAs && connectionString && connectionString.length > 0 && <div className="font-satoshi">{connectionString}</div>}
         </div>
     )
 }
@@ -48,9 +53,10 @@ interface MegoWalletProps {
     customStyle?: CustomStyle;
     providerConfiguration?: providerConfiguration;
     forceChainId?: number;
+    connectionString?: string;
 }
 
-export function WalletButton({ customStyle, providerConfiguration, forceChainId }: MegoWalletProps) {
+export function WalletButton({ customStyle, providerConfiguration, forceChainId, connectionString }: MegoWalletProps) {
     const { openMegoModal, loggedAs, provider, setForceChainId } = useWeb3Context();
 
     // Inflate the custom style and button override component
@@ -87,7 +93,7 @@ export function WalletButton({ customStyle, providerConfiguration, forceChainId 
                 justifyContent: `${customStyle?.megoWalletPosition || 'right'}`,
                 gap: '0.5rem',
             }}>
-            <WalletIcon />
+            <WalletIcon connectionString={connectionString} />
         </div>
     )
 }
