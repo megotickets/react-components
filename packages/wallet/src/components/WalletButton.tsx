@@ -1,7 +1,7 @@
-import React, { useEffect } from "react"
+import React, { useEffect, useState } from "react"
 import { useWeb3Context } from "./web3-context"
 import "../css/mego-style.css";
-import { useCustomization, getLoginData } from "@megotickets/core";
+import { useCustomization, getLoginData, LoginData } from "@megotickets/core";
 import { CustomStyle, providerConfiguration } from "interfaces/CustomStyle";
 
 const GlobalStyle = `
@@ -25,9 +25,17 @@ interface WalletConnectButtonProps {
 const WalletIcon: React.FC<WalletConnectButtonProps> = ({ connectionString }) => {
     const { loggedAs } = useWeb3Context();
     const { style } = useCustomization();
-    const loginData = getLoginData();
-    const isConnectWithMego = loginData?.isConnectWithMego || false;
-    const email = loginData?.email || "Email";
+    const [isConnectWithMego, setIsConnectWithMego] = useState<boolean>(false);
+    const [email, setEmail] = useState<string>("");
+
+    useEffect(() => {
+        const loginData = getLoginData();
+        if (loginData) {
+            setIsConnectWithMego(loginData.isConnectWithMego || false);
+            setEmail(loginData.email || "");
+        }
+    }, []);
+
     return (
         <div className="mego-wallet-icon-container" style={{ ...style?.megoWalletContainerStyle }}>
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28 26" style={{ ...style?.megoWalletIconStyle, height: '1.5rem', width: '1.5rem', stroke: 'none', fill: `${style?.megoWalletIconStyle?.stroke || 'white'}` }}>
@@ -41,7 +49,7 @@ const WalletIcon: React.FC<WalletConnectButtonProps> = ({ connectionString }) =>
                 />
             </svg>
             {loggedAs && !isConnectWithMego && <div className="font-satoshi">{loggedAs.slice(0, 4)}...{loggedAs.slice(-4)}</div>}
-            {loggedAs && isConnectWithMego && <div className="font-satoshi">{email}</div>}
+            {loggedAs && isConnectWithMego && email && <div className="font-satoshi">{email}</div>}
             {!loggedAs && connectionString && connectionString.length > 0 && <div className="font-satoshi">{connectionString}</div>}
         </div>
     )
