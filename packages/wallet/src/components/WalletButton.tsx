@@ -36,6 +36,18 @@ const WalletIcon: React.FC<WalletConnectButtonProps> = ({ connectionString }) =>
         }
     }, []);
 
+    const croppedEmail = (email:string) => {
+        const parts = email.split('@');
+        if (parts.length === 2) {
+            const localPart = parts[0];
+            const domainPart = parts[1];
+            const first3Local = localPart.substring(0, 3);
+            const last3Domain = domainPart.slice(-3);
+            return `${first3Local}..@...${last3Domain}`;
+        }
+        return email; // Fallback nel caso improbabile che l'email non abbia '@'
+    }
+
     return (
         <div className="mego-wallet-icon-container" style={{ ...style?.megoWalletContainerStyle }}>
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28 26" style={{ ...style?.megoWalletIconStyle, height: '1.5rem', width: '1.5rem', stroke: 'none', fill: `${style?.megoWalletIconStyle?.stroke || 'white'}` }}>
@@ -49,7 +61,11 @@ const WalletIcon: React.FC<WalletConnectButtonProps> = ({ connectionString }) =>
                 />
             </svg>
             {loggedAs && !isConnectWithMego && <div className="font-satoshi">{loggedAs.slice(0, 4)}...{loggedAs.slice(-4)}</div>}
-            {loggedAs && isConnectWithMego && email && <div className="font-satoshi">{email}</div>}
+            {loggedAs && isConnectWithMego && email && (
+                <div className="font-satoshi">
+                    {croppedEmail(email)}
+                </div>
+            )}
             {!loggedAs && connectionString && connectionString.length > 0 && <div className="font-satoshi">{connectionString}</div>}
         </div>
     )
@@ -86,7 +102,7 @@ export function WalletButton({ customStyle, providerConfiguration, forceChainId,
         const styleElement = document.createElement('style');
         styleElement.innerHTML = GlobalStyle;
         document.head.appendChild(styleElement);
-        
+
         return () => {
             document.head.removeChild(styleElement);
         };
