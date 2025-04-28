@@ -29,12 +29,20 @@ const WalletIcon: React.FC<WalletConnectButtonProps> = ({ connectionString }) =>
     const [email, setEmail] = useState<string>("");
 
     useEffect(() => {
-        const loginData = getLoginData();
-        if (loginData) {
-            setIsConnectWithMego(loginData.isConnectWithMego || false);
-            setEmail(loginData.email || "");
+        if (loggedAs) {
+            const loginData = getLoginData();
+            if (loginData) {
+                setIsConnectWithMego(loginData.isConnectWithMego || false);
+                setEmail(loginData.email || "");
+            } else {
+                setIsConnectWithMego(false);
+                setEmail("");
+            }
+        } else {
+            setIsConnectWithMego(false);
+            setEmail("");
         }
-    }, []);
+    }, [loggedAs]);
 
     const croppedEmail = (email:string) => {
         const parts = email.split('@');
@@ -106,7 +114,7 @@ export function WalletButton({ customStyle, providerConfiguration, forceChainId,
         return () => {
             document.head.removeChild(styleElement);
         };
-    }, [customStyle, providerConfiguration, forceChainId]);
+    }, [customStyle, providerConfiguration, forceChainId, setStyle, setProviderConfiguration, setForceChainId]);
 
 
     return (
