@@ -80,5 +80,11 @@
     "congratulationsTitle": "Congratulations!",
     "creatingClaim": "Creating claim...",
     "creatingClaims": "Creating claims...",
-    "selectTicketQuantity": "Select an option ( N° tickets )"
+    "selectTicketQuantity": "Select an option ( N° tickets )",
+    "subtotal": "Subtotal",
+    "discount": "Discount",
+    "noAppliedDiscount": "No discount applied",
+    "totalToPay": "Total to pay",
+    "ticketQuantity": "Number of tickets",
+    "summary": "Order summary"
 } 

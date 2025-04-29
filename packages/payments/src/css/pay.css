@@ -448,3 +448,62 @@
     width: 100%;
 }
 
+.ticket-summary-container {
+    background-color: #000000;
+    border-radius: 12px;
+    padding: 0.5rem 1rem;
+    margin-bottom: 1rem;
+    border: 1px solid white;
+    color: #fff;
+    font-family: 'Satoshi', sans-serif;
+}
+
+.ticket-summary-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    text-align: left;
+}
+
+.ticket-summary-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+    font-size: 0.9rem;
+}
+
+.ticket-summary-label {
+    color: #a0a0a0;
+}
+
+.ticket-summary-value {
+    font-weight: 500;
+}
+
+.ticket-summary-discount .ticket-summary-value {
+    color: #34d399;
+}
+
+.ticket-summary-divider {
+    border: none;
+    height: 1px;
+    background-color: rgba(255, 255, 255, 0.1);
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+.ticket-summary-total {
+    font-size: 1rem;
+    font-weight: bold;
+    margin-top: 1rem;
+}
+
+.ticket-summary-total .ticket-summary-label {
+    color: #fff;
+}
+
+.ticket-summary-total .ticket-summary-value {
+    font-size: 1.1rem;
+}
+

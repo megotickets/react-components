@@ -80,5 +80,11 @@
     "congratulationsTitle": "Congratulazioni!",
     "creatingClaim": "Stiamo recuperando il biglietto...",
     "creatingClaims": "Stiamo recuperando i biglietti...",
-    "selectTicketQuantity": "Seleziona un'opzione ( N° biglietti )"
+    "selectTicketQuantity": "Seleziona un'opzione ( N° biglietti )",
+    "subtotal": "Subtotale",
+    "discount": "Sconto",
+    "noAppliedDiscount": "Nessun sconto applicato",
+    "totalToPay": "Totale da pagare",
+    "ticketQuantity": "Numero biglietti",
+    "summary": "Riepilogo Ordine"
 } 

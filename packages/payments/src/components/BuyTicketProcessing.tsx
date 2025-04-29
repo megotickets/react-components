@@ -57,7 +57,7 @@ export const BuyTicketProcessing = () => {
                     await new Promise(resolve => setTimeout(resolve, 1000));
                     if(processor === 'stripe'){
                         console.log('Stripe processor')
-                        setStepper(Stepper.Payments_Stripe)
+                        setStepper(Stepper.PaymentSummary)
                     } else {
                         console.log('Other processor')
                         setStepper(Stepper.Payments_crypto)

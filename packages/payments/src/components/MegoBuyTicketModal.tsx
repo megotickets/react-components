@@ -10,6 +10,7 @@ import { BuyTicketClaimGeneration } from "./BuyTicketClaimGeneration";
 import BuyTicketWithStripe from "./BuyTicketWithStripe";
 import BuyTicketWithCrypto from "./BuyTicketWithCrypto";
 import { useLanguage, LanguageSelector } from "@megotickets/core";
+import BuyTicketSummary from "./BuyTicketSummary";
 interface MegoBuyTicketModalProps {
   onClose?: () => void;
 }
@@ -90,6 +91,7 @@ const MegoBuyTicketModal: React.FC<MegoBuyTicketModalProps> = ({ onClose }) => {
           {stepper === Stepper.Form_data && <BuyTicketForm />}
           {stepper === Stepper.Processing && <BuyTicketProcessing />}
           {stepper === Stepper.Payments_crypto && <BuyTicketWithCrypto />}
+          {stepper === Stepper.PaymentSummary && <BuyTicketSummary />}
           {stepper === Stepper.Payments_Stripe && <BuyTicketWithStripe />}
           {stepper === Stepper.NFT_Mint && <BuyCheckNFTAndMint />}
           {stepper === Stepper.Claim_Generation && <BuyTicketClaimGeneration />}
