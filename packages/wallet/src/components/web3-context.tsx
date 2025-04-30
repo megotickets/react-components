@@ -11,7 +11,7 @@ import '@rainbow-me/rainbowkit/styles.css';
 import { BrowserProvider, ethers } from "ethers";
 import axios from "axios";
 import { useConnectModal } from '@rainbow-me/rainbowkit';
-import { getLoginData, LoginData, removeLoginData, saveLoginData, useAccount, useSwitchChain } from '@megotickets/core';
+import { checkSessions, CheckSessionsResult, DeviceIdResult, getDeviceId, getLoginData, LoginData, removeLoginData, saveLoginData, useAccount, useSwitchChain } from '@megotickets/core';
 import { disconnect } from '@megotickets/core'
 import { config } from "@megotickets/core";
 type Route =
@@ -139,20 +139,23 @@ export const Web3Provider: React.FC<Web3ProviderProps> = ({ children }) => {
     setIsLoading(false); // Reset loading state when closing modal
   };
 
-  function redirectToAppleLogin() {
+  async function redirectToAppleLogin() {
+    const deviceId : DeviceIdResult = await getDeviceId();
     setIsLoading(true);
     localStorage.setItem("justLogged", "true");
     setTimeout(() => {
       window.location.href = BASE_URL + "/auth/apple" + "?origin="
-        + window.location.href.replace("https://", "").replace("http://", "");
+        + window.location.href.replace("https://", "").replace("http://", "") + "&device=" + deviceId.deviceId;
     }, 2500);
   }
 
-  function redirectToGoogleLogin() {
+  async function redirectToGoogleLogin() {
+    const deviceId = await getDeviceId();
     setIsLoading(true);
     localStorage.setItem("justLogged", "true");
     setTimeout(() => {
-      window.location.href = BASE_URL + "/auth/google" + "?origin=" + window.location.href.replace("https://", "").replace("http://", "");
+      window.location.href = BASE_URL + "/auth/google" + "?origin=" 
+        + window.location.href.replace("https://", "").replace("http://", "") + "&device=" + deviceId.deviceId;
     }, 2500);
   }
 
@@ -327,8 +330,7 @@ export const Web3Provider: React.FC<Web3ProviderProps> = ({ children }) => {
     }
   }
 
-  useEffect(() => {
-
+  const autoLogin = async () => {
     //Local storage session first!
     const loginData: LoginData | null = getLoginData();
     let urlProvider = null;
@@ -412,9 +414,16 @@ export const Web3Provider: React.FC<Web3ProviderProps> = ({ children }) => {
 
     //# 4
     if ((urlProvider === 'google' || urlProvider === 'apple') && urlLoggedAs) {
-      //console.log("[DEBUG] #4 - urlProvider === 'google' && urlLoggedAs");
       try {
-        //const jsonRpcProvider = new ethers.JsonRpcProvider(process?.env?.REACT_APP_JSON_RPC_PROVIDER || "");
+        //Check session
+        const sessionResult : CheckSessionsResult = await checkSessions(session ?? "");
+        if (sessionResult.error) {
+          console.error("[Google Auth] Error checking session:", sessionResult.message);
+          logout();
+          window.location.reload();
+          return;
+        }
+        
         setNoWalletConnectProvider(null);
         if (urlProvider === 'google') {
           setProvider('google');
@@ -431,7 +440,10 @@ export const Web3Provider: React.FC<Web3ProviderProps> = ({ children }) => {
         console.error("[Google Auth] Error initializing provider:", error);
       }
     }
+  }
 
+  useEffect(() => {
+    autoLogin();
   }, []);
 
   //Handle chain change
