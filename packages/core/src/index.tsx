@@ -24,4 +24,4 @@ export type { LoginData } from './interfaces/LoginData';
 
 // --- Mego Session System Exports ---
 export { getDeviceId, checkSessions } from './utils/MegoSession';
-export type { DeviceIdResult, CheckSessionsResult } from './utils/MegoSession';
+export type { CheckSessionsResult } from './utils/MegoSession';

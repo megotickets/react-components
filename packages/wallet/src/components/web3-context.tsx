@@ -11,7 +11,7 @@ import '@rainbow-me/rainbowkit/styles.css';
 import { BrowserProvider, ethers } from "ethers";
 import axios from "axios";
 import { useConnectModal } from '@rainbow-me/rainbowkit';
-import { checkSessions, CheckSessionsResult, DeviceIdResult, getDeviceId, getLoginData, LoginData, removeLoginData, saveLoginData, useAccount, useSwitchChain } from '@megotickets/core';
+import { checkSessions, CheckSessionsResult, getDeviceId, getLoginData, LoginData, removeLoginData, saveLoginData, useAccount, useSwitchChain } from '@megotickets/core';
 import { disconnect } from '@megotickets/core'
 import { config } from "@megotickets/core";
 type Route =
@@ -140,22 +140,22 @@ export const Web3Provider: React.FC<Web3ProviderProps> = ({ children }) => {
   };
 
   async function redirectToAppleLogin() {
-    const deviceId : DeviceIdResult = await getDeviceId();
+    const deviceId : string = await getDeviceId();
     setIsLoading(true);
     localStorage.setItem("justLogged", "true");
     setTimeout(() => {
       window.location.href = BASE_URL + "/auth/apple" + "?origin="
-        + window.location.href.replace("https://", "").replace("http://", "") + "&device=" + deviceId.deviceId;
+        + window.location.href.replace("https://", "").replace("http://", "") + "&device=" + deviceId;
     }, 2500);
   }
 
   async function redirectToGoogleLogin() {
-    const deviceId = await getDeviceId();
+    const deviceId : string = await getDeviceId();
     setIsLoading(true);
     localStorage.setItem("justLogged", "true");
     setTimeout(() => {
       window.location.href = BASE_URL + "/auth/google" + "?origin=" 
-        + window.location.href.replace("https://", "").replace("http://", "") + "&device=" + deviceId.deviceId;
+        + window.location.href.replace("https://", "").replace("http://", "") + "&device=" + deviceId;
     }, 2500);
   }
 
