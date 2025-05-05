@@ -68,12 +68,10 @@ const MegoBuyTicketModal: React.FC<MegoBuyTicketModalProps> = ({ onClose }) => {
     <div className={`${isClosing ? "closing" : ""} mego-modal-container payment-modal`}>
       <div className="mego-modal-backdrop" onClick={handleClose}></div>
       <div
-        className="mego-modal-wrapper payment-wrapper"
+        className="mego-modal-wrapper payment-wrapper" 
         style={{
-          minHeight: "75vh",
-          maxHeight: "75vh",
           display: 'flex',
-          
+          flexDirection: 'column'
         }}
       >
         <div className="mego-modal-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
