@@ -135,7 +135,7 @@ export const BuyTicketForm: React.FC = () => {
                                 id="ticketQuantity"
                                 value={amountOfTicket || 1}
                                 onChange={(e) => setAmountOfTicket(parseInt(e.target.value))}
-                                className="input-field"
+                                className="input-field select-field"
                             >
                                 {Array.from({ length: 10 }, (_, i) => (
                                     <option key={i + 1} value={i + 1}>{i + 1}</option>
@@ -171,7 +171,7 @@ export const BuyTicketForm: React.FC = () => {
                                                 id={fieldId}
                                                 value={metadataValues[index] || ''}
                                                 onChange={(e) => handleMetadataChange(index, e.target.value)}
-                                                className="input-field"
+                                                className="input-field select-field"
                                             >
                                                 {matchingConfig.options.map(option => (
                                                     <option key={option} value={option}>{option}</option>
