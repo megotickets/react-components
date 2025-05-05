@@ -125,22 +125,31 @@ export function MegoModal({ isOpen, onClose }: MegoModalProps) {
             </div>
           </div>
         </div>
-        <div className="mego-modal-content" style={{ ...style?.modalStyle?.bodyStyle }}>
-          <span
-            style={{
-              transform: "scale(0.8)",
-              height: 300,
-              transition: "height 0.3s",
-            }}
-          >
-            <div className="mego-modal-title mego-font-medium font-satoshi" style={{ marginBottom: '0.5rem' }}>
-              {t(section === "Register" ? 'registerTitle' : 'loginTitle', 'wallet')}
-            </div>
+        <div 
+          className="mego-modal-content" 
+          style={{
+            ...style?.modalStyle?.bodyStyle, // Stili base
+            ...(isLoading ? { // Stili condizionali per il loading
+              display: 'flex',
+              flexDirection: 'column' as React.CSSProperties['flexDirection']
+            } : {})
+          }}
+        >
+          <div className="mego-modal-title mego-font-medium font-satoshi" style={{ marginBottom: '0.5rem' }}>
+            {t(section === "Register" ? 'registerTitle' : 'loginTitle', 'wallet')}
+          </div>
 
-            {isLoading ? <div style={{ marginTop: '1rem', marginBottom: '1rem' }}><Loader /></div> : (
-              returnCurrentSection()
-            )}
-          </span>
+          {isLoading ? 
+            <div style={{ 
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',  
+              flexGrow: 1,           
+            }}>
+              <Loader />
+            </div> : (
+            returnCurrentSection()
+          )}
         </div>
       </div>
     </div>
