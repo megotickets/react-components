@@ -86,5 +86,6 @@
     "noAppliedDiscount": "Nessun sconto applicato",
     "totalToPay": "Totale da pagare",
     "ticketQuantity": "Numero biglietti",
-    "summary": "Riepilogo Ordine"
+    "summary": "Riepilogo Ordine",
+    "noTokensToClaim": "Nessun biglietto da reclamare"
 } 

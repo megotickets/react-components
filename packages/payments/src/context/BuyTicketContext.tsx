@@ -43,8 +43,8 @@ interface BuyTicketContextType {
   setPaymentsDetails: (paymentsDetails: any) => void;
 
   //Token id
-  tokenId: string | null;
-  setTokenId: (tokenId: string | null) => void;
+  tokenIds: string[] | null;
+  setTokenIds: (tokenId: string[] | null) => void;
 
   //processor
   processor: string | null;
@@ -92,7 +92,7 @@ export const BuyTicketProvider: React.FC<BuyTicketProviderProps> = ({ children }
   const [stepper, setStepper] = useState<Stepper>(Stepper.Form_data);
   const [claimMetadata, setClaimMetadata] = useState<any>(null);
   const [emailOfBuyer, setEmailOfBuyer] = useState<string | null>(null);
-  const [tokenId, setTokenId] = useState<string | null>(null);
+  const [tokenIds, setTokenIds] = useState<string[] | null>(null);
 
   //Claim data
   const [claimData, setClaimData] = useState<any>(null);
@@ -139,7 +139,7 @@ export const BuyTicketProvider: React.FC<BuyTicketProviderProps> = ({ children }
     setIsOpen(false)
     setClaimData(null)
     setPaymentsDetails(null)
-    setTokenId(null)
+    setTokenIds(null)
     setProcessor(null)
     setDiscountCode(null)
     setAmountOfTicket(1)
@@ -163,7 +163,7 @@ export const BuyTicketProvider: React.FC<BuyTicketProviderProps> = ({ children }
       stepper: JSON.stringify(stepper),
       claimMetadata: JSON.stringify(claimMetadata),
       emailOfBuyer: JSON.stringify(emailOfBuyer),
-      tokenId: JSON.stringify(tokenId),
+      tokenIds: JSON.stringify(tokenIds),
       claimData: JSON.stringify(claimData),
       processor: JSON.stringify(processor)
     }
@@ -194,8 +194,8 @@ export const BuyTicketProvider: React.FC<BuyTicketProviderProps> = ({ children }
       if(pendingProcess?.emailOfBuyer){
         setEmailOfBuyer(JSON.parse(pendingProcess.emailOfBuyer))
       }
-      if(pendingProcess?.tokenId){
-        setTokenId(JSON.parse(pendingProcess.tokenId))
+      if(pendingProcess?.tokenIds){
+        setTokenIds(JSON.parse(pendingProcess.tokenIds))
       }
       if(pendingProcess?.claimData){
         setClaimData(JSON.parse(pendingProcess.claimData))
@@ -267,11 +267,11 @@ export const BuyTicketProvider: React.FC<BuyTicketProviderProps> = ({ children }
     setPaymentsDetails,
 
     //Token id
-    tokenId,
-    setTokenId,
+    tokenIds,
+    setTokenIds,
 
     //Processor
-    processor,
+    processor,  
     setProcessor,
 
     //Restore

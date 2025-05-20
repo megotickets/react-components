@@ -4,6 +4,9 @@
   "scripts": {
     "dev": "pnpm --filter web dev",
     "dev:mego": "pnpm --filter '@megotickets/wallet' dev",
+    "dev:payments": "pnpm --filter '@megotickets/payments' dev",
+    "dev:core": "pnpm --filter '@megotickets/core' dev",
+    "dev:web": "pnpm --filter '@my-web3/web' dev",
 
     "build": "pnpm --filter './packages/**' build",
     "build:mego": "pnpm --filter '@megotickets/wallet' build",

@@ -1,6 +1,7 @@
 import axios from 'axios';
 const baseUrl = 'https://tickets-api.mego.tools'
-import { mainnet, optimism, arbitrum, goerli, polygon, config, switchChain } from "@megotickets/core";
+import { mainnet, optimism, arbitrum, goerli, polygon, config, switchChain, signWithMego } from "@megotickets/core";
+import { isConnectedWithMego } from './utils';
 //const baseUrl = 'https://tickets-api-dev.mego.tools'
 
 /**
@@ -85,6 +86,22 @@ const mintNFT = async (paymentId: string) => {
     }
 }
 
+const getAllNFTsOfUser = async (identifier: string, walletAddress: string) => {
+    try {
+        const response = await axios.get(`${baseUrl}/nfts/owned/${identifier}/${walletAddress}`)
+        return response.data
+    } catch (error) {
+        console.error('Errore nel ottenere tutti gli NFT:', error);
+        throw error;
+    }
+}
+
+const getNewTokenIdList = (ipoteticNewUserNfts: any, userNFTsBeforeMint: any) => {
+    //Deve tornare solo la lista di tokenId presenti solo nell'ipotetica lista degli NFT dell'utente e che non sono presenti in userNFTsBeforeMint
+    const newTokenIdList = ipoteticNewUserNfts.owned.filter((nft: any) => !userNFTsBeforeMint.owned.some((beforeMintNft: any) => beforeMintNft.tokenId === nft.tokenId));
+    return newTokenIdList.map((nft: any) => nft.tokenId);
+}
+
 /**
  * Create a claim (and data for qrcode, apple wallet, google wallet)
  * @param signature - The signature of the claim
@@ -114,6 +131,7 @@ const createClaim = async (signature: string, tokenId: string, email: string, ti
         throw error;
     }
 }
+
 
 /**
  * Get event details
@@ -296,6 +314,6 @@ const obtainNfts = async (eventIdentifier: string, walletAddress: string) => {
 }
 
 export {
-    askPaymentDetails, checkNFT, mintNFT, createClaim, saveMegoPendingClaimProcessing, getMegoPendingClaimProcessingData, cleanMegoPendingClaimProcessing, getPayment, checkPayment, checkUserBalance, resolveProcessor, switchNetwork, obtainNfts, getDecimals
+    askPaymentDetails, checkNFT, mintNFT, createClaim, saveMegoPendingClaimProcessing, getMegoPendingClaimProcessingData, cleanMegoPendingClaimProcessing, getPayment, checkPayment, checkUserBalance, resolveProcessor, switchNetwork, obtainNfts, getDecimals, getAllNFTsOfUser, getNewTokenIdList
 }
 

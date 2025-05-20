@@ -86,5 +86,6 @@
     "noAppliedDiscount": "No discount applied",
     "totalToPay": "Total to pay",
     "ticketQuantity": "Number of tickets",
-    "summary": "Order summary"
+    "summary": "Order summary",
+    "noTokensToClaim": "No tokens to claim"
 } 

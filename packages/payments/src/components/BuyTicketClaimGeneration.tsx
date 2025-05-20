@@ -14,7 +14,7 @@ import { getLoginDataInfo } from "@/utils/LoginUtils";
 
 export const BuyTicketClaimGeneration = () => {
     const { t } = useLanguage()
-    const { eventDetails, openPopup, resetPaymentProcessing, setStepper, emailOfBuyer, setClaimData, claimMetadata, tokenId, amountOfTicket } = useBuyTicketContext()
+    const { eventDetails, openPopup, resetPaymentProcessing, setStepper, emailOfBuyer, setClaimData, claimMetadata, tokenIds, amountOfTicket } = useBuyTicketContext()
     const [message, setMessage] = useState<string>(t('processing', 'payments'))
 
     let count = 0;
@@ -24,45 +24,72 @@ export const BuyTicketClaimGeneration = () => {
             const userAddress = getLoginDataInfo()?.loggedAs || ""
             const provider = getLoginDataInfo()?.provider || ""
             const session = getLoginDataInfo()?.session || ""
-            let signature = ""
-            if (isConnectedWithMego() && provider) {
-                const signatureResponse = await signWithMego(session, `Claiming token ${tokenId}`)
-                if (signatureResponse.error) {
-                    setMessage(t('error', 'payments'))
-                    openPopup({ title: 'Alert', message: t('errorCreatingClaim', 'payments'), modality: PopupModality.Error, isOpen: true, })
-                    resetPaymentProcessing()
-                    return;
+
+            if(!tokenIds || tokenIds.length === 0){
+                setMessage(t('noTokensToClaim', 'payments'))
+                openPopup({ title: 'Alert', message: t('noTokensToClaim', 'payments'), modality: PopupModality.Error, isOpen: true })
+                resetPaymentProcessing()
+                return;
+            }
+            
+
+            const signatures : Array<{signature: string, tokenId: string}> = [] 
+            if(tokenIds && tokenIds.length > 0){
+                for(const tokenId of tokenIds){
+                    let sig = {signature: "", tokenId: tokenId}
+                    //console.log('[CLAIM] Stiamo prendendo la signature per il tokenId', tokenId)
+                    if (isConnectedWithMego() && provider) {
+                        const sigResponse = await signWithMego(session, `Claiming token ${tokenId}`)
+                        if (sigResponse.error) {
+                           //console.log('[CLAIM] Errore nel prendere la signature per il tokenId', tokenId)
+                            setMessage(t('error', 'payments'))
+                            openPopup({ title: 'Alert', message: t('errorCreatingClaim', 'payments'), modality: PopupModality.Error, isOpen: true, })
+                            resetPaymentProcessing()
+                            return;
+                        }else{
+                            sig = {signature: sigResponse.signature, tokenId: tokenId}
+                        }
+                    } else {
+                        setMessage(t('pleaseConfirmSubscriptionToAttendTheEvent', 'payments'))
+                        const _sig = await signMessage(config, { message: `Claiming token ${tokenId}` })
+                        sig = {signature: _sig, tokenId: tokenId}
+                         //TODO: Multiple concurrent firms
+                    }
+                    signatures.push(sig)
                 }
-                signature = signatureResponse.signature
-            } else {
-                setMessage(t('pleaseConfirmSubscriptionToAttendTheEvent', 'payments'))
-                signature = await signMessage(config, { message: `Claiming token ${tokenId}` })
             }
 
             await new Promise(resolve => setTimeout(resolve, 1000));
-            if (!signature) {
+            
+            if (signatures.length !== tokenIds.length) {
                 setMessage(t('errorCreatingClaim', 'payments'))
                 openPopup({ title: 'Alert', message: t('errorCreatingClaim', 'payments'), modality: PopupModality.Error, isOpen: true, })
                 resetPaymentProcessing()
-                return;
+                //TODO: Come gestiamo questa situazione? 
             }
 
             //Create claim
             setMessage(amountOfTicket > 1 ? t('creatingClaims', 'payments') : t('creatingClaim', 'payments'))
-            const claim = await createClaim(signature, tokenId || "", emailOfBuyer || "", eventDetails?.event?.identifier, userAddress, `Claiming token ${tokenId}`, true, claimMetadata);
 
-            if (claim.error) {
-                setMessage(t('errorCreatingClaim', 'payments'))
-                openPopup({
-                    title: 'Alert',
-                    message: t('errorCreatingClaim', 'payments'),
-                    modality: PopupModality.Error,
-                    isOpen: true
-                })
-                resetPaymentProcessing()
-                return;
+            //Create claims for every signature
+            const claims = []
+            for(const signature of signatures){
+                const claim = await createClaim(signature.signature, signature.tokenId || "", emailOfBuyer || "", eventDetails?.event?.identifier, userAddress, `Claiming token ${signature.tokenId}`, true, claimMetadata);
+                if (claim.error) {
+                    setMessage(t('errorCreatingClaim', 'payments'))
+                    openPopup({
+                        title: 'Alert',
+                        message: t('errorCreatingClaim', 'payments'),
+                        modality: PopupModality.Error,
+                        isOpen: true
+                    })
+                    resetPaymentProcessing()
+                    return;
+                }
+                claims.push(claim)
             }
-            setClaimData(claim)
+            
+            setClaimData(claims)
             setStepper(Stepper.Claim)
             return; 
         }
