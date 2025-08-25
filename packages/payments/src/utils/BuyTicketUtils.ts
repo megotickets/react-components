@@ -113,7 +113,7 @@ const getNewTokenIdList = (ipoteticNewUserNfts: any, userNFTsBeforeMint: any) =>
  * @param acceptNotification - The accept notification of the claim
  * @param claim_metadata - The claim metadata of the claim
  */
-const createClaim = async (signature: string, tokenId: string, email: string, tier: string, address: string, challenge: string, acceptNotification: boolean, claim_metadata: Array<any>) => {
+const createClaim = async (signature: string, tokenId: string, email: string, tier: string, address: string, challenge: string, acceptNotification: boolean, claim_metadata: Array<any>, language: string = "en") => {
     try {
         const response = await axios.post(`${baseUrl}/claims/create`, {
             signature,
@@ -123,7 +123,8 @@ const createClaim = async (signature: string, tokenId: string, email: string, ti
             address,
             challenge,
             acceptNotification,
-            claim_metadata
+            claim_metadata,
+            language
         })
         return response.data
     } catch (error) {

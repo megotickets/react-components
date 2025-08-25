@@ -13,7 +13,7 @@ import "../css/pay.css";
 import { getLoginDataInfo } from "@/utils/LoginUtils";
 
 export const BuyTicketClaimGeneration = () => {
-    const { t } = useLanguage()
+    const { t, language } = useLanguage()
     const { eventDetails, openPopup, resetPaymentProcessing, setStepper, emailOfBuyer, setClaimData, claimMetadata, tokenIds, amountOfTicket } = useBuyTicketContext()
     const [message, setMessage] = useState<string>(t('processing', 'payments'))
 
@@ -116,7 +116,7 @@ export const BuyTicketClaimGeneration = () => {
                     }
                     try {
                         console.log('[CLAIM] Creazione del claim per il tokenId (tentativo', retryCount, ')', signature.tokenId)
-                        const claim = await createClaim(signature.signature, signature.tokenId || "", emailOfBuyer || "", eventDetails?.event?.identifier, userAddress, `Claiming token ${signature.tokenId}`, true, claimMetadata);
+                        const claim = await createClaim(signature.signature, signature.tokenId || "", emailOfBuyer || "", eventDetails?.event?.identifier, userAddress, `Claiming token ${signature.tokenId}`, true, claimMetadata, language);
                         if (claim.error) {
                             console.log('[CLAIM] Errore nel creare il claim per il tokenId', signature.tokenId)
                             claimRetrieved = false
@@ -176,7 +176,8 @@ export const BuyTicketClaimGeneration = () => {
             data?.userAddress || "",
             data?.message || "",
             true,
-            data?.claim_metadata || []
+            data?.claim_metadata || [],
+            language || "en"
         );
 
         if (claim.error) {
