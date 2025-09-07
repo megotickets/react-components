@@ -54,7 +54,7 @@ export const TicketHeader: React.FC<TicketHeaderProps> = ({
               <svg xmlns="http://www.w3.org/2000/svg" style={{ height: '1.25rem', width: '1.25rem', marginRight: '0.75rem', color: '#9CA3AF' }} fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
               </svg>
-              <span className="font-satoshi" style={{ color: '#E5E7EB', fontSize: '0.9rem' }}>{t('blockchainNetwork', 'payments')}: {event.blockchain || 'Polygon'}</span>
+              <span className="font-satoshi" style={{ color: '#E5E7EB', fontSize: '0.9rem' }}>{t('blockchainNetwork', 'payments')}: {event.network?.toUpperCase() || 'Polygon'}</span>
             </div>
             
             {/* Hosted By */}
