@@ -18,7 +18,10 @@ export const CustomTicket: React.FC<CustomTicketProps> = ({
       <h3 className="text-blue-900 text-xl font-semibold mb-2">{title}</h3>
       <p className="text-blue-700 text-sm leading-relaxed">{description}</p>
       <Ticket
-        ticketId="694b4ce9-9f0c-4756-8dcb-ad0889078da6"
+        ticketId={
+          process.env.NEXT_PUBLIC_TICKET_ID ??
+          "6f057f40-0cb5-42bb-b068-77e7b5fa4ed2"
+        }
         showOnlyButton={true}
         googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}
         overrideButton={

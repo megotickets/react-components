@@ -39,6 +39,7 @@ export const TicketHeader: React.FC<TicketHeaderProps> = ({
             </div>
             
             {/* Event Location */}
+            {event.event_location && (
             <div className="ticket-event-location-container font-satoshi">
               <svg xmlns="http://www.w3.org/2000/svg" style={{ height: '1.25rem', width: '1.25rem', marginRight: '0.75rem', color: '#9CA3AF' }} fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
@@ -46,6 +47,7 @@ export const TicketHeader: React.FC<TicketHeaderProps> = ({
               </svg>
               <span className="font-satoshi" style={{ color: '#E5E7EB', fontSize: '0.9rem' }}>{event.event_location}</span>
             </div>
+            )}
             
             {/* Blockchain Network */}
             <div className="ticket-event-blockchain-container font-satoshi">
