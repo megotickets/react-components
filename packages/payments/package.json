@@ -1,7 +1,7 @@
 {
   "name": "@megotickets/payments",
   "private": false,
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Payment processing components for MegoTickets React components library",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",

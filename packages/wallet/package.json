@@ -1,6 +1,6 @@
 {
   "name": "@megotickets/wallet",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "private": false,
   "description": "Web3 wallet integration components for MegoTickets React components library",
   "main": "./dist/index.js",
