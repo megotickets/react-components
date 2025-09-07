@@ -1,6 +1,8 @@
 {
-  "name": "my-web3-monorepo",
-  "private": true,
+  "name": "@megotickets/react-components",
+  "version": "1.0.0",
+  "description": "React components library for MegoTickets - Web3 ticketing platform with wallet integration and payment processing",
+  "private": false,
   "scripts": {
     "dev": "pnpm --filter web dev",
     "dev:mego": "pnpm --filter '@megotickets/wallet' dev",
@@ -15,8 +17,36 @@
 
     "build:payments": "pnpm --filter '@megotickets/payments' build",
 
-    "build:all": "pnpm build:core && pnpm build:payments && pnpm build:mego && pnpm --filter @my-web3/web build"
+    "build:all": "pnpm build:core && pnpm build:payments && pnpm build:mego && pnpm --filter @my-web3/web build",
+    "publish:all": "pnpm build:all && pnpm --filter './packages/**' publish --access public",
+    "publish:core": "pnpm build:core && pnpm --filter '@megotickets/core' publish --access public",
+    "publish:payments": "pnpm build:payments && pnpm --filter '@megotickets/payments' publish --access public",
+    "publish:wallet": "pnpm build:mego && pnpm --filter '@megotickets/wallet' publish --access public"
   },
+  "keywords": [
+    "react",
+    "components",
+    "web3",
+    "ticketing",
+    "wallet",
+    "payments",
+    "ethereum",
+    "blockchain",
+    "megotickets"
+  ],
+  "author": "MegoTickets",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/megotickets/react-components.git"
+  },
+  "homepage": "https://github.com/megotickets/react-components#readme",
+  "bugs": {
+    "url": "https://github.com/megotickets/react-components/issues"
+  },
+  "workspaces": [
+    "packages/*"
+  ],
   "devDependencies": {
     "gh-pages": "^6.0.0"
   }

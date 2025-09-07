@@ -1,17 +1,40 @@
 {
   "name": "@megotickets/wallet",
-  "version": "0.1.0",
+  "version": "1.0.0",
+  "private": false,
+  "description": "Web3 wallet integration components for MegoTickets React components library",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
   "scripts": {
     "build": "tsup src/index.tsx --format cjs,esm --dts --external react --inject-style --tsconfig tsconfig.json",
-    "dev": "tsup src/index.tsx --format cjs,esm --dts --external react --inject-style --watch --tsconfig tsconfig.json"
+    "dev": "tsup src/index.tsx --format cjs,esm --dts --external react --inject-style --watch --tsconfig tsconfig.json",
+    "prepublishOnly": "pnpm build"
   },
+  "keywords": ["react", "components", "wallet", "web3", "ethereum", "megotickets"],
+  "author": "MegoTickets",
+  "license": "MIT",
   "peerDependencies": {
     "react": "^18.0.0",
     "react-dom": "^18.0.0"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/megotickets/react-components.git",
+    "directory": "packages/wallet"
+  },
+  "homepage": "https://github.com/megotickets/react-components#readme",
+  "bugs": {
+    "url": "https://github.com/megotickets/react-components/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "dist/**/*",
+    "README.md",
+    "LICENSE"
+  ],
   "dependencies": {
     "@megotickets/core": "workspace:core",
     "@rainbow-me/rainbowkit": "^2.0.0",

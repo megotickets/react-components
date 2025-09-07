@@ -1,0 +1,30 @@
+# Source files
+src/
+tsconfig.json
+postcss.config.js
+
+# Development files
+node_modules/
+*.log
+.env*
+
+# Build artifacts (keep dist/)
+*.tsbuildinfo
+
+# Explicitly include dist folder
+!dist/
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Test files
+__tests__/
+*.test.*
+*.spec.*

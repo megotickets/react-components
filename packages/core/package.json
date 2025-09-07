@@ -1,18 +1,41 @@
 {
   "name": "@megotickets/core",
-  "version": "1.0.0",
-  "description": "",
+  "private": false,
+  "version": "1.0.1",
+  "description": "Core components and utilities for MegoTickets React components library",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
   "scripts": {
     "build": "tsup src/index.tsx --format cjs,esm --dts --external react --inject-style --tsconfig tsconfig.json",
-    "dev": "tsup src/index.tsx --format cjs,esm --dts --external react --inject-style --watch --tsconfig tsconfig.json"
+    "dev": "tsup src/index.tsx --format cjs,esm --dts --external react --inject-style --watch --tsconfig tsconfig.json",
+    "prepublishOnly": "pnpm build"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": ["react", "components", "web3", "core", "utilities", "megotickets"],
+  "author": "MegoTickets",
+  "license": "MIT",
   "packageManager": "pnpm@10.4.1",
+  "peerDependencies": {
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/megotickets/react-components.git",
+    "directory": "packages/core"
+  },
+  "homepage": "https://github.com/megotickets/react-components#readme",
+  "bugs": {
+    "url": "https://github.com/megotickets/react-components/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "dist/**/*",
+    "README.md",
+    "LICENSE"
+  ],
   "dependencies": {
     "@rainbow-me/rainbowkit": "^2.0.0",
     "@react-google-maps/api": "^2.20.6",
