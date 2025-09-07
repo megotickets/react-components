@@ -4,10 +4,12 @@ import "../css/pay.css";
 import { useLanguage } from '@megotickets/core';
 interface TicketLocationProps {
   event: any;
+  googleMapsApiKey?: string;
 }
 
 interface MapContainerProps {
   location: string;
+  googleMapsApiKey: string;
 }
 
 const containerStyle = {
@@ -22,7 +24,7 @@ const defaultCenter = {
   lng: 12.4964
 };
 
-const MapContainer: React.FC<MapContainerProps> = ({ location }) => {
+const MapContainer: React.FC<MapContainerProps> = ({ location, googleMapsApiKey }) => {
   const [center, setCenter] = useState(defaultCenter);
   const [mapError, setMapError] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -43,11 +45,8 @@ const MapContainer: React.FC<MapContainerProps> = ({ location }) => {
     setIsLoading(false);
   }, []);
   
-  // Get API key from environment variables
-  const apiKey = process.env.REACT_APP_GOOGLE_MAPS_API_KEY || '';
-  
   // If no API key is provided or there's an error, show fallback UI
-  if (!apiKey || mapError) {
+  if (!googleMapsApiKey || mapError) {
     return (
       <div className="ticket-map-container">
         <p className="font-satoshi" style={{ color: '#9CA3AF', marginBottom: '0.5rem' }}>{t('unableToLoadMap', 'payments')}</p>
@@ -65,7 +64,7 @@ const MapContainer: React.FC<MapContainerProps> = ({ location }) => {
       )}
       {/* @ts-ignore */}
       <LoadScript 
-        googleMapsApiKey={apiKey} 
+        googleMapsApiKey={googleMapsApiKey} 
         onError={onError}
       >
         {/* @ts-ignore */}
@@ -92,7 +91,7 @@ const MapContainer: React.FC<MapContainerProps> = ({ location }) => {
 };
 
 
-export const TicketLocation: React.FC<TicketLocationProps> = ({ event }) => {
+export const TicketLocation: React.FC<TicketLocationProps> = ({ event, googleMapsApiKey }) => {
   const { t } = useLanguage()
   return (
     <div className="ticket-block-container">
@@ -115,8 +114,8 @@ export const TicketLocation: React.FC<TicketLocationProps> = ({ event }) => {
             }}
           />
           
-          {event.event_type === 'physical' && (
-            <MapContainer location={event.event_location} />
+          {event.event_type === 'physical' && googleMapsApiKey && (
+            <MapContainer location={event.event_location} googleMapsApiKey={googleMapsApiKey} />
           )}
         </div>
       </div>

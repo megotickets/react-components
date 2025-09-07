@@ -11,7 +11,10 @@ export function PaymentPreview() {
           description="Test associazione"
         />
 
-        <Ticket ticketId="f8e4bc90-aaf3-42ba-a9c3-514af7131c4a" />
+        <Ticket 
+          ticketId="f8e4bc90-aaf3-42ba-a9c3-514af7131c4a" 
+          googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}
+        />
 
         {/* 
                     <Ticket ticketId='b5af9d49-d865-4238-a4e3-9dc48ed280d0' />

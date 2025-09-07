@@ -18,9 +18,10 @@ interface TicketProps {
   metadataConfig?: MegoMetadataFieldConfig[];
   shareEmail?: ShareEmailOptions;
   redirectUrl?: string;
+  googleMapsApiKey?: string;
 }
 
-export const Ticket: React.FC<TicketProps> = ({ ticketId, showOnlyButton, overrideButton, onTicketLoad, metadataConfig, shareEmail, redirectUrl }) => {
+export const Ticket: React.FC<TicketProps> = ({ ticketId, showOnlyButton, overrideButton, onTicketLoad, metadataConfig, shareEmail, redirectUrl, googleMapsApiKey }) => {
   const [eventDetails, setEventDetails] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -120,6 +121,7 @@ export const Ticket: React.FC<TicketProps> = ({ ticketId, showOnlyButton, overri
       />
       <TicketLocation
         event={event}
+        googleMapsApiKey={googleMapsApiKey}
       />
       <TicketUserNFT userId={ticketId} eventIdentifier={event.identifier} />
     </div>
