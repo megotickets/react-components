@@ -1,7 +1,7 @@
 {
   "name": "@megotickets/core",
   "private": false,
-  "version": "1.0.3",
+  "version": "1.0.2",
   "description": "Core components and utilities for MegoTickets React components library",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
