@@ -12,6 +12,9 @@ export function PaymentPreview() {
         />
 
         <Ticket
+          showLocation={false}
+          showUserNFT={false}
+          showPayment={false}
           ticketId={
             process.env.NEXT_PUBLIC_TICKET_ID ??
             "6f057f40-0cb5-42bb-b068-77e7b5fa4ed2"

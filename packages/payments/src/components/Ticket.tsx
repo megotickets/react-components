@@ -19,9 +19,26 @@ interface TicketProps {
   shareEmail?: ShareEmailOptions;
   redirectUrl?: string;
   googleMapsApiKey?: string;
+  showHeader?: boolean;
+  showPayment?: boolean;
+  showLocation?: boolean;
+  showUserNFT?: boolean;
 }
 
-export const Ticket: React.FC<TicketProps> = ({ ticketId, showOnlyButton, overrideButton, onTicketLoad, metadataConfig, shareEmail, redirectUrl, googleMapsApiKey }) => {
+export const Ticket: React.FC<TicketProps> = ({ 
+  ticketId, 
+  showOnlyButton, 
+  overrideButton, 
+  onTicketLoad, 
+  metadataConfig, 
+  shareEmail, 
+  redirectUrl, 
+  googleMapsApiKey,
+  showHeader = true,
+  showPayment = true,
+  showLocation = true,
+  showUserNFT = true
+}) => {
   const [eventDetails, setEventDetails] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -107,23 +124,31 @@ export const Ticket: React.FC<TicketProps> = ({ ticketId, showOnlyButton, overri
 
   return (
     <div className="ticket-container">
-      <TicketHeader
-        event={event}
-        startDate={startDate}
-        endDate={endDate}
-      />
-      <TicketPayment
-        eventDetails={eventDetails}
-        isPriceZero={isPriceZero}
-        priceText={priceText}
-        supplyText={supplyText}
-        overrideButton={overrideButton}
-      />
-      <TicketLocation
-        event={event}
-        googleMapsApiKey={googleMapsApiKey}
-      />
-      <TicketUserNFT userId={ticketId} eventIdentifier={event.identifier} />
+      {showHeader && (
+        <TicketHeader
+          event={event}
+          startDate={startDate}
+          endDate={endDate}
+        />
+      )}
+      {showPayment && (
+        <TicketPayment
+          eventDetails={eventDetails}
+          isPriceZero={isPriceZero}
+          priceText={priceText}
+          supplyText={supplyText}
+          overrideButton={overrideButton}
+        />
+      )}
+      {showLocation && (
+        <TicketLocation
+          event={event}
+          googleMapsApiKey={googleMapsApiKey}
+        />
+      )}
+      {showUserNFT && (
+        <TicketUserNFT userId={ticketId} eventIdentifier={event.identifier} />
+      )}
     </div>
   );
 };
