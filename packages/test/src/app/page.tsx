@@ -1,7 +1,7 @@
 "use client";
 
 import { MegoWalletButton, Web3MegoClientProvider } from "@megotickets/wallet";
-import { Web3Provider } from "@megotickets/core"
+import { Web3Provider } from "@megotickets/core";
 import { BuyTicketProvider } from "@megotickets/payments";
 import { MegoPreview } from "../components/status/MegoPreview";
 
@@ -45,7 +45,7 @@ export default function Home() {
                     border: '1px solid #000',
                     boxShadow: '0 0 10px 0 rgba(33, 7, 179, 0.5)',
                   }, */
-                }
+                },
                 /* megoWalletContainerStyle: {
                   border: '3px solid purple',
                   color: 'purple',
