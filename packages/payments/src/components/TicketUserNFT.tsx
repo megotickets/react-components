@@ -44,6 +44,7 @@ export const TicketUserNFT: React.FC<TicketUserNFTProps> = ({ userId, eventIdent
         {owneds.length > 0 ? (
           owneds.map((nft) => (
             <MyTicket
+              nft={nft}
               key={nft.tokenId}
               tokenId={nft.tokenId}
               image={nft?.metadata?.image}
