@@ -33,10 +33,10 @@ jobs:
         run: pnpm build:payments
         
       - name: Build wallet package
-        run: pnpm build:mego
+        run: pnpm build:wallet  
         
       - name: Build Next.js app
-        run: pnpm --filter @my-web3/web build
+        run: pnpm --filter @megotickets/test-react-components build
         
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
