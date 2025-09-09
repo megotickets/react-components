@@ -9,14 +9,10 @@
     "dev:payments": "pnpm --filter '@megotickets/payments' dev",
     "dev:core": "pnpm --filter '@megotickets/core' dev",
     "dev:web": "pnpm --filter '@megotickets/test-react-components' dev",
-
     "build": "pnpm --filter './packages/**' build",
     "build:wallet": "pnpm --filter '@megotickets/wallet' build",
-
     "build:core": "pnpm --filter '@megotickets/core' build",
-
     "build:payments": "pnpm --filter '@megotickets/payments' build",
-
     "build:all": "pnpm build:core && pnpm build:payments && pnpm build:wallet && pnpm --filter @megotickets/test-react-components build",
     "publish:all": "pnpm build:all && pnpm --filter './packages/**' publish --access public",
     "publish:core": "pnpm build:core && pnpm --filter '@megotickets/core' publish --access public",
