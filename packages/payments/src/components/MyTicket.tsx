@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import '../css/pay.css';
-import { signMessage, useLanguage } from '@megotickets/core';
-import { createClaim } from '@/utils/BuyTicketUtils';
-import { getLoginDataInfo } from '@/utils/LoginUtils';
+import { useLanguage } from '@megotickets/core';
 import { useBuyTicketContext } from '@/context/BuyTicketContext';
 import { Stepper } from '@/interfaces/interface-stepper';
 interface MyTicketProps {
