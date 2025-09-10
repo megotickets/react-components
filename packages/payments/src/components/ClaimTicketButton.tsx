@@ -6,18 +6,21 @@ import "../css/pay.css";
 import { MegoMetadataFieldConfig } from "../interfaces/metadata";
 import { getLoginData, LoginData } from "@megotickets/core";
 import { getLoginDataInfo } from "@/utils/LoginUtils";
+import { TicketCustomStyle } from '../interfaces/TicketCustomStyle';
 
 interface ClaimTicketButtonProps {
   eventDetails: any;
   buttonText?: string;
   overrideButton?: React.ReactNode;
   metadataConfig?: MegoMetadataFieldConfig[];
+  customStyle?: TicketCustomStyle;
 }
 
 export const ClaimTicketButton: React.FC<ClaimTicketButtonProps> = ({
   buttonText,
   eventDetails,
   overrideButton,
+  customStyle,
 }) => {
 
   const { setIsOpen, setEventDetails, resetPaymentProcessing, stepper, setMetadataConfig, amountOfTicket } = useBuyTicketContext();
@@ -53,11 +56,15 @@ export const ClaimTicketButton: React.FC<ClaimTicketButtonProps> = ({
     <div
       className={`ticketButton ${!getLoginDataInfo()?.loggedAs ? 'ticketButtonDisabled' : ''}`}
       onClick={() => getLoginDataInfo()?.loggedAs ? handleOpenModal() : null}
+      style={customStyle?.buttonStyle}
     >
       <div
         className="ticketBtn font-satoshi"
-        onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#111'}
-        onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#000'}
+        onMouseOver={(e) => e.currentTarget.style.backgroundColor = customStyle?.buttonStyle?.backgroundColor || '#111'}
+        onMouseOut={(e) => e.currentTarget.style.backgroundColor = customStyle?.buttonStyle?.backgroundColor || '#000'}
+        style={{
+          ...customStyle?.buttonStyle
+        }}
       >
         {buttonText || (amountOfTicket > 1 ? t('buyTickets', 'payments') : t('buyTicket', 'payments'))}
       </div>

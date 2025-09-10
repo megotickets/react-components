@@ -6,3 +6,4 @@ export { BuyTicketProvider } from './context/BuyTicketContext';
 export type { MegoMetadataFieldConfig } from './interfaces/metadata';
 export { MegoMetadataInputType } from './interfaces/metadata';
 export { ShareEmailOptions } from './interfaces/interface-share-email';
+export type { TicketCustomStyle } from './interfaces/TicketCustomStyle';

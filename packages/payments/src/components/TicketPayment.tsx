@@ -4,6 +4,7 @@ import { useLanguage } from '@megotickets/core';
 import '../css/pay.css';
 import { MegoMetadataFieldConfig } from "../interfaces/metadata";
 import { useBuyTicketContext } from '@/context/BuyTicketContext';
+import { TicketCustomStyle } from '../interfaces/TicketCustomStyle';
 
 interface TicketPaymentProps {
   eventDetails: any;
@@ -12,6 +13,8 @@ interface TicketPaymentProps {
   supplyText: string;
   overrideButton?: React.ReactNode;
   metadataConfig?: MegoMetadataFieldConfig[];
+  customStyle?: TicketCustomStyle;
+  customButtonText?: string;
 }
 
 
@@ -21,21 +24,36 @@ export const TicketPayment: React.FC<TicketPaymentProps> = ({
   priceText,
   supplyText,
   overrideButton,
+  customStyle,
+  customButtonText,
 }) => {
   const { t } = useLanguage()
   const { amountOfTicket } = useBuyTicketContext()
   return (
-    <div className="ticketPaymentContainer">
+    <div 
+      className="ticketPaymentContainer"
+      style={{
+        backgroundColor: customStyle?.paymentBackgroundColor,
+        ...customStyle?.paymentContainerStyle
+      }}
+    >
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div>
-          <div className="ticketPriceTitle font-satoshi">
+          <div 
+            className="ticketPriceTitle font-satoshi"
+            style={{
+              color: customStyle?.primaryTextColor || customStyle?.priceStyle?.color,
+              ...customStyle?.priceStyle
+            }}
+          >
             {`${t('price', 'payments')}: ${priceText}`}
           </div>
         </div>
         <ClaimTicketButton
           eventDetails={eventDetails}
-          buttonText={isPriceZero ? t('claimFreeTicket', 'payments') : amountOfTicket > 1 ? t('buyTickets', 'payments') : t('buyTicket', 'payments')}
+          buttonText={customButtonText || (isPriceZero ? t('claimFreeTicket', 'payments') : amountOfTicket > 1 ? t('buyTickets', 'payments') : t('buyTicket', 'payments'))}
           overrideButton={overrideButton}
+          customStyle={customStyle}
         />
       </div>
     </div>

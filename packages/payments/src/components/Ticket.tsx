@@ -10,6 +10,7 @@ import { useLanguage } from '@megotickets/core';
 import { MegoMetadataFieldConfig } from '../interfaces/metadata';
 import { ShareEmailOptions } from '../interfaces/interface-share-email';
 import { useBuyTicketContext } from '@/context/BuyTicketContext';
+import { TicketCustomStyle } from '../interfaces/TicketCustomStyle';
 interface TicketProps {
   ticketId: string;
   showOnlyButton?: boolean;
@@ -23,6 +24,8 @@ interface TicketProps {
   showPayment?: boolean;
   showLocation?: boolean;
   showUserNFT?: boolean;
+  customStyle?: TicketCustomStyle;
+  customButtonText?: string;
 }
 
 export const Ticket: React.FC<TicketProps> = ({ 
@@ -37,7 +40,9 @@ export const Ticket: React.FC<TicketProps> = ({
   showHeader = true,
   showPayment = true,
   showLocation = true,
-  showUserNFT = true
+  showUserNFT = true,
+  customStyle,
+  customButtonText  
 }) => {
   const [eventDetails, setEventDetails] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(true);
@@ -123,12 +128,15 @@ export const Ticket: React.FC<TicketProps> = ({
   }
 
   return (
-    <div className="ticket-container">
+    <div 
+      className="ticket-container"
+    >
       {showHeader && (
         <TicketHeader
           event={event}
           startDate={startDate}
           endDate={endDate}
+          customStyle={customStyle}
         />
       )}
       {showPayment && (
@@ -138,16 +146,23 @@ export const Ticket: React.FC<TicketProps> = ({
           priceText={priceText}
           supplyText={supplyText}
           overrideButton={overrideButton}
+          customStyle={customStyle}
+          customButtonText={customButtonText}
         />
       )}
       {showLocation && (
         <TicketLocation
           event={event}
           googleMapsApiKey={googleMapsApiKey}
+          customStyle={customStyle}
         />
       )}
       {showUserNFT && (
-        <TicketUserNFT userId={ticketId} eventIdentifier={event.identifier} />
+        <TicketUserNFT 
+          userId={ticketId} 
+          eventIdentifier={event.identifier} 
+          customStyle={customStyle}
+        />
       )}
     </div>
   );
