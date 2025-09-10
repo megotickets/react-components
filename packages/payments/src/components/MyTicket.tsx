@@ -12,6 +12,8 @@ interface MyTicketProps {
 export const MyTicket: React.FC<MyTicketProps> = ({ tokenId, image, nft }) => {
   const [isHovered, setIsHovered] = useState(false);
   const { t } = useLanguage()
+  
+  if(!nft?.claim) return null;
 
   const { email, tier, customMetadata : claim_metadata } = nft.claim
   const { setEventDetails, setEmailOfBuyer, setClaimMetadata, setTokenIds, setAmountOfTicket, setIsOpen, setStepper } = useBuyTicketContext()
