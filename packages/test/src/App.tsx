@@ -181,6 +181,28 @@ function MegoTicketsDemo() {
                   import.meta.env.VITE_TICKET_ID ??
                   "6f057f40-0cb5-42bb-b068-77e7b5fa4ed2"
                 }
+                customStyle={{
+                  // Create a gradient background
+                  headerContainerStyle: {
+                    backgroundColor: "#90ee90",
+                  },
+                  paymentContainerStyle: {
+                    backgroundColor: "#90ee90",
+                  },
+                  locationContainerStyle: {
+                    backgroundColor: "#90ee90",
+                  },
+                  userNFTContainerStyle: {
+                    backgroundColor: "#90ee90",
+                  },
+                  primaryTextColor: "#000",
+                  secondaryTextColor: "#000",
+                  iconColor: "#000",
+                  buttonStyle: {
+                    color: "#fff",
+                    backgroundColor: "#000",
+                  },
+                }}
                 googleMapsApiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}
                 onTicketLoad={(data) => {
                   console.log("Ticket loaded:", data);
@@ -247,7 +269,14 @@ function MegoTicketsDemo() {
         </section>
 
         <footer className="app-footer" style={{ textAlign: "center" }}>
-          Made with ❤️ by <a href="https://yomi.digital" target="_blank" rel="noopener noreferrer">YOMI</a>
+          Made with ❤️ by{" "}
+          <a
+            href="https://yomi.digital"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            YOMI
+          </a>
         </footer>
       </main>
 

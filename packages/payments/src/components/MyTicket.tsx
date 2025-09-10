@@ -3,13 +3,15 @@ import '../css/pay.css';
 import { useLanguage } from '@megotickets/core';
 import { useBuyTicketContext } from '@/context/BuyTicketContext';
 import { Stepper } from '@/interfaces/interface-stepper';
+import { TicketCustomStyle } from '../interfaces/TicketCustomStyle';
 interface MyTicketProps {
   tokenId: string;
   image?: string;
   nft?: any;
+  customStyle?: TicketCustomStyle;
 }
 
-export const MyTicket: React.FC<MyTicketProps> = ({ tokenId, image, nft }) => {
+export const MyTicket: React.FC<MyTicketProps> = ({ tokenId, image, nft, customStyle }) => {
   const [isHovered, setIsHovered] = useState(false);
   const { t } = useLanguage()
 
@@ -38,9 +40,13 @@ export const MyTicket: React.FC<MyTicketProps> = ({ tokenId, image, nft }) => {
       className="ticket-token-id-root"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
+      style={customStyle?.nftItemStyle}
     >
       <div
         className="ticket-token-id-container font-satoshi"
+        style={{
+          color: customStyle?.primaryTextColor
+        }}
       >
         #{tokenId}
       </div>
@@ -48,6 +54,7 @@ export const MyTicket: React.FC<MyTicketProps> = ({ tokenId, image, nft }) => {
         src={image} 
         alt={`${t('ticket', 'payments')} #${tokenId}`} 
         className="ticket-image"
+        style={customStyle?.nftItemStyle}
       />
     </div>
   );
