@@ -14,6 +14,7 @@ interface TicketPaymentProps {
   overrideButton?: React.ReactNode;
   metadataConfig?: MegoMetadataFieldConfig[];
   customStyle?: TicketCustomStyle;
+  customButtonText?: string;
 }
 
 
@@ -24,6 +25,7 @@ export const TicketPayment: React.FC<TicketPaymentProps> = ({
   supplyText,
   overrideButton,
   customStyle,
+  customButtonText,
 }) => {
   const { t } = useLanguage()
   const { amountOfTicket } = useBuyTicketContext()
@@ -49,7 +51,7 @@ export const TicketPayment: React.FC<TicketPaymentProps> = ({
         </div>
         <ClaimTicketButton
           eventDetails={eventDetails}
-          buttonText={isPriceZero ? t('claimFreeTicket', 'payments') : amountOfTicket > 1 ? t('buyTickets', 'payments') : t('buyTicket', 'payments')}
+          buttonText={customButtonText || (isPriceZero ? t('claimFreeTicket', 'payments') : amountOfTicket > 1 ? t('buyTickets', 'payments') : t('buyTicket', 'payments'))}
           overrideButton={overrideButton}
           customStyle={customStyle}
         />

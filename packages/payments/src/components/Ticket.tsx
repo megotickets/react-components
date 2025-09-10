@@ -25,6 +25,7 @@ interface TicketProps {
   showLocation?: boolean;
   showUserNFT?: boolean;
   customStyle?: TicketCustomStyle;
+  customButtonText?: string;
 }
 
 export const Ticket: React.FC<TicketProps> = ({ 
@@ -40,7 +41,8 @@ export const Ticket: React.FC<TicketProps> = ({
   showPayment = true,
   showLocation = true,
   showUserNFT = true,
-  customStyle
+  customStyle,
+  customButtonText  
 }) => {
   const [eventDetails, setEventDetails] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(true);
@@ -145,6 +147,7 @@ export const Ticket: React.FC<TicketProps> = ({
           supplyText={supplyText}
           overrideButton={overrideButton}
           customStyle={customStyle}
+          customButtonText={customButtonText}
         />
       )}
       {showLocation && (

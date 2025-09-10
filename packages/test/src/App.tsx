@@ -203,6 +203,7 @@ function MegoTicketsDemo() {
                     backgroundColor: "#000",
                   },
                 }}
+                customButtonText="Join our team"
                 googleMapsApiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}
                 onTicketLoad={(data) => {
                   console.log("Ticket loaded:", data);
