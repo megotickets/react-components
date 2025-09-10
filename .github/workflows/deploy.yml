@@ -38,9 +38,17 @@ jobs:
       - name: Build Next.js app
         run: pnpm --filter @megotickets/test-react-components build
         
-      - name: Deploy to GitHub Pages
+      - name: Deploy to GitHub Pages (Main)
+        if: github.ref_name == 'main'
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./packages/test/dist
-          destination_dir: ${{ github.ref_name == 'main' && '' || github.ref_name }}
+          
+      - name: Deploy to GitHub Pages (Branch)
+        if: github.ref_name != 'main'
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./packages/test/dist
+          destination_dir: ${{ github.ref_name }}
