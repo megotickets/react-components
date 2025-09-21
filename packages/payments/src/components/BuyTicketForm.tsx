@@ -23,8 +23,6 @@ export const BuyTicketForm: React.FC = () => {
     const [isNFTCheckLoading, setIsNFTCheckLoading] = useState(false);
     const { t, language } = useLanguage()
 
-    console.log(eventDetails)
-
     let count = 0;
 
     useEffect(() => {
@@ -93,20 +91,9 @@ export const BuyTicketForm: React.FC = () => {
         const areTermsValid = termsAccepted;
         let isSharedEmailValid = true;
 
-        console.log("shareEmailContext", shareEmailContext)
-
         if (!shareEmailContext || shareEmailContext === ShareEmailOptions.MANDATORY) {
             isSharedEmailValid = shareEmail;
         }
-
-        console.log({
-            isEmailValid,
-            areTermsValid,
-            isSharedEmailValid,
-            metadataValues,
-            metadataLength: eventDetails?.event?.claim_metadata?.length || 0,
-            filledMetadataCount: Object.keys(metadataValues).length
-        });
 
         setIsFormValid(isEmailValid && areTermsValid && isSharedEmailValid);
     }, [email, termsAccepted, shareEmail, metadataValues, eventDetails, shareEmailContext]);
@@ -165,7 +152,7 @@ export const BuyTicketForm: React.FC = () => {
                                     fieldElement = (
                                         <div>
                                             <p className="font-satoshi" style={{ color: 'white', marginBottom: '0.5rem' }}>
-                                                { `${t('selectOption', 'payments')} ( ${matchingConfig.labelTranslations && matchingConfig.labelTranslations[language] || (metadataString.charAt(0).toUpperCase() + metadataString.slice(1).toLowerCase())} )`}
+                                                {`${t('selectOption', 'payments')} ( ${matchingConfig.labelTranslations && matchingConfig.labelTranslations[language] || (metadataString.charAt(0).toUpperCase() + metadataString.slice(1).toLowerCase())} )`}
                                             </p>
                                             <select
                                                 id={fieldId}
@@ -226,17 +213,24 @@ export const BuyTicketForm: React.FC = () => {
                                 );
                             })}
 
-                            {!isConnectedWithMego() && <input
-                                type="email"
-                                id="email"
-                                placeholder={t('email', 'payments')}
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                                className="input-field"
-                                style={{
-                                    border: `1px solid ${!email || !email.includes('@') ? '#FCA5A5' : 'white'}`,
-                                }}
-                            />}
+                            {!isConnectedWithMego() &&
+                                <div style={{ width: '100%', marginBottom: '0.75rem' }}>
+                                    <p className="font-satoshi" style={{ color: 'white', marginBottom: '0.5rem' }}>
+                                        E-Mail
+                                    </p>
+                                    <input
+                                        type="email"
+                                        id="email"
+                                        placeholder={t('email', 'payments')}
+                                        value={email}
+                                        onChange={(e) => setEmail(e.target.value)}
+                                        className="input-field"
+                                        style={{
+                                            border: `1px solid ${!email || !email.includes('@') ? '#FCA5A5' : 'white'}`,
+                                        }}
+                                    />
+                                </div>
+                            }
                         </div>
 
                         <div className="ticket-form-checkbox-container">

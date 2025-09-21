@@ -25,8 +25,6 @@ export const PaymentsCollectors = () => {
         return;
     }
 
-    console.log("userConnectedWithMego -> ", getLoginDataInfo()?.isConnectWithMego)
-
     // Sposta la logica MEgo in un useEffect
     useEffect(() => {
         if (isConnectedWithMego() && eventDetails?.event?.price > 0) {
@@ -47,7 +45,7 @@ export const PaymentsCollectors = () => {
             {
                 Object.entries(eventDetails?.event?.collectors || {}).sort(([keyA], [keyB]) => keyA === "stripe" ? -1 : keyB === "stripe" ? 1 : 0).map(([key, value]) => {
                     return (
-                        <div key={key} className="ticket-collector-item-container" style={{ display: getLoginDataInfo()?.isConnectWithMego ? 'none' : 'block' }}>
+                        <div key={key} className="ticket-collector-item-container" style={{ display: getLoginDataInfo()?.provider === "walletConnect" ? 'none' : 'block' }}>
                             <div
                                 onClick={() => {
                                     console.log("Settato il processor a: ", key)

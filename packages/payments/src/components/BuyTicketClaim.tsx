@@ -48,9 +48,8 @@ export const BuyTicketClaim: React.FC = () => {
                         )}
                         <button
                             className={`mego-modal-button mego-apple font-satoshi`}
-                            style={{ marginTop: '1rem', display: 'flex', alignItems: 'center', justifyContent: 'flex-start', cursor: claimData?.qr ? 'pointer' : 'not-allowed', opacity: claimData?.qr ? 1 : 0.5 }}
-                            onClick={() => downloadQrCode(claim.qr)}
-                            disabled={!claim?.qr?.qr}>
+                            style={{ marginTop: '1rem', display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}
+                            onClick={() => downloadQrCode(claim.qr)}>
                             <QrCodeIcon height={50} width={50} style={{ marginRight: '0.5rem' }} />
                             {t('downloadQRCode', 'payments')}
                         </button>

@@ -110,9 +110,8 @@ export const Web3Provider: React.FC<Web3ProviderProps> = ({ children }) => {
       localStorage.setItem("loggedAs", address);
       setProvider("walletConnect");
 
-      saveLoginData({ //<--- Save login data (if user login with walletconnect)
+      saveLoginData({
         loggedAs: address,
-        isConnectWithMego: false,
         provider: "walletConnect",
         email: "-"
       });
@@ -251,9 +250,8 @@ export const Web3Provider: React.FC<Web3ProviderProps> = ({ children }) => {
       localStorage.setItem("loggedAs", address);
       localStorage.setItem("provider", "walletConnect");
 
-      saveLoginData({ //<--- Save login data (if user login with walletconnect)
+      saveLoginData({ 
         loggedAs: address,
-        isConnectWithMego: false,
         provider: "walletConnect",
         email: "-"
       });
@@ -295,9 +293,8 @@ export const Web3Provider: React.FC<Web3ProviderProps> = ({ children }) => {
       localStorage.setItem("email", email);
       setProvider("email");
 
-      saveLoginData({ //<--- Save login data (if user login with email)
+      saveLoginData({ 
         loggedAs: check.data.addresses.eth,
-        isConnectWithMego: true,
         provider: "email",
         email: email
       });
@@ -353,7 +350,6 @@ export const Web3Provider: React.FC<Web3ProviderProps> = ({ children }) => {
 
       saveLoginData({
         loggedAs: urlLoggedAs,
-        isConnectWithMego: urlProvider != "walletConnect",
         provider: urlProvider,
         email: email,
         session: session,
@@ -559,7 +555,7 @@ export const Web3Provider: React.FC<Web3ProviderProps> = ({ children }) => {
 
   const isConnectedWithMego = () => {
     const loginData: LoginData | null = getLoginData();
-    return loginData?.isConnectWithMego || false;
+    return loginData?.provider !== "walletConnect";
   }
 
 

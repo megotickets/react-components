@@ -7,8 +7,6 @@ import { PopupModality } from "../interfaces/popup-enum";
 import { Stepper } from "../interfaces/interface-stepper";
 import { signMessage } from "@megotickets/core";
 import { config } from "@megotickets/core";
-import { isConnectedWithMego, getProvider } from "../utils/utils";
-import { signMessageWithGoogle, signMessageWithApple } from "@megotickets/core";
 import "../css/pay.css";
 import { getLoginDataInfo } from "@/utils/LoginUtils";
 
@@ -50,7 +48,7 @@ export const BuyTicketClaimGeneration = () => {
                             await new Promise(resolve => setTimeout(resolve, retryDelay));
                         }
                         try {
-                            if (isConnectedWithMego() && provider) {
+                            if (provider !== "walletConnect" && provider) {
 
                                 //MEGO CASE
                                 let sigResponse = await signWithMego(session, `Claiming token ${tokenId}`)

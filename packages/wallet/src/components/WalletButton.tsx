@@ -23,23 +23,19 @@ interface WalletConnectButtonProps {
 }
 
 const WalletIcon: React.FC<WalletConnectButtonProps> = ({ connectionString }) => {
-    const { loggedAs } = useWeb3Context();
+    const { loggedAs, provider } = useWeb3Context();
     const { style } = useCustomization();
-    const [isConnectWithMego, setIsConnectWithMego] = useState<boolean>(false);
     const [email, setEmail] = useState<string>("");
 
     useEffect(() => {
         if (loggedAs) {
             const loginData = getLoginData();
             if (loginData) {
-                setIsConnectWithMego(loginData.isConnectWithMego || false);
                 setEmail(loginData.email || "");
             } else {
-                setIsConnectWithMego(false);
                 setEmail("");
             }
         } else {
-            setIsConnectWithMego(false);
             setEmail("");
         }
     }, [loggedAs]);
@@ -47,11 +43,11 @@ const WalletIcon: React.FC<WalletConnectButtonProps> = ({ connectionString }) =>
     const croppedEmail = (email:string) => {
         const parts = email.split('@');
         if (parts.length === 2) {
-            const localPart = parts[0];
-            const domainPart = parts[1];
-            const first3Local = localPart.substring(0, 3);
-            const last3Domain = domainPart.slice(-3);
-            return `${first3Local}..@...${last3Domain}`;
+            let localPart = parts[0];
+            if(localPart.length > 16) {
+                localPart = localPart.substring(0, 16) + "..";
+            }
+            return `${localPart}`;
         }
         return email; // Fallback nel caso improbabile che l'email non abbia '@'
     }
@@ -68,8 +64,8 @@ const WalletIcon: React.FC<WalletConnectButtonProps> = ({ connectionString }) =>
                     }}
                 />
             </svg>
-            {loggedAs && !isConnectWithMego && <div className="font-satoshi">{loggedAs.slice(0, 4)}...{loggedAs.slice(-4)}</div>}
-            {loggedAs && isConnectWithMego && email && (
+            {loggedAs && provider === "walletConnect" && <div className="font-satoshi">{loggedAs.slice(0, 4)}...{loggedAs.slice(-4)}</div>}
+            {loggedAs && provider !== "walletConnect" && email && (
                 <div className="font-satoshi">
                     {croppedEmail(email)}
                 </div>

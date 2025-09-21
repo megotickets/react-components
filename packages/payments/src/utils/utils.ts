@@ -1,7 +1,7 @@
 import { getLoginDataInfo } from "./LoginUtils";
 
 export const isConnectedWithMego = () => {
-    return getLoginDataInfo()?.isConnectWithMego || false
+    return getLoginDataInfo()?.provider !== "walletConnect"
 }
 
 export const getProvider = () => {
