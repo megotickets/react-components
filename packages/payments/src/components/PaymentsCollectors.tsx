@@ -40,12 +40,16 @@ export const PaymentsCollectors = () => {
         setSelectedProcessor(processor || 'stripe');
     }, [processor]);
 
+    if (userConnectedWithMego) {
+        return null;
+    }
+
     return (
-        <div className="ticket-collectors-container" >
+        <div className="ticket-collectors-container">
             {
                 Object.entries(eventDetails?.event?.collectors || {}).sort(([keyA], [keyB]) => keyA === "stripe" ? -1 : keyB === "stripe" ? 1 : 0).map(([key, value]) => {
                     return (
-                        <div key={key} className="ticket-collector-item-container" style={{ display: getLoginDataInfo()?.provider === "walletConnect" ? 'none' : 'block' }}>
+                        <div key={key} className="ticket-collector-item-container">
                             <div
                                 onClick={() => {
                                     console.log("Settato il processor a: ", key)

@@ -214,8 +214,8 @@ export const BuyTicketForm: React.FC = () => {
                             })}
 
                             {!isConnectedWithMego() &&
-                                <div style={{ width: '100%', marginBottom: '0.75rem' }}>
-                                    <p className="font-satoshi" style={{ color: 'white', marginBottom: '0.5rem' }}>
+                                <div style={{ width: '100%', marginBottom: '0.75rem', marginTop: '0' }}>
+                                    <p className="font-satoshi" style={{ color: 'white', marginBottom: '0.5rem', marginTop: '0' }}>
                                         E-Mail
                                     </p>
                                     <input
